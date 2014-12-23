@@ -59,6 +59,8 @@ const u16 STRING_IPRODUCT[17] = {
 	'A','r','d','u','i','n','o',' ','E','s','p','l','o','r','a',' '
 #elif USB_PID == 0x9208
 	'L','i','l','y','P','a','d','U','S','B',' ',' ',' ',' ',' ',' '
+#elif USB_PID == 0x8040
+	'E','t','h','e','r','n','e','t',' ','2',' ',' ',' ',' ',' ',' '
 #else
 	'U','S','B',' ','I','O',' ','B','o','a','r','d',' ',' ',' ',' '
 #endif
@@ -70,6 +72,8 @@ const u16 STRING_IMANUFACTURER[12] = {
 	'A','r','d','u','i','n','o',' ','L','L','C'
 #elif USB_VID == 0x1b4f
 	'S','p','a','r','k','F','u','n',' ',' ',' '
+#elif USB_VID == 0x2a03
+	'A','r','d','u','i','n','o',' ','S','r','l'	
 #else
 	'U','n','k','n','o','w','n',' ',' ',' ',' '
 #endif
