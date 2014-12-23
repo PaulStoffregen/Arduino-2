@@ -22,3 +22,4 @@ test-bin
 build/windows/launch4j-*
 build/windows/launcher/launch4j
 build/windows/WinAVR-*.zip
+*.bak
