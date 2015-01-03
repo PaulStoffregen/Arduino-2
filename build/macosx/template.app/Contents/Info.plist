@@ -31,7 +31,7 @@
     <key>CFBundleIconFile</key>
     <string>processing.icns</string>
     <key>CFBundleIdentifier</key> 
-    <string>cc.arduino.Arduino</string>
+    <string>org.arduino.Arduino</string>
     <key>CFBundleDocumentTypes</key>
     <array>
       <dict>
