@@ -216,7 +216,7 @@
       displayname="Arduino"
       shortversion="${version}"
       icon="macosx/template.app/Contents/Resources/processing.icns"
-      identifier="cc.arduino.Arduino"
+      identifier="org.arduino.Arduino"
       mainclassname="processing.app.Base">
 
       <documentType name="Arduino Source File"
@@ -378,10 +378,21 @@
       <fileset dir="macosx/work/${staging_hardware_folder}/tools/avr/avr/bin" includes="**/*" />
       <fileset dir="macosx/work/${staging_hardware_folder}/tools/avr/libexec/gcc/avr/4.8.1/" includes="*" />
     </chmod>
+    
+    <!-- Sign app -->
+    <exec executable="codesign" dir="macosx/work">
+  	<arg line="--force -s &quot;Arduino srl&quot; -v Arduino.app/" />
+    </exec>
+
+    <!-- Check for successful signing -->
+    <exec executable="codesign" dir="macosx/work" failonerror="true">
+    	<arg line="-dvvv Arduino.app/" />
+    </exec>
 
     <exec executable="zip" dir="macosx/work">
-      <arg line="-q -r ../arduino-${version}-${platform}.zip ." />
+      <arg line="-q -r ../arduino-${version}-${platform}-java7.zip ." />
     </exec>
+    
     <!-- <exec executable="ditto" dir="macosx/work">
       <arg line="-c -k -rsrc . ../arduino-${version}-macosx.zip" />
     </exec> -->
@@ -390,7 +401,7 @@
       =======================================================
       Arduino for Mac OS X was built. Grab the image from
 
-      macosx/arduino-${version}-${platform}.zip
+      macosx/arduino-${version}-${platform}-java7.zip
       =======================================================
     </echo>
   </target>
