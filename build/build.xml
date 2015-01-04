@@ -295,7 +295,7 @@
 
     <!-- Unzip unsigned app into working dir -->
     <exec executable="unzip" dir="macosx/work">
-      <arg line="../arduino-${version}-${platform}.zip" />
+      <arg line="../arduino-${version}.org-${platform}.zip" />
     </exec>
 
     <!-- Unlock keychain file -->
@@ -313,18 +313,18 @@
       <arg line="-vvvv Arduino.app/" />
     </exec>
 
-    <delete file="macosx/arduino-${version}-${platform}.zip" />
+    <delete file="macosx/arduino-${version}.org-${platform}.zip" />
 
     <!-- Create signed zip file -->
     <exec executable="zip" dir="macosx/work">
-      <arg line="-q -r ../arduino-${version}-${platform}-signed.zip ." />
+      <arg line="-q -r ../arduino-${version}.org-${platform}-signed.zip ." />
     </exec>
 
     <echo>
       =======================================================
       Arduino for Mac OS X built and signed.
 
-      macosx/arduino-${version}-${platform}-signed.zip
+      macosx/arduino-${version}.org-${platform}-signed.zip
       =======================================================
     </echo>
   </target>
@@ -363,7 +363,7 @@
 	</exec>
 
     <exec executable="zip" dir="macosx/work">
-      <arg line="-q -r ../arduino-${version}-${platform}.zip ." />
+      <arg line="-q -r ../arduino-${version}.org-${platform}.zip ." />
     </exec>
     <!-- <exec executable="ditto" dir="macosx/work">
       <arg line="-c -k -rsrc . ../arduino-${version}-macosx.zip" />
@@ -373,7 +373,7 @@
       =======================================================
       Arduino for Mac OS X was built. Grab the image from
 
-      macosx/arduino-${version}-${platform}.zip
+      macosx/arduino-${version}.org-${platform}.zip
       =======================================================
     </echo>
   </target>
@@ -416,7 +416,7 @@
 
     <delete file="macosx/arduino-*.dmg" />
     <exec executable="hdiutil">
-      <arg line="convert macosx/working.dmg -quiet -format UDZO -imagekey zlib-level=9 -o macosx/arduino-${version}.dmg" />
+      <arg line="convert macosx/working.dmg -quiet -format UDZO -imagekey zlib-level=9 -o macosx/arduino-${version}.org.dmg" />
     </exec>
 
     <!-- Clean up the interim files. -->
@@ -427,7 +427,7 @@
       =======================================================
       Arduino for Mac OS X was built. Grab the image from
 
-      macosx/arduino-${version}.dmg
+      macosx/arduino-${version}.org.dmg
       =======================================================
     </echo>
   </target>
@@ -660,7 +660,7 @@
       <arg value="-z"/>
       <arg value="-c"/>
       <arg value="-f"/>
-      <arg value="arduino-${version}-${platform}.tgz"/>
+      <arg value="arduino-${version}.org-${platform}.tgz"/>
       <arg value="arduino-${version}"/>
     </exec>
 
@@ -670,7 +670,7 @@
       =======================================================
       Arduino for Linux was built. Grab the archive from
 
-      build/linux/arduino-${version}-${platform}.tgz
+      build/linux/arduino-${version}.org-${platform}.tgz
       =======================================================
     </echo>
   </target>
@@ -825,7 +825,7 @@
 	 excludes="java/**" />
     -->
 
-    <zip destfile="windows/arduino-${version}-${platform}.zip" level="9">
+    <zip destfile="windows/arduino-${version}.org-${platform}.zip" level="9">
       <zipfileset dir="windows/work"
 		  prefix="arduino-${version}" />
     </zip>
@@ -834,7 +834,7 @@
       =======================================================
       Arduino for Windows was built. Grab the archive from
 
-      windows/arduino-${version}-${platform}.zip
+      windows/arduino-${version}.org-${platform}.zip
       =======================================================
     </echo>
   </target>
