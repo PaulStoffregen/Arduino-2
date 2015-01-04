@@ -220,14 +220,14 @@
              token="REVISION" value="${revision}" />
     
     <!-- Sign app -->
-	<exec executable="codesign" dir="macosx/work">
-  		<arg line="--force -s &quot;Arduino srl&quot; -v Arduino.app/" />
-	</exec>
-
-	<!-- Check for successful signing -->
-	<exec executable="codesign" dir="macosx/work" failonerror="true">
-  		<arg line="-dvvv Arduino.app/" />
-	</exec>
+    <exec executable="codesign" dir="macosx/work">
+        <arg line="--force -s &quot;Arduino srl&quot; -v Arduino.app/" />
+    </exec>
+    
+    <!-- Check for successful signing -->
+    <exec executable="codesign" dir="macosx/work" failonerror="true">
+        <arg line="-dvvv Arduino.app/" />
+    </exec>
     
     <exec executable="ditto" dir="macosx/work">
       <arg line="-c -k -rsrc . ../arduino-${version}.org-macosx.zip" />
