@@ -230,14 +230,14 @@
 	</exec>
     
     <exec executable="ditto" dir="macosx/work">
-      <arg line="-c -k -rsrc . ../arduino-${version}-macosx.zip" />
+      <arg line="-c -k -rsrc . ../arduino-${version}.org-macosx.zip" />
     </exec>
 
     <echo>
       =======================================================
       Arduino for Mac OS X was built. Grab the image from   
       
-      macosx/arduino-${version}-macosx.zip
+      macosx/arduino-${version}.org-macosx.zip
       =======================================================
     </echo>
   </target>
@@ -280,7 +280,7 @@
   
     <delete file="macosx/arduino-*.dmg" />
     <exec executable="hdiutil">
-      <arg line="convert macosx/working.dmg -quiet -format UDZO -imagekey zlib-level=9 -o macosx/arduino-${version}.dmg" />
+      <arg line="convert macosx/working.dmg -quiet -format UDZO -imagekey zlib-level=9 -o macosx/arduino-${version}.org.dmg" />
     </exec>
 
     <!-- Clean up the interim files. -->
@@ -291,7 +291,7 @@
       =======================================================
       Arduino for Mac OS X was built. Grab the image from   
       
-      macosx/arduino-${version}.dmg
+      macosx/arduino-${version}.org.dmg
       =======================================================
     </echo>
   </target>
@@ -410,7 +410,7 @@
       <arg value="-z"/>
       <arg value="-c"/>
       <arg value="-f"/>
-      <arg value="arduino-${version}-linux.tgz"/>
+      <arg value="arduino-${version}.org-linux.tgz"/>
       <arg value="arduino-${version}"/>
     </exec>
 
@@ -420,7 +420,7 @@
       =======================================================
       Arduino for Linux was built. Grab the archive from   
       
-      build/linux/arduino-${version}-linux.tgz
+      build/linux/arduino-${version}.org-linux.tgz
       =======================================================
     </echo>
   </target>
@@ -548,12 +548,12 @@
 	 excludes="java/**" />
     -->
 
-    <zip destfile="windows/arduino-${version}-windows.zip">
+    <zip destfile="windows/arduino-${version}.org-windows.zip">
       <zipfileset dir="windows/work" 
 		  prefix="arduino-${version}" />
     </zip>
 
-    <zip destfile="windows/arduino-${version}-windows-expert.zip">
+    <zip destfile="windows/arduino-${version}.org-windows-expert.zip">
       <zipfileset dir="windows/work" 
 		  prefix="arduino-${version}" 
 		  excludes="java/**" />
@@ -563,8 +563,8 @@
       =======================================================
       Arduino for Windows was built. Grab the archive from   
       
-      windows/arduino-${version}-windows.zip
-      windows/arduino-${version}-windows-expert.zip
+      windows/arduino-${version}.org-windows.zip
+      windows/arduino-${version}.org-windows-expert.zip
       =======================================================
     </echo>
   </target>
