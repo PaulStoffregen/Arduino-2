@@ -4,6 +4,9 @@
 DriverPackageDisplayName="Arduino USB Driver"
 ManufacturerName="Arduino Srl (www.arduino.org)"
 ServiceName="USB RS-232 Emulation Driver"
+due.bossa.name="Bossa Program Port"
+due.programming_port.name="Arduino Due Programming Port"
+due.sketch.name="Arduino Due"
 esplora.bootloader.name="Arduino Esplora bootloader"
 esplora.sketch.name="Arduino Esplora"
 leonardo.bootloader.name="Arduino Leonardo bootloader"
@@ -22,6 +25,10 @@ robotControl.bootloader.name="Arduino Robot Control bootloader"
 robotControl.sketch.name="Arduino Robot"
 robotMotor.bootloader.name="Arduino Robot Motor bootloader"
 robotMotor.sketch.name="Arduino Robot"
+yun.bootloader.name="Arduino Yun bootloader"
+yun.sketch.name="Arduino Yun"
+lininoone.bootloader.name="Linino One bootloader"
+lininoone.sketch.name="Linino One"
 
 [DefaultInstall]
 CopyINF=arduino-org.inf
@@ -43,6 +50,9 @@ FakeModemCopyFileSection=12
 DefaultDestDir=12
 
 [DeviceList]
+%due.bossa.name%=DriverInstall, USB\VID_03EB&PID_6124
+%due.programming_port.name%=DriverInstall, USB\VID_2A03&PID_003D
+%due.sketch.name%=DriverInstall, USB\VID_2A03&PID_003E&MI_00
 %esplora.bootloader.name%=DriverInstall, USB\VID_2A03&PID_003C
 %esplora.sketch.name%=DriverInstall, USB\VID_2A03&PID_803C&MI_00
 %leonardo.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0036
@@ -61,8 +71,15 @@ DefaultDestDir=12
 %robotControl.sketch.name%=DriverInstall, USB\VID_2A03&PID_8038&MI_00
 %robotMotor.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0039
 %robotMotor.sketch.name%=DriverInstall, USB\VID_2A03&PID_8039&MI_00
+%yun.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0041
+%yun.sketch.name%=DriverInstall, USB\VID_2A03&PID_8041&MI_00
+%lininoone.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0001
+%lininoone.sketch.name%=DriverInstall, USB\VID_2A03&PID_8001&MI_00
 
 [DeviceList.NTamd64]
+%due.bossa.name%=DriverInstall, USB\VID_03EB&PID_6124
+%due.programming_port.name%=DriverInstall, USB\VID_2A03&PID_003D
+%due.sketch.name%=DriverInstall, USB\VID_2A03&PID_003E&MI_00
 %esplora.bootloader.name%=DriverInstall, USB\VID_2A03&PID_003C
 %esplora.sketch.name%=DriverInstall, USB\VID_2A03&PID_803C&MI_00
 %leonardo.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0036
@@ -81,6 +98,10 @@ DefaultDestDir=12
 %robotControl.sketch.name%=DriverInstall, USB\VID_2A03&PID_8038&MI_00
 %robotMotor.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0039
 %robotMotor.sketch.name%=DriverInstall, USB\VID_2A03&PID_8039&MI_00
+%yun.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0041
+%yun.sketch.name%=DriverInstall, USB\VID_2A03&PID_8041&MI_00
+%lininoone.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0001
+%lininoone.sketch.name%=DriverInstall, USB\VID_2A03&PID_8001&MI_00
 
 [DeviceList.NTia64]
 %esplora.bootloader.name%=DriverInstall, USB\VID_2A03&PID_003C
@@ -101,6 +122,10 @@ DefaultDestDir=12
 %robotControl.sketch.name%=DriverInstall, USB\VID_2A03&PID_8038&MI_00
 %robotMotor.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0039
 %robotMotor.sketch.name%=DriverInstall, USB\VID_2A03&PID_8039&MI_00
+%yun.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0041
+%yun.sketch.name%=DriverInstall, USB\VID_2A03&PID_8041&MI_00
+%lininoone.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0001
+%lininoone.sketch.name%=DriverInstall, USB\VID_2A03&PID_8001&MI_00
 
 [DriverInstall]
 include=mdmcpq.inf,usb.inf
