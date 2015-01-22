@@ -45,40 +45,40 @@ yun.build.extra_flags={build.usb_flags}
 
 ##############################################################
 
-lininoone.name=Linino One
-lininoone.upload.via_ssh=true
+one.name=Linino One
+one.upload.via_ssh=true
 
-lininoone.vid.0=0x2a03
-lininoone.pid.0=0x0001
-lininoone.vid.1=0x2a03
-lininoone.pid.1=0x8001
+one.vid.0=0x2a03
+one.pid.0=0x0001
+one.vid.1=0x2a03
+one.pid.1=0x8001
 
-lininoone.upload.tool=avrdude
-lininoone.upload.protocol=avr109
-lininoone.upload.maximum_size=28672
-lininoone.upload.maximum_data_size=2560
-lininoone.upload.speed=57600
-lininoone.upload.disable_flushing=true
-lininoone.upload.use_1200bps_touch=true
-lininoone.upload.wait_for_upload_port=true
+one.upload.tool=avrdude
+one.upload.protocol=avr109
+one.upload.maximum_size=28672
+one.upload.maximum_data_size=2560
+one.upload.speed=57600
+one.upload.disable_flushing=true
+one.upload.use_1200bps_touch=true
+one.upload.wait_for_upload_port=true
 
-lininoone.bootloader.tool=avrdude
-lininoone.bootloader.low_fuses=0xff
-lininoone.bootloader.high_fuses=0xd8
-lininoone.bootloader.extended_fuses=0xfb
-lininoone.bootloader.file=caterina/Caterina-LininoOne.hex
-lininoone.bootloader.unlock_bits=0x3F
-lininoone.bootloader.lock_bits=0x2F
+one.bootloader.tool=avrdude
+one.bootloader.low_fuses=0xff
+one.bootloader.high_fuses=0xd8
+one.bootloader.extended_fuses=0xfb
+one.bootloader.file=caterina/Caterina-LininoOne.hex
+one.bootloader.unlock_bits=0x3F
+one.bootloader.lock_bits=0x2F
 
-lininoone.build.mcu=atmega32u4
-lininoone.build.f_cpu=16000000L
-lininoone.build.vid=0x2a03
-lininoone.build.pid=0x8001
-lininoone.build.usb_product="Linino One"
-lininoone.build.board=AVR_YUN
-lininoone.build.core=arduino
-lininoone.build.variant=yun
-lininoone.build.extra_flags={build.usb_flags}
+one.build.mcu=atmega32u4
+one.build.f_cpu=16000000L
+one.build.vid=0x2a03
+one.build.pid=0x8001
+one.build.usb_product="Linino One"
+one.build.board=AVR_YUN
+one.build.core=arduino
+one.build.variant=yun
+one.build.extra_flags={build.usb_flags}
 
 ##############################################################
 
