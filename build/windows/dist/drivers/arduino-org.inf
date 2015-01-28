@@ -27,8 +27,6 @@ robotMotor.bootloader.name="Arduino Robot Motor bootloader"
 robotMotor.sketch.name="Arduino Robot"
 yun.bootloader.name="Arduino Yun bootloader"
 yun.sketch.name="Arduino Yun"
-lininoone.bootloader.name="Linino One bootloader"
-lininoone.sketch.name="Linino One"
 
 [DefaultInstall]
 CopyINF=arduino-org.inf
@@ -73,8 +71,6 @@ DefaultDestDir=12
 %robotMotor.sketch.name%=DriverInstall, USB\VID_2A03&PID_8039&MI_00
 %yun.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0041
 %yun.sketch.name%=DriverInstall, USB\VID_2A03&PID_8041&MI_00
-%lininoone.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0001
-%lininoone.sketch.name%=DriverInstall, USB\VID_2A03&PID_8001&MI_00
 
 [DeviceList.NTamd64]
 %due.bossa.name%=DriverInstall, USB\VID_03EB&PID_6124
@@ -100,8 +96,6 @@ DefaultDestDir=12
 %robotMotor.sketch.name%=DriverInstall, USB\VID_2A03&PID_8039&MI_00
 %yun.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0041
 %yun.sketch.name%=DriverInstall, USB\VID_2A03&PID_8041&MI_00
-%lininoone.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0001
-%lininoone.sketch.name%=DriverInstall, USB\VID_2A03&PID_8001&MI_00
 
 [DeviceList.NTia64]
 %esplora.bootloader.name%=DriverInstall, USB\VID_2A03&PID_003C
@@ -124,8 +118,6 @@ DefaultDestDir=12
 %robotMotor.sketch.name%=DriverInstall, USB\VID_2A03&PID_8039&MI_00
 %yun.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0041
 %yun.sketch.name%=DriverInstall, USB\VID_2A03&PID_8041&MI_00
-%lininoone.bootloader.name%=DriverInstall, USB\VID_2A03&PID_0001
-%lininoone.sketch.name%=DriverInstall, USB\VID_2A03&PID_8001&MI_00
 
 [DriverInstall]
 include=mdmcpq.inf,usb.inf
