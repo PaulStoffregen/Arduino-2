@@ -238,7 +238,7 @@ void UDD_InitEP( uint32_t ul_ep_nb, uint32_t ul_ep_cfg )
 
 		/* get endpoint configuration from setting register */
 		usb_endpoint_table[ul_ep_nb].DeviceDescBank[0].ADDR.reg = (uint32_t)&udd_ep_out_cache_buffer[0];
-		usb_endpoint_table[ul_ep_nb].DeviceDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE = 8;
+		usb_endpoint_table[ul_ep_nb].DeviceDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE = 16;
 		usb_endpoint_table[ul_ep_nb].DeviceDescBank[0].PCKSIZE.bit.BYTE_COUNT = 0;
 
 		// NACK if not ready

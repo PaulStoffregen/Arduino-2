@@ -180,6 +180,7 @@ typedef struct
 	uint8_t wValueH;
 	uint16_t wIndex;
 	uint16_t wLength;
+	uint8_t data[8];
 } Setup;
 
 //================================================================================

@@ -25,6 +25,7 @@ build/macosx/arduino-*.zip
 build/macosx/dist/gcc-*.tar.gz
 build/macosx/libastylej*
 build/macosx/appbundler*.jar
+build/macosx/dist/*tar.bz2
 build/linux/work/
 build/linux/dist/*.tar.gz
 build/linux/dist/*.tar.bz2

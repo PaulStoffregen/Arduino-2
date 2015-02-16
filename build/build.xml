@@ -269,6 +269,14 @@
     <unzip src="macosx/libastylej-2.03.zip" dest="macosx" overwrite="true"/>
     <copy file="macosx/libastylej/libastylej.jnilib" todir="macosx/work/Arduino.app/Contents/Resources/Java/lib/" />
     <chmod perm="755" file="macosx/work/Arduino.app/Contents/Resources/Java/lib/libastylej.jnilib" />
+  
+  <!-- Unzip OpenOCD tools -->
+    <antcall target="unzip-openocd">
+      <param name="dist_file" value="OpenOCD-0.9.0-dev-arduino-x86_64-apple-darwin13.4.0.tar.bz2" />
+      <param name="dist_url" value="http://download.arduino.org/OpenOCD-0.9.0-dev-arduino-x86_64-apple-darwin13.4.0.tar.bz2" />
+      <param name="dist_check_file" value="OpenOCD-0.9.0-dev-arduino" />
+    </antcall>
+
   </target>
 
   <target name="macosx-run" depends="macosx-build" description="Run Mac OS X version">
@@ -508,6 +516,15 @@
     <antcall target="unzip-avr-toolchain">
       <param name="file_arch" value="linux32" />
     </antcall>
+    
+    <!-- Unzip OpenOCD tools -->
+    <antcall target="unzip-openocd">
+      <param name="dist_file" value="OpenOCD-0.9.0-dev-arduino-i486-linux-gnu.tar.bz2" />
+      <param name="dist_url" value="http://download.arduino.org/OpenOCD-0.9.0-dev-arduino-i486-linux-gnu.tar.bz2" />
+      <param name="dist_check_file" value="OpenOCD-0.9.0-dev-arduino" />
+    </antcall>
+    
+    <chmod perm="755" file="linux/work/hardware/tools/OpenOCD-0.9.0-dev-arduino/bin/openocd" />
   </target>
 
   <target name="linux64-build" depends="linux-build" description="Build linux (64-bit) version">
@@ -522,6 +539,15 @@
     <antcall target="unzip-avr-toolchain">
       <param name="file_arch" value="linux64" />
     </antcall>
+    
+    <!-- Unzip OpenOCD tools -->
+    <antcall target="unzip-openocd">
+      <param name="dist_file" value="OpenOCD-0.9.0-dev-arduino-x86-64-linux-gnu.tar.bz2" />
+      <param name="dist_url" value="http://download.arduino.org/OpenOCD-0.9.0-dev-arduino-x86-64-linux-gnu.tar.bz2" />
+      <param name="dist_check_file" value="OpenOCD-0.9.0-dev-arduino" />
+    </antcall>
+    
+    <chmod perm="755" file="linux/work/hardware/tools/OpenOCD-0.9.0-dev-arduino/bin/openocd" />
   </target>
 
   <target name="linux32-run" depends="linux32-build" description="Run Linux (32-bit) version">
@@ -751,6 +777,15 @@
       <param name="file_arch" value="win32" />
     </antcall>
 
+	<!-- Unzip OpenOCD tools -->
+    <antcall target="unzip-openocd">
+      <param name="dist_file" value="OpenOCD-0.9.0-dev-arduino-win32.zip" />
+      <param name="dist_url" value="http://download.arduino.org/OpenOCD-0.9.0-dev-arduino-win32.zip" />
+      <param name="dist_check_file" value="OpenOCD-0.9.0-dev-arduino" />
+    </antcall>
+
+
+
     <get src="http://download.arduino.org/libastylej-2.03.zip" dest="windows" usetimestamp="true" skipexisting="true" />
     <unzip src="windows/libastylej-2.03.zip" dest="windows" overwrite="true"/>
     <copy file="windows/libastylej/AStylej.dll" todir="windows/work/lib" />
@@ -763,6 +798,7 @@
     <chmod perm="755">
       <fileset file="windows/work/hardware/tools/bossac.exe" />
       <fileset file="windows/work/hardware/tools/listComPorts.exe" />
+      <fileset file="windows/work/hardware/tools/OpenOCD-0.9.0-dev-arduino/bin/openocd.exe" />
     </chmod>
 
     <antcall target="assemble">
@@ -879,6 +915,40 @@
 
   <target name="clean" description="Perform a spring cleaning"
 	  depends="linux-clean, windows-clean, macosx-clean, subprojects-clean">
+  </target>
+
+  <!-- - - - - - - -->
+  <!-- OPEN OCD	   -->
+  <!-- - - - - - - -->
+  <target name="check-openocd">
+    <available file="${staging_folder}/dist/${dist_file}" property="openocd_distfile_available" />
+    <available file="${staging_folder}/work/hardware/tools/${dist_check_file}" property="openocd_installed" />
+  </target>
+
+  <!-- Retrieve openOCD -->
+  <target name="get-openocd" depends="check-openocd" unless="openocd_distfile_available">
+    <get src="${dist_url}" dest="${staging_folder}/dist/${dist_file}" verbose="true" ignoreerrors="true" />
+  </target>
+
+  <target name="unzip-openocd" depends="get-openocd, check-openocd"
+      unless="openocd_toolchain_installed">
+    <checksum file="${staging_folder}/dist/${dist_file}" algorithm="sha"
+      fileext=".sha" verifyproperty="checksum.matches"/>
+    <condition property="checksum.matches.fail">
+      <equals arg1="${checksum.matches}" arg2="false"/>
+    </condition>
+    <fail if="checksum.matches.fail">Checksum failed.
+
+      File ${dist_file} failed checksum.
+      Please remove "${staging_folder}/dist/${dist_file}" to download it again.
+    </fail>
+
+    <!-- Unzip openocd to the destination folder -->
+    <exec executable="tar">
+      <arg value="xfz"/>
+      <arg value="${staging_folder}/dist/${dist_file}"/>
+      <arg value="--directory=${staging_folder}/work/${staging_hardware_folder}/tools/"/>
+    </exec>
   </target>
 
 </project>

@@ -116,7 +116,11 @@ bool WEAK CDC_Setup(Setup& setup)
 	{
 		if (CDC_SET_LINE_CODING == r)
 		{
-			USBD_RecvControl((void*)&_usbLineInfo,7);
+			while( UDD_FifoByteCount(EP0) <15);
+			//USBD_RecvControl((void*)&_usbLineInfo,7);
+			uint8_t* line = (uint8_t*)&_usbLineInfo;
+			for(uint8_t i = 0; i<7; i++)
+				line[i] = setup.data[i];
 			return false;
 		}
 

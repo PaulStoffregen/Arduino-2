@@ -81,10 +81,13 @@ recipe.size.regex=\.text\s+([0-9]+).*
 tools.openocd.cmd=bin/openocd
 tools.openocd.cmd.windows=bin/openocd.exe
 tools.openocd.path={runtime.ide.path}/hardware/tools/OpenOCD-0.9.0-dev-arduino
+tools.openocd.cmd.macosx=bin/openocd
+
 
 tools.openocd.upload.params.verbose=
 tools.openocd.upload.params.quiet=
-tools.openocd.upload.pattern="{path}/{cmd}" {upload.verbose} -s "{path}/share/openocd/scripts/" -f ../../../../../arduino/samd/variants/{build.variant}/{build.openocdscript} -c "program {{{build.path}/{build.project_name}.elf}} verify reset"
+#tools.openocd.upload.pattern="{path}/{cmd}" {upload.verbose} -s "{path}/share/openocd/scripts/" -f ../../../../../arduino/samd/variants/{build.variant}/{build.openocdscript} -c "program {{{build.path}/{build.project_name}.elf}} verify reset"
+tools.openocd.upload.pattern="{path}/{cmd}" -s "{path}/share/openocd/scripts/" -f ../../../../../arduino/samd/variants/{build.variant}/{build.openocdscript} -c "program {{{build.path}/{build.project_name}.elf}} verify reset"
 
 # AVR Uploader/Programmers tools
 # ------------------------------
@@ -94,7 +97,8 @@ tools.avrdude.config.path={runtime.ide.path}/hardware/tools/avr/etc/avrdude.conf
 
 tools.avrdude.upload.params.verbose=-v -v
 tools.avrdude.upload.params.quiet=-q -q
-tools.avrdude.upload.pattern="{cmd.path}" "-C{config.path}" {upload.verbose} -p{build.emu.mcu} -c{upload.protocol} -P{serial.port} -b{upload.speed} -D "-Uflash:w:{build.path}/{build.project_name}.hex:i"
+#tools.avrdude.upload.pattern="{cmd.path}" "-C{config.path}" {upload.verbose} -p{build.emu.mcu} -c{upload.protocol} -P{serial.port} -b{upload.speed} -D "-Uflash:w:{build.path}/{build.project_name}.hex:i"
+tools.avrdude.upload.pattern="{cmd.path}" "-C{config.path}" {upload.verbose} -p{build.emu.mcu} -c{upload.protocol} -P{serial.port} -b{upload.speed} "-Uflash:w:{build.path}/{build.project_name}.hex:i"
 
 tools.avrdude.program.params.verbose=-v -v
 tools.avrdude.program.params.quiet=-q -q

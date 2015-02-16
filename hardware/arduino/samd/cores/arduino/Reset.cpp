@@ -38,7 +38,7 @@ static int ticks = -1;
 
 void initiateReset(int _ticks) {
 	ticks = _ticks;
-	tickReset();
+	banzai();
 }
 
 void cancelReset() {
