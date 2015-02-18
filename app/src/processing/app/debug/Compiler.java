@@ -143,6 +143,12 @@ public class Compiler implements MessageConsumer {
     sketch.setCompilingProgress(80);
     compileHex();
 
+    //7. build the .bin file (only for Arduino Zero Pro)
+    if(prefs.get("build.mcu").equals("cortex-m0plus")){
+      sketch.setCompilingProgress(80);
+      compileBin();
+    }
+
     sketch.setCompilingProgress(90);
     return true;
   }
@@ -784,6 +790,21 @@ public class Compiler implements MessageConsumer {
     String[] cmdArray;
     try {
       String cmd = prefs.get("recipe.objcopy.hex.pattern");
+      cmdArray = StringReplacer.formatAndSplit(cmd, dict, true);
+    } catch (Exception e) {
+      throw new RunnerException(e);
+    }
+    execAsynchronously(cmdArray);
+  }
+
+  // 7. build the .bin file
+  void compileBin() throws RunnerException {
+    PreferencesMap dict = new PreferencesMap(prefs);
+    dict.put("ide_version", "" + Base.REVISION);
+
+    String[] cmdArray;
+    try {
+      String cmd = prefs.get("recipe.objcopy.bin.pattern");
       cmdArray = StringReplacer.formatAndSplit(cmd, dict, true);
     } catch (Exception e) {
       throw new RunnerException(e);

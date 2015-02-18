@@ -24,7 +24,7 @@ compiler.ar.cmd=arm-none-eabi-ar
 compiler.ar.flags=rcs
 compiler.objcopy.cmd=arm-none-eabi-objcopy
 compiler.objcopy.eep.flags=-O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load --no-change-warnings --change-section-lma .eeprom=0
-#compiler.elf2hex.flags=-O binary
+compiler.elf2hex.bin.flags=-O binary
 compiler.elf2hex.flags=-O ihex -R .eeprom
 compiler.elf2hex.cmd=arm-none-eabi-objcopy
 
@@ -70,6 +70,9 @@ recipe.objcopy.eep.pattern=
 ## Create hex
 recipe.objcopy.hex.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.hex"
 
+## Create bin
+recipe.objcopy.bin.pattern="{compiler.path}{compiler.elf2hex.cmd}" {compiler.elf2hex.bin.flags} "{build.path}/{build.project_name}.elf" "{build.path}/{build.project_name}.bin"
+
 ## Compute size
 recipe.size.pattern="{compiler.path}{compiler.size.cmd}" -A "{build.path}/{build.project_name}.elf"
 recipe.size.regex=\.text\s+([0-9]+).*
@@ -87,7 +90,7 @@ tools.openocd.cmd.macosx=bin/openocd
 tools.openocd.upload.params.verbose=
 tools.openocd.upload.params.quiet=
 #tools.openocd.upload.pattern="{path}/{cmd}" {upload.verbose} -s "{path}/share/openocd/scripts/" -f ../../../../../arduino/samd/variants/{build.variant}/{build.openocdscript} -c "program {{{build.path}/{build.project_name}.elf}} verify reset"
-tools.openocd.upload.pattern="{path}/{cmd}" -s "{path}/share/openocd/scripts/" -f ../../../../../arduino/samd/variants/{build.variant}/{build.openocdscript} -c "program {{{build.path}/{build.project_name}.elf}} verify reset"
+tools.openocd.upload.pattern="{path}/{cmd}" -s "{path}/share/openocd/scripts/" -f ../../../../../arduino/samd/variants/{build.variant}/{build.openocdscript} -c "program {{{build.path}/{build.project_name}.bin}} verify reset {build.section.start}"
 
 # AVR Uploader/Programmers tools
 # ------------------------------
