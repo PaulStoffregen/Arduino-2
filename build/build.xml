@@ -779,8 +779,8 @@
 
 	<!-- Unzip OpenOCD tools -->
     <antcall target="unzip-openocd">
-      <param name="dist_file" value="OpenOCD-0.9.0-dev-arduino-win32.zip" />
-      <param name="dist_url" value="http://download.arduino.org/OpenOCD-0.9.0-dev-arduino-win32.zip" />
+      <param name="dist_file" value="OpenOCD-0.9.0-dev-arduino-win32.tar.bz2" />
+      <param name="dist_url" value="http://download.arduino.org/OpenOCD-0.9.0-dev-arduino-win32.tar.bz2" />
       <param name="dist_check_file" value="OpenOCD-0.9.0-dev-arduino" />
     </antcall>
 
