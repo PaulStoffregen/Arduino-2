@@ -2,8 +2,8 @@
 * Copyright (C) 2011 - 2014 Bosch Sensortec GmbH
 *
 * NAxisMotion.cpp
-* Date: 2014/08/27
-* Revision: 2.3 $
+* Date: 2015/02/10
+* Revision: 3.0 $
 *
 * Usage:        Source file of the C++ Wrapper for the BNO055 Sensor API
 *
@@ -63,7 +63,7 @@ NAxisMotion::NAxisMotion()
 void NAxisMotion::initSensor(void)
 {	
 	//Initialize the GPIO peripheral
-	pinMode(INT_PIN, INPUT);			//Configure Interrupt pin
+	pinMode(INT_PIN, INPUT_PULLUP);		//Configure Interrupt pin
 	pinMode(RESET_PIN, OUTPUT);			//Configure Reset pin
 	
 	//Power on the BNO055
@@ -95,11 +95,14 @@ void NAxisMotion::resetSensor(void)
 	//Initialize the BNO055 structure to hold the device information
 	bno055_init(&myBNO);
 	
+	//Post initialization delay
+	delay(POST_INIT_PERIOD);
+	
 	//To set the output data format to the Android style
 	bno055_set_data_output_format(ANDROID);
 	
 	//Set the default data update mode to auto
-	dataUpdateMode = AUTO;
+	dataUpdateMode = AUTO;	
 }
 
 /*******************************************************************************************
@@ -175,7 +178,7 @@ void NAxisMotion::updateAccel(void)
 void NAxisMotion::updateMag(void)
 {
 	BNO055_RETURN_FUNCTION_TYPE comRes = BNO055_ZERO_U8X;		//Holds the communication results
-	comRes = bno055_convert_float_mag_xyz_microtesla(&magData);	//Read the data from the sensor
+	comRes = bno055_convert_float_mag_xyz_uT(&magData);	//Read the data from the sensor
 }
 
 /*******************************************************************************************
@@ -331,9 +334,9 @@ void NAxisMotion::updateAccelConfig(void)
 void NAxisMotion::accelInterrupts(bool xStatus, bool yStatus, bool zStatus)
 {
 	BNO055_RETURN_FUNCTION_TYPE comRes = BNO055_ZERO_U8X;		//Holds the communication results
-	comRes = bno055_set_accel_anymotion_nomotion_axis_enable(BNO055_ACCEL_ANYMOTION_NOMOTION_X_AXIS, xStatus);
-	comRes = bno055_set_accel_anymotion_nomotion_axis_enable(BNO055_ACCEL_ANYMOTION_NOMOTION_Y_AXIS, yStatus);
-	comRes = bno055_set_accel_anymotion_nomotion_axis_enable(BNO055_ACCEL_ANYMOTION_NOMOTION_Z_AXIS, zStatus);
+	comRes = bno055_set_accel_any_motion_no_motion_axis_enable(BNO055_ACCEL_ANY_MOTION_NO_MOTION_X_AXIS, xStatus);
+	comRes = bno055_set_accel_any_motion_no_motion_axis_enable(BNO055_ACCEL_ANY_MOTION_NO_MOTION_Y_AXIS, yStatus);
+	comRes = bno055_set_accel_any_motion_no_motion_axis_enable(BNO055_ACCEL_ANY_MOTION_NO_MOTION_Z_AXIS, zStatus);
 }
 
 /*******************************************************************************************
@@ -344,7 +347,7 @@ void NAxisMotion::accelInterrupts(bool xStatus, bool yStatus, bool zStatus)
 void NAxisMotion::resetInterrupt(void)
 {
 	BNO055_RETURN_FUNCTION_TYPE comRes = BNO055_ZERO_U8X;		//Holds the communication results
-	comRes = bno055_set_int_rst(ENABLE);
+	comRes = bno055_set_intr_rst(ENABLE);
 }
 
 /*******************************************************************************************
@@ -387,10 +390,10 @@ void NAxisMotion::resetInterrupt(void)
 void NAxisMotion::enableAnyMotion(uint8_t threshold, uint8_t duration)
 {
 	BNO055_RETURN_FUNCTION_TYPE comRes = BNO055_ZERO_U8X;		//Holds the communication results
-	comRes = bno055_set_accel_anymotion_thres(threshold);
-	comRes = bno055_set_accel_anymotion_dur(duration);
-	comRes = bno055_set_int_accel_anymotion(ENABLE);
-	comRes = bno055_set_int_mask_accel_anymotion(ENABLE);
+	comRes = bno055_set_accel_any_motion_thres(threshold);
+	comRes = bno055_set_accel_any_motion_durn(duration);
+	comRes = bno055_set_intr_accel_any_motion(ENABLE);
+	comRes = bno055_set_intr_mask_accel_any_motion(ENABLE);
 }
 
 /*******************************************************************************************
@@ -401,8 +404,8 @@ void NAxisMotion::enableAnyMotion(uint8_t threshold, uint8_t duration)
 void NAxisMotion::disableAnyMotion(void)
 {
 	BNO055_RETURN_FUNCTION_TYPE comRes = BNO055_ZERO_U8X;		//Holds the communication results
-	comRes = bno055_set_int_accel_anymotion(DISABLE);
-	comRes = bno055_set_int_mask_accel_anymotion(DISABLE);
+	comRes = bno055_set_intr_accel_any_motion(DISABLE);
+	comRes = bno055_set_intr_mask_accel_any_motion(DISABLE);
 }
 
 /*******************************************************************************************
@@ -453,9 +456,9 @@ void NAxisMotion::enableSlowNoMotion(uint8_t threshold, uint8_t duration, bool m
 	BNO055_RETURN_FUNCTION_TYPE comRes = BNO055_ZERO_U8X;		//Holds the communication results
 	comRes = bno055_set_accel_slow_no_motion_enable(motion);
 	comRes = bno055_set_accel_slow_no_motion_thres(threshold);
-	comRes = bno055_set_accel_slow_no_motion_dur(duration);
-	comRes = bno055_set_int_accel_nomotion(ENABLE);
-	comRes = bno055_set_int_mask_accel_nomotion(ENABLE);
+	comRes = bno055_set_accel_slow_no_motion_durn(duration);
+	comRes = bno055_set_intr_accel_no_motion(ENABLE);
+	comRes = bno055_set_intr_mask_accel_no_motion(ENABLE);
 }
 	
 /*******************************************************************************************
@@ -466,8 +469,8 @@ void NAxisMotion::enableSlowNoMotion(uint8_t threshold, uint8_t duration, bool m
 void NAxisMotion::disableSlowNoMotion(void)
 {
 	BNO055_RETURN_FUNCTION_TYPE comRes = BNO055_ZERO_U8X;		//Holds the communication results
-	comRes = bno055_set_int_accel_nomotion(DISABLE);
-	comRes = bno055_set_int_mask_accel_anymotion(DISABLE);
+	comRes = bno055_set_intr_accel_no_motion(DISABLE);
+	comRes = bno055_set_intr_mask_accel_any_motion(DISABLE);
 }
 
 /*******************************************************************************************
@@ -982,7 +985,7 @@ signed char BNO055_I2C_bus_write(unsigned char dev_addr,unsigned char reg_addr, 
 	return comres;
 }
 
-void _delay(uint32_t period)
+void _delay(u_32 period)
 {
-	delay(long(period));
+	delay(period);
 }

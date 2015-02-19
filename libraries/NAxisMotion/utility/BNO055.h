@@ -5,9 +5,9 @@
 *
 * File : bno055.h
 *
-* Date : 2014/09/10
+* Date : 2014/12/12
 *
-* Revision : 2.0 $
+* Revision : 2.0.2 $
 *
 * Usage: Sensor Driver file for BNO055 sensor
 *
@@ -61,32 +61,43 @@
 /**\name	DATA TYPES INCLUDES		*/
 /************************************************************/
 /*!
-*	These definition uses for define the data types
-*/
-/*!
-*	While porting the API please consider the following
-*	Please check the version of C standard
-*	Are you using Linux platform
+* @brief The following definition uses for define the data types
+*
+* @note While porting the API please consider the following
+* @note Please check the version of C standard
+* @note Are you using Linux platform
 */
 
 /*!
-*	This definition uses for the Linux platform support
-*	Please use the types.h for your data types definitions
+* @brief For the Linux platform support
+* Please use the types.h for your data types definitions
 */
 #ifdef	__KERNEL__
 
 #include <linux/types.h>
+/* singed integer type*/
+typedef	int8_t s_8;/**< used for signed 8bit */
+typedef	int16_t s_16;/**< used for signed 16bit */
+typedef	int32_t s_32;/**< used for signed 32bit */
+typedef	int64_t s_64;/**< used for signed 64bit */
+
+typedef	u_int8_t u_8;/**< used for unsigned 8bit */
+typedef	u_int16_t u_16;/**< used for unsigned 16bit */
+typedef	u_int32_t u_32;/**< used for unsigned 32bit */
+typedef	u_int64_t u_64;/**< used for unsigned 64bit */
+
+
 
 #else /* ! __KERNEL__ */
-/*!
-*	These definition uses for define the C
-*	standard version data types
-*/
+/**********************************************************
+* These definition uses for define the C
+* standard version data types
+***********************************************************/
 # if !defined(__STDC_VERSION__)
 
-/*!
-*	compiler is C11 C standard
-*/
+/************************************************
+ * compiler is C11 C standard
+************************************************/
 #if (__STDC_VERSION__ == 201112L)
 
 /************************************************/
@@ -94,122 +105,113 @@
 /************************************************/
 
 /*unsigned integer types*/
-#define	_u8	uint8_t
-#define	_u16	uint16_t
-#define	_u32	uint32_t
-#define	_u64	uint64_t
+typedef	uint8_t u_8;/**< used for unsigned 8bit */
+typedef	uint16_t u_16;/**< used for unsigned 16bit */
+typedef	uint32_t u_32;/**< used for unsigned 32bit */
+typedef	uint64_t u_64;/**< used for unsigned 64bit */
 
 /*signed integer types*/
-#define	_s8	int8_t
-#define	_s16	int16_t
-#define	_s32	int32_t
-#define	_s64	int64_t
-/*!
- *	compiler is C99 C standard
-*/
+typedef	int8_t s_8;/**< used for signed 8bit */
+typedef	int16_t s_16;/**< used for signed 16bit */
+typedef	int32_t s_32;/**< used for signed 32bit */
+typedef	int64_t s_64;/**< used for signed 64bit */
+/************************************************
+ * compiler is C99 C standard
+************************************************/
 
 #elif (__STDC_VERSION__ == 199901L)
 
-/*!
-*	stdint.h is a C99 supported c library.
-*	which is used to fixed the integer size
-*/
+/* stdint.h is a C99 supported c library.
+which is used to fixed the integer size*/
 /************************************************/
 #include <stdint.h>
 /************************************************/
 
 /*unsigned integer types*/
-#define	_u8	uint8_t
-#define	_u16	uint16_t
-#define	_u32	uint32_t
-#define	_u64	uint64_t
+typedef	uint8_t u_8;/**< used for unsigned 8bit */
+typedef	uint16_t u_16;/**< used for unsigned 16bit */
+typedef	uint32_t u_32;/**< used for unsigned 32bit */
+typedef	uint64_t u_64;/**< used for unsigned 64bit */
 
 /*signed integer types*/
-#define _s8	int8_t
-#define	_s16	int16_t
-#define	_s32	int32_t
-#define	_s64	int64_t
-/*!
-*	compiler is C89 or other C standard
-*/
+typedef int8_t s_8;/**< used for signed 8bit */
+typedef	int16_t s_16;/**< used for signed 16bit */
+typedef	int32_t s_32;/**< used for signed 32bit */
+typedef	int64_t s_64;/**< used for signed 64bit */
+/************************************************
+ * compiler is C89 or other C standard
+************************************************/
+
 #else /*  !defined(__STDC_VERSION__) */
-/*!	By default it is defined as 32 bit machine configuration
-*	define the definition based on your machine configuration
-*	define the data types based on your
+/*!
+* @brief By default it is defined as 32 bit machine configuration
+*	define your data types based on your
 *	machine/compiler/controller configuration
 */
-//#define  MACHINE_32_BIT
+#define  MACHINE_32_BIT
+
+/*! @brief
+ *	If your machine support 16 bit
+ *	define the MACHINE_16_BIT
+ */
 #ifdef MACHINE_16_BIT
 #include <limits.h>
 /*signed integer types*/
-#define	_s8	signed char
-#define	_s16	signed short int
-#define	_s32	signed long int
+typedef	signed char  s_8;/**< used for signed 8bit */
+typedef	signed short int s_16;/**< used for signed 16bit */
+typedef	signed long int s_32;/**< used for signed 32bit */
 
 #if defined(LONG_MAX) && LONG_MAX == 0x7fffffffffffffffL
-#define _s64 long int
-#define _u64 unsigned long int
+typedef long int s_64;/**< used for signed 64bit */
+typedef unsigned long int u_64;/**< used for unsigned 64bit */
 #elif defined(LLONG_MAX) && (LLONG_MAX == 0x7fffffffffffffffLL)
-#define _s64 long long int
-#define _u64 unsigned long long int
+typedef long long int s_64;/**< used for signed 64bit */
+typedef unsigned long long int u_64;/**< used for unsigned 64bit */
 #else
 #warning Either the correct data type for signed 64 bit integer \
 could not be found, or 64 bit integers are not supported in your environment.
 #warning If 64 bit integers are supported on your platform, \
-please set _s64 manually.
+please set s_64 manually.
 #endif
 
 /*unsigned integer types*/
-#define	_u8	unsigned char
-#define	_u16	unsigned short int
-#define	_u32	unsigned long int
+typedef	unsigned char u_8;/**< used for unsigned 8bit */
+typedef	unsigned short int u_16;/**< used for unsigned 16bit */
+typedef	unsigned long int u_32;/**< used for unsigned 32bit */
 
 /* If your machine support 32 bit
 define the MACHINE_32_BIT*/
 #elif defined MACHINE_32_BIT
 /*signed integer types*/
-#define	_s8	signed char
-#define	_s16	signed short int
-#define	_s32	signed int
-#define	_s64	signed long long int
+typedef	signed char  s_8;/**< used for signed 8bit */
+typedef	signed short int s_16;/**< used for signed 16bit */
+typedef	signed int s_32;/**< used for signed 32bit */
+typedef	signed long long int s_64;/**< used for signed 64bit */
 
 /*unsigned integer types*/
-#define	_u8	unsigned char
-#define	_u16	unsigned short int
-#define	_u32	unsigned int
-#define	_u64	unsigned long long int
+typedef	unsigned char u_8;/**< used for unsigned 8bit */
+typedef	unsigned short int u_16;/**< used for unsigned 16bit */
+typedef	unsigned int u_32;/**< used for unsigned 32bit */
+typedef	unsigned long long int u_64;/**< used for unsigned 64bit */
 
 /* If your machine support 64 bit
 define the MACHINE_64_BIT*/
 #elif defined MACHINE_64_BIT
 /*signed integer types*/
-#define	_s8	signed char
-#define	_s16	signed short int
-#define	_s32	signed int
-#define	_s64	signed long int
+typedef	signed char  s_8;/**< used for signed 8bit */
+typedef	signed short int s_16;/**< used for signed 16bit */
+typedef	signed int s_32;/**< used for signed 32bit */
+typedef	signed long int s_64;/**< used for signed 64bit */
 
 /*unsigned integer types*/
-#define	_u8	unsigned char
-#define	_u16	unsigned short int
-#define	_u32	unsigned int
-#define	_u64	unsigned long int
+typedef	unsigned char u_8;/**< used for unsigned 8bit */
+typedef	unsigned short int u_16;/**< used for unsigned 16bit */
+typedef	unsigned int u_32;/**< used for unsigned 32bit */
+typedef	unsigned long int u_64;/**< used for unsigned 64bit */
 
 #else
-/************************************************/
-#include <stdint.h>
-/************************************************/
-
-/*unsigned integer types*/
-#define	_u8	uint8_t
-#define	_u16	uint16_t
-#define	_u32	uint32_t
-#define	_u64	uint64_t
-
-/*signed integer types*/
-#define _s8	int8_t
-#define	_s16	int16_t
-#define	_s32	int32_t
-#define	_s64	int64_t
+#warning The data types defined above which not supported \
+define the data types manually
 #endif
 #endif
 
@@ -218,108 +220,93 @@ define the MACHINE_64_BIT*/
  *	Like C89/C99/C11***/
 #else
 /*!
-*	By default it is defined as 32 bit machine configuration*
-*	define the definition based on your machine configuration*
-*	define the data types based on your
+* @brief By default it is defined as 32 bit machine configuration
+*	define your data types based on your
 *	machine/compiler/controller configuration
 */
-//#define  MACHINE_32_BIT
+#define  MACHINE_32_BIT
 
 /* If your machine support 16 bit
 define the MACHINE_16_BIT*/
 #ifdef MACHINE_16_BIT
 #include <limits.h>
 /*signed integer types*/
-#define	_s8	signed char
-#define	_s16	signed short int
-#define	_s32	signed long int
+typedef	signed char  s_8;/**< used for signed 8bit */
+typedef	signed short int s_16;/**< used for signed 16bit */
+typedef	signed long int s_32;/**< used for signed 32bit */
 
 #if defined(LONG_MAX) && LONG_MAX == 0x7fffffffffffffffL
-#define _s64 long int
-#define _u64 unsigned long int
+typedef long int s_64;/**< used for signed 64bit */
+typedef unsigned long int u_64;/**< used for unsigned 64bit */
 #elif defined(LLONG_MAX) && (LLONG_MAX == 0x7fffffffffffffffLL)
-#define _s64 long long int
-#define _u64 unsigned long long int
+typedef long long int s_64;/**< used for signed 64bit */
+typedef unsigned long long int u_64;/**< used for unsigned 64bit */
 #else
 #warning Either the correct data type for signed 64 bit integer \
 could not be found, or 64 bit integers are not supported in your environment.
 #warning If 64 bit integers are supported on your platform, \
-please set _s64 manually.
+please set s_64 manually.
 #endif
 
 /*unsigned integer types*/
-#define	_u8	unsigned char
-#define	_u16	unsigned short int
-#define	_u32	unsigned long int
+typedef	unsigned char u_8;/**< used for unsigned 8bit */
+typedef	unsigned short int u_16;/**< used for unsigned 16bit */
+typedef	unsigned long int u_32;/**< used for unsigned 32bit */
 
-/* If your machine support 32 bit
+/*! @brief If your machine support 32 bit
 define the MACHINE_32_BIT*/
 #elif defined MACHINE_32_BIT
 /*signed integer types*/
-#define	_s8	signed char
-#define	_s16	signed short int
-#define	_s32	signed int
-#define	_s64	signed long long int
+typedef	signed char  s_8;/**< used for signed 8bit */
+typedef	signed short int s_16;/**< used for signed 16bit */
+typedef	signed int s_32;/**< used for signed 32bit */
+typedef	signed long long int s_64;/**< used for signed 64bit */
 
 /*unsigned integer types*/
-#define	_u8	unsigned char
-#define	_u16	unsigned short int
-#define	_u32	unsigned int
-#define	_u64	unsigned long long int
+typedef	unsigned char u_8;/**< used for unsigned 8bit */
+typedef	unsigned short int u_16;/**< used for unsigned 16bit */
+typedef	unsigned int u_32;/**< used for unsigned 32bit */
+typedef	unsigned long long int u_64;/**< used for unsigned 64bit */
 
 /* If your machine support 64 bit
 define the MACHINE_64_BIT*/
-#elif defined  MACHINE_64_BIT
+#elif defined MACHINE_64_BIT
 /*signed integer types*/
-#define	_s8	signed char
-#define	_s16	signed short int
-#define	_s32	signed int
-#define	_s64	signed long int
+typedef	signed char  s_8;/**< used for signed 8bit */
+typedef	signed short int s_16;/**< used for signed 16bit */
+typedef	signed int s_32;/**< used for signed 32bit */
+typedef	signed long int s_64;/**< used for signed 64bit */
 
 /*unsigned integer types*/
-#define	_u8	unsigned char
-#define	_u16	unsigned short int
-#define	_u32	unsigned int
-#define	_u64	unsigned long int
+typedef	unsigned char u_8;/**< used for unsigned 8bit */
+typedef	unsigned short int u_16;/**< used for unsigned 16bit */
+typedef	unsigned int u_32;/**< used for unsigned 32bit */
+typedef	unsigned long int u_64;/**< used for unsigned 64bit */
 
 #else
-
-/************************************************/
-#include <stdint.h>
-/************************************************/
-
-/*unsigned integer types*/
-#define	_u8	uint8_t
-#define	_u16	uint16_t
-#define	_u32	uint32_t
-#define	_u64	uint64_t
-
-/*signed integer types*/
-#define _s8	int8_t
-#define	_s16	int16_t
-#define	_s32	int32_t
-#define	_s64	int64_t
+#warning The data types defined above which not supported \
+define the data types manually
 #endif
 #endif
 #endif
 /***************************************************************/
 /**\name	BUS READ AND WRITE FUNCTIONS           */
 /***************************************************************/
-#define BNO055_WR_FUNC_PTR _s8 (*bus_write)\
-(_u8, _u8 , _u8 *, _u8)
+#define BNO055_WR_FUNC_PTR s_8 (*bus_write)\
+(u_8, u_8 , u_8 *, u_8)
 
 #define BNO055_BUS_WRITE_FUNC(dev_addr, reg_addr, reg_data, wr_len)\
 	bus_write(dev_addr, reg_addr, reg_data, wr_len)
 
-#define BNO055_RD_FUNC_PTR _s8 \
-(*bus_read)(_u8, _u8 , _u8 *, _u8)
+#define BNO055_RD_FUNC_PTR s_8 \
+(*bus_read)(u_8, u_8 , u_8 *, u_8)
 
 #define BNO055_BUS_READ_FUNC(dev_addr, reg_addr, reg_data, r_len)\
 bus_read(dev_addr, reg_addr, reg_data, r_len)
 
 #define BNO055_DELAY_RETURN_TYPE void
 
-#define BNO055_DELAY_PARAM_TYPES _u32
+#define BNO055_DELAY_PARAM_TYPES u_32
 
 #define BNO055_DELAY_FUNC(delay_in_msec)\
 	delay_func(delay_in_msec)
@@ -412,7 +399,7 @@ bus_read(dev_addr, reg_addr, reg_data, r_len)
 /* Status registers*/
 #define BNO055_CALIB_STAT_ADDR				0X35
 #define BNO055_SELFTEST_RESULT_ADDR			0X36
-#define BNO055_INT_STAT_ADDR				0X37
+#define BNO055_INTR_STAT_ADDR				0X37
 #define BNO055_SYS_CLK_STAT_ADDR			0X38
 #define BNO055_SYS_STAT_ADDR				0X39
 #define BNO055_SYS_ERR_ADDR					0X3A
@@ -495,28 +482,28 @@ bus_read(dev_addr, reg_addr, reg_data, r_len)
 /* Interrupt registers*/
 #define INT_MASK_ADDR						0X0F
 #define INT_ADDR							0X10
-#define ACCEL_ANYMOTION_THRES_ADDR			0X11
-#define ACCEL_INT_SETTINGS_ADDR				0X12
-#define ACCEL_HIGH_G_DUR_ADDR				0X13
+#define ACCEL_ANY_MOTION_THRES_ADDR			0X11
+#define ACCEL_INTR_SETTINGS_ADDR				0X12
+#define ACCEL_HIGH_G_DURN_ADDR				0X13
 #define ACCEL_HIGH_G_THRES_ADDR				0X14
-#define ACCEL_NOMOTION_THRES_ADDR			0X15
-#define ACCEL_NOMOTION_SET_ADDR				0X16
-#define GYRO_INT_SETING_ADDR				0X17
+#define ACCEL_NO_MOTION_THRES_ADDR			0X15
+#define ACCEL_NO_MOTION_SET_ADDR				0X16
+#define GYRO_INTR_SETING_ADDR				0X17
 #define GYRO_HIGHRATE_X_SET_ADDR			0X18
-#define GYRO_DUR_X_ADDR						0X19
+#define GYRO_DURN_X_ADDR						0X19
 #define GYRO_HIGHRATE_Y_SET_ADDR			0X1A
-#define GYRO_DUR_Y_ADDR						0X1B
+#define GYRO_DURN_Y_ADDR						0X1B
 #define GYRO_HIGHRATE_Z_SET_ADDR			0X1C
-#define GYRO_DUR_Z_ADDR						0X1D
-#define GYRO_ANYMOTION_THRES_ADDR			0X1E
-#define GYRO_ANYMOTION_SET_ADDR				0X1F
+#define GYRO_DURN_Z_ADDR						0X1D
+#define GYRO_ANY_MOTION_THRES_ADDR			0X1E
+#define GYRO_ANY_MOTION_SET_ADDR				0X1F
 /* PAGE1 REGISTERS DEFINITION END*/
 
 
-#define BNO055_MDELAY_DATA_TYPE           _u32
+#define BNO055_MDELAY_DATA_TYPE           u_32
 
-/*< This refers BNO055 return type as _s8 */
-#define BNO055_RETURN_FUNCTION_TYPE        _s8
+/*< This refers BNO055 return type as s_8 */
+#define BNO055_RETURN_FUNCTION_TYPE        s_8
 
 /* Compile switch definition for Float and double*/
 #define BNO055_FLOAT_ENABLE
@@ -528,14 +515,14 @@ bus_read(dev_addr, reg_addr, reg_data, r_len)
 *	@brief bno055 struct
 */
 struct bno055_t {
-_u8 chip_id;/**< chip_id of bno055 */
-_u16 sw_rev_id;/**< software revision id of bno055 */
-_u8 page_id;/**< page_id of bno055 */
-_u8 accel_rev_id;/**< accel revision id of bno055 */
-_u8 mag_rev_id;/**< mag revision id of bno055 */
-_u8 gyro_rev_id;/**< gyro revision id of bno055 */
-_u8 bl_rev_id;/**< boot loader revision id of bno055 */
-_u8 dev_addr;/**< i2c device address of bno055 */
+u_8 chip_id;/**< chip_id of bno055 */
+u_16 sw_rev_id;/**< software revision id of bno055 */
+u_8 page_id;/**< page_id of bno055 */
+u_8 accel_rev_id;/**< accel revision id of bno055 */
+u_8 mag_rev_id;/**< mag revision id of bno055 */
+u_8 gyro_rev_id;/**< gyro revision id of bno055 */
+u_8 bl_rev_id;/**< boot loader revision id of bno055 */
+u_8 dev_addr;/**< i2c device address of bno055 */
 BNO055_WR_FUNC_PTR;/**< bus write function pointer */
 BNO055_RD_FUNC_PTR;/**<bus read function pointer */
 void (*delay_msec)(BNO055_MDELAY_DATA_TYPE);/**< delay function pointer */
@@ -543,65 +530,65 @@ void (*delay_msec)(BNO055_MDELAY_DATA_TYPE);/**< delay function pointer */
 /*!
 * @brief struct for accel data read from registers
 */
-struct bno055_accel {
-_s16 x;/**< accel x data */
-_s16 y;/**< accel y data */
-_s16 z;/**< accel z data */
+struct bno055_accel_t {
+s_16 x;/**< accel x data */
+s_16 y;/**< accel y data */
+s_16 z;/**< accel z data */
 };
 /*!
 * @brief struct for Mag data read from registers
 */
-struct bno055_mag {
-_s16 x;/**< mag x data */
-_s16 y;/**< mag y data */
-_s16 z;/**< mag z data */
+struct bno055_mag_t {
+s_16 x;/**< mag x data */
+s_16 y;/**< mag y data */
+s_16 z;/**< mag z data */
 };
 /*!
 * @brief struct for Gyro data read from registers
 */
-struct bno055_gyro {
-_s16 x;/**< gyro x data */
-_s16 y;/**< gyro y data */
-_s16 z;/**< gyro z data */
+struct bno055_gyro_t {
+s_16 x;/**< gyro x data */
+s_16 y;/**< gyro y data */
+s_16 z;/**< gyro z data */
 };
 /*!
 * @brief struct for Euler data read from registers
 */
-struct bno055_euler {
-_s16 h;/**< Euler h data */
-_s16 r;/**< Euler r data */
-_s16 p;/**< Euler p data */
+struct bno055_euler_t {
+s_16 h;/**< Euler h data */
+s_16 r;/**< Euler r data */
+s_16 p;/**< Euler p data */
 };
 /*!
 * @brief struct for Quaternion data read from registers
 */
-struct bno055_quaternion {
-_s16 w;/**< Quaternion w data */
-_s16 x;/**< Quaternion x data */
-_s16 y;/**< Quaternion y data */
-_s16 z;/**< Quaternion z data */
+struct bno055_quaternion_t {
+s_16 w;/**< Quaternion w data */
+s_16 x;/**< Quaternion x data */
+s_16 y;/**< Quaternion y data */
+s_16 z;/**< Quaternion z data */
 };
 /*!
 * @brief struct for Linear Accel data read from registers
 */
-struct bno055_linear_accel {
-_s16 x; /**< Linear Accel x data */
-_s16 y; /**< Linear Accel y data */
-_s16 z; /**< Linear Accel z data */
+struct bno055_linear_accel_t {
+s_16 x; /**< Linear Accel x data */
+s_16 y; /**< Linear Accel y data */
+s_16 z; /**< Linear Accel z data */
 };
 /*!
 * @brief struct for Gravity data read from registers
 */
-struct bno055_gravity {
-_s16 x;/**< Gravity x data */
-_s16 y;/**< Gravity y data */
-_s16 z;/**< Gravity z data */
+struct bno055_gravity_t {
+s_16 x;/**< Gravity x data */
+s_16 y;/**< Gravity y data */
+s_16 z;/**< Gravity z data */
 };
 #ifdef	BNO055_DOUBLE_ENABLE
 /*!
 * @brief struct for Accel-output data of precision double
 */
-struct bno055_accel_double {
+struct bno055_accel_double_t {
 double x;/**< Accel x double data */
 double y;/**< Accel y double data */
 double z;/**< Accel z double data */
@@ -609,7 +596,7 @@ double z;/**< Accel z double data */
 /*!
 * @brief struct for Mag-output data of precision double
 */
-struct bno055_mag_double {
+struct bno055_mag_double_t {
 double x;/**< Mag x double data */
 double y;/**< Mag y double data */
 double z;/**< Mag z double data */
@@ -617,7 +604,7 @@ double z;/**< Mag z double data */
 /*!
 * @brief struct for Gyro-output data of precision double
 */
-struct bno055_gyro_double {
+struct bno055_gyro_double_t {
 double x;/**< Gyro x double data */
 double y;/**< Gyro y double data */
 double z;/**< Gyro z double data */
@@ -625,7 +612,7 @@ double z;/**< Gyro z double data */
 /*!
 * @brief struct for Euler-output data of precision double
 */
-struct bno055_euler_double {
+struct bno055_euler_double_t {
 double h;/**< Euler h double data */
 double r;/**< Euler r double data */
 double p;/**< Euler p double data */
@@ -633,7 +620,7 @@ double p;/**< Euler p double data */
 /*!
 * @brief struct for Linear Accel-output data of precision double
 */
-struct bno055_linear_accel_double {
+struct bno055_linear_accel_double_t {
 double x;/**< linear accel x double data */
 double y;/**< linear accel y double data */
 double z;/**< linear accel z double data */
@@ -641,7 +628,7 @@ double z;/**< linear accel z double data */
 /*!
 * @brief struct for Gravity-output data of precision double
 */
-struct bno055_gravity_double {
+struct bno055_gravity_double_t {
 double x;/**< Gravity x double data */
 double y;/**< Gravity y double data */
 double z;/**< Gravity z double data */
@@ -651,7 +638,7 @@ double z;/**< Gravity z double data */
 /*!
 * @brief struct for Accel-output data of precision float
 */
-struct bno055_accel_float {
+struct bno055_accel_float_t {
 float x;/**< accel x float data */
 float y;/**< accel y float data */
 float z;/**< accel z float data */
@@ -659,7 +646,7 @@ float z;/**< accel z float data */
 /*!
 * @brief struct for Mag-output data of precision float
 */
-struct bno055_mag_float {
+struct bno055_mag_float_t {
 float x;/**< Mag x float data */
 float y;/**< Mag y float data */
 float z;/**< Mag z float data */
@@ -667,7 +654,7 @@ float z;/**< Mag z float data */
 /*!
 * @brief struct for Gyro-output data of precision float
 */
-struct bno055_gyro_float {
+struct bno055_gyro_float_t {
 float x;/**< Gyro x float data */
 float y;/**< Gyro y float data */
 float z;/**< Gyro z float data */
@@ -675,7 +662,7 @@ float z;/**< Gyro z float data */
 /*!
 * @brief struct for Euler-output data of precision float
 */
-struct bno055_euler_float {
+struct bno055_euler_float_t {
 float h;/**< Euler h float data */
 float r;/**< Euler r float data */
 float p;/**< Euler p float data */
@@ -683,7 +670,7 @@ float p;/**< Euler p float data */
 /*!
 * @brief struct for Linear accel-output data of precision float
 */
-struct bno055_linear_accel_float {
+struct bno055_linear_accel_float_t {
 float x;/**< Linear accel x float data */
 float y;/**< Linear accel y float data */
 float z;/**< Linear accel z float data */
@@ -691,7 +678,7 @@ float z;/**< Linear accel z float data */
 /*!
 * @brief struct for Gravity-output data of precision float
 */
-struct bno055_gravity_float {
+struct bno055_gravity_float_t {
 float x;/**< Gravity x float data */
 float y;/**< Gravity y float data */
 float z;/**< Gravity z float data */
@@ -700,65 +687,68 @@ float z;/**< Gravity z float data */
 /*!
 * @brief struct for Accel offset
 */
-struct bno055_accel_offset {
-_s16 x;/**< Accel offset x data */
-_s16 y;/**< Accel offset y data */
-_s16 z;/**< Accel offset z data */
-_s16 r;/**< Accel radius r data */
+struct bno055_accel_offset_t {
+s_16 x;/**< Accel offset x data */
+s_16 y;/**< Accel offset y data */
+s_16 z;/**< Accel offset z data */
+s_16 r;/**< Accel radius r data */
 };
 /*!
 * @brief struct for Gyro offset
 */
-struct bno055_gyro_offset {
-_s16 x;/**< Gyro offset x data */
-_s16 y;/**< Gyro offset y data */
-_s16 z;/**< Gyro offset z data */
+struct bno055_gyro_offset_t {
+s_16 x;/**< Gyro offset x data */
+s_16 y;/**< Gyro offset y data */
+s_16 z;/**< Gyro offset z data */
 };
 /*!
 * @brief struct for Mag offset
 */
-struct bno055_mag_offset {
-_s16 x;/**< Mag offset x data */
-_s16 y;/**< Mag offset y data */
-_s16 z;/**< Mag offset z data */
-_s16 r;/**< Mag radius x data */
+struct bno055_mag_offset_t {
+s_16 x;/**< Mag offset x data */
+s_16 y;/**< Mag offset y data */
+s_16 z;/**< Mag offset z data */
+s_16 r;/**< Mag radius x data */
 };
 /*!
 * @brief struct for soft iron calibration matrix
 */
-struct bno055_sic_matrix {
-_s16 sic_0;/**< soft iron calibration matrix 0 data */
-_s16 sic_1;/**< soft iron calibration matrix 1 data */
-_s16 sic_2;/**< soft iron calibration matrix 2 data */
-_s16 sic_3;/**< soft iron calibration matrix 3 data */
-_s16 sic_4;/**< soft iron calibration matrix 4 data */
-_s16 sic_5;/**< soft iron calibration matrix 5 data */
-_s16 sic_6;/**< soft iron calibration matrix 6 data */
-_s16 sic_7;/**< soft iron calibration matrix 7 data */
-_s16 sic_8;/**< soft iron calibration matrix 8 data */
+struct bno055_sic_matrix_t {
+s_16 sic_0;/**< soft iron calibration matrix 0 data */
+s_16 sic_1;/**< soft iron calibration matrix 1 data */
+s_16 sic_2;/**< soft iron calibration matrix 2 data */
+s_16 sic_3;/**< soft iron calibration matrix 3 data */
+s_16 sic_4;/**< soft iron calibration matrix 4 data */
+s_16 sic_5;/**< soft iron calibration matrix 5 data */
+s_16 sic_6;/**< soft iron calibration matrix 6 data */
+s_16 sic_7;/**< soft iron calibration matrix 7 data */
+s_16 sic_8;/**< soft iron calibration matrix 8 data */
 };
 /***************************************************/
 /**\name	CONSTANT DEFINITIONS                   */
 /***************************************************/
-#define         BNO055_ZERO_U8X           ((_u8)0)
-#define         BNO055_TWO_U8X			  ((_u8)2)
-#define         BNO055_FOUR_U8X           ((_u8)4)
-#define         BNO055_FIVE_U8X           ((_u8)5)
-#define         BNO055_SIX_U8X            ((_u8)6)
-#define         BNO055_SEVEN_U8X          ((_u8)7)
-#define         BNO055_ELEVEN_U8X         ((_u8)11)
-#define         BNO055_SIXTEEN_U8X        ((_u8)16)
-#define			BNO055_EIGHT_U8X		  ((_u8)8)
+#define         BNO055_ZERO_U8X           ((u_8)0)
+#define         BNO055_ONE_U8X           ((u_8)1)
+#define         BNO055_TWO_U8X			  ((u_8)2)
+#define         BNO055_FOUR_U8X           ((u_8)4)
+#define         BNO055_FIVE_U8X           ((u_8)5)
+#define         BNO055_SIX_U8X            ((u_8)6)
+#define         BNO055_SEVEN_U8X          ((u_8)7)
+#define         BNO055_ELEVEN_U8X         ((u_8)11)
+#define         BNO055_SIXTEEN_U8X        ((u_8)16)
+#define			BNO055_EIGHT_U8X		  ((u_8)8)
+#define			BNO055_TWENTY_U8X         ((u_8)20)
+#define			BNO055_EIGHTEEN_U8X       ((u_8)18)
 
 
-#define         BNO055_SHIFT_8_POSITION	   ((_u8)8)
+#define         BNO055_SHIFT_8_POSITION	   ((u_8)8)
 
 
 /*  BNO055 API error codes */
-#define E_NULL_PTR                  ((_s8)-127)
-#define E_BNO055_OUT_OF_RANGE       ((_s8)-2)
-#define	SUCCESS						((_u8)0)
-#define	ERROR						((_s8)-1)
+#define E_NULL_PTR                  ((s_8)-127)
+#define E_BNO055_OUT_OF_RANGE       ((s_8)-2)
+#define	SUCCESS						((u_8)0)
+#define	ERROR						((s_8)-1)
 
 /* Selection for bit enable and disable */
 #define ENABLED		0x01
@@ -794,7 +784,7 @@ _s16 sic_8;/**< soft iron calibration matrix 8 data */
 #define	ACCEL_DIV_MG	1
 
 /*Mag division factor*/
-#define MAG_DIV_MICROTESLA	16.0
+#define MAG_DIV_UT	16.0
 
 /*Gyro division factor*/
 #define GYRO_DIV_DPS		16.0
@@ -814,6 +804,9 @@ _s16 sic_8;/**< soft iron calibration matrix 8 data */
 #define TEMP_DIV_FAHRENHEIT	0.5
 #define TEMP_DIV_CELSIUS	1
 
+#define	BNO055_SIX_HUNDRES_U8X	600
+
+
 
 /* Operation mode settings*/
 #define OPERATION_MODE_CONFIG			0X00
@@ -829,13 +822,6 @@ _s16 sic_8;/**< soft iron calibration matrix 8 data */
 #define OPERATION_MODE_M4G				0X0A
 #define OPERATION_MODE_NDOF_FMC_OFF		0X0B
 #define OPERATION_MODE_NDOF				0X0C
-
-/* Data output rates*/
-#define FASTEST_MODE_1		0X00
-#define FASTEST_MODE_2		0X01
-#define GAME_MODE			0X02
-#define UI_MODE				0X04
-#define NORMAL_MODE			0X05
 
 /* Power mode*/
 #define POWER_MODE_NORMAL	0X00
@@ -915,27 +901,27 @@ _s16 sic_8;/**< soft iron calibration matrix 8 data */
 #define GYRO_POWER_MODE_ADVANCE_POWERSAVE	0X04
 
 /* Accel Sleep Duration */
-#define BNO055_ACCEL_SLEEP_DUR_0_5MS        0x05
+#define BNO055_ACCEL_SLEEP_DURN_0_5MS        0x05
 /* sets sleep duration to 0.5 ms  */
-#define BNO055_ACCEL_SLEEP_DUR_1MS          0x06
+#define BNO055_ACCEL_SLEEP_DURN_1MS          0x06
 /* sets sleep duration to 1 ms */
-#define BNO055_ACCEL_SLEEP_DUR_2MS          0x07
+#define BNO055_ACCEL_SLEEP_DURN_2MS          0x07
 /* sets sleep duration to 2 ms */
-#define BNO055_ACCEL_SLEEP_DUR_4MS          0x08
+#define BNO055_ACCEL_SLEEP_DURN_4MS          0x08
 /* sets sleep duration to 4 ms */
-#define BNO055_ACCEL_SLEEP_DUR_6MS          0x09
+#define BNO055_ACCEL_SLEEP_DURN_6MS          0x09
 /* sets sleep duration to 6 ms*/
-#define BNO055_ACCEL_SLEEP_DUR_10MS         0x0A
+#define BNO055_ACCEL_SLEEP_DURN_10MS         0x0A
 /* sets sleep duration to 10 ms */
-#define BNO055_ACCEL_SLEEP_DUR_25MS         0x0B
+#define BNO055_ACCEL_SLEEP_DURN_25MS         0x0B
  /* sets sleep duration to 25 ms */
-#define BNO055_ACCEL_SLEEP_DUR_50MS         0x0C
+#define BNO055_ACCEL_SLEEP_DURN_50MS         0x0C
  /* sets sleep duration to 50 ms */
-#define BNO055_ACCEL_SLEEP_DUR_100MS        0x0D
+#define BNO055_ACCEL_SLEEP_DURN_100MS        0x0D
  /* sets sleep duration to 100 ms */
-#define BNO055_ACCEL_SLEEP_DUR_500MS        0x0E
+#define BNO055_ACCEL_SLEEP_DURN_500MS        0x0E
  /* sets sleep duration to 500 ms */
-#define BNO055_ACCEL_SLEEP_DUR_1S           0x0F
+#define BNO055_ACCEL_SLEEP_DURN_1S           0x0F
 /* sets sleep duration to 1 s */
 
 /* Gyro Auto sleep duration*/
@@ -949,9 +935,9 @@ _s16 sic_8;/**< soft iron calibration matrix 8 data */
 #define	BNO055_GYRO_40MS_AUTOSLPDUR		0x07
 
 /* Accel Any/No motion axis selection*/
-#define BNO055_ACCEL_ANYMOTION_NOMOTION_X_AXIS		0
-#define BNO055_ACCEL_ANYMOTION_NOMOTION_Y_AXIS		1
-#define BNO055_ACCEL_ANYMOTION_NOMOTION_Z_AXIS		2
+#define BNO055_ACCEL_ANY_MOTION_NO_MOTION_X_AXIS		0
+#define BNO055_ACCEL_ANY_MOTION_NO_MOTION_Y_AXIS		1
+#define BNO055_ACCEL_ANY_MOTION_NO_MOTION_Z_AXIS		2
 
 /* Accel High g axis selection*/
 #define BNO055_ACCEL_HIGH_G_X_AXIS		0
@@ -959,9 +945,9 @@ _s16 sic_8;/**< soft iron calibration matrix 8 data */
 #define BNO055_ACCEL_HIGH_G_Z_AXIS		2
 
 /* Gyro Any motion axis selection*/
-#define BNO055_GYRO_ANYMOTION_X_AXIS		0
-#define BNO055_GYRO_ANYMOTION_Y_AXIS		1
-#define BNO055_GYRO_ANYMOTION_Z_AXIS		2
+#define BNO055_GYRO_ANY_MOTION_X_AXIS		0
+#define BNO055_GYRO_ANY_MOTION_Y_AXIS		1
+#define BNO055_GYRO_ANY_MOTION_Z_AXIS		2
 
 
 /* Gyro High rate axis selection*/
@@ -984,6 +970,58 @@ _s16 sic_8;/**< soft iron calibration matrix 8 data */
 /* Gyro anymotion and high rate filter configuration */
 #define	FILTERED	0x00
 #define	UNFILTERED	0x01
+
+/* mask definitions*/
+#define BNO055_SIC_HEX_0_0_F_F_DATA		0x00FF
+/****************************************************/
+/**\name	ARRAY SIZE DEFINITIONS      */
+/***************************************************/
+#define ARRAY_SIZE_TWO		2
+#define ARRAY_SIZE_THREE	3
+#define ARRAY_SIZE_SIX		6
+#define ARRAY_SIZE_FIVE		5
+#define ARRAY_SIZE_EIGHT	8
+#define ARRAY_SIZE_TWELVE	12
+#define ARRAY_SIZE_FOURTEEN	14
+#define ARRAY_SIZE_EIGHTEEN	18
+#define ARRAY_SIZE_TWENTY_SIX	26
+
+#define INDEX_ZERO		0
+#define INDEX_ONE		1
+#define INDEX_TWO		2
+#define INDEX_THREE		3
+#define INDEX_FOUR		4
+#define INDEX_FIVE		5
+#define INDEX_SIX		6
+#define INDEX_SEVEN		7
+#define INDEX_EIGHT		8
+#define INDEX_NINE		9
+#define INDEX_TEN		10
+#define INDEX_ELEVEN	11
+#define INDEX_TWELVE	12
+#define INDEX_THIRTEEN	13
+#define INDEX_FOURTEEN	14
+#define INDEX_FIVETEEN	15
+#define INDEX_SIXTEEN	16
+#define INDEX_SEVENTEEN	17
+#define INDEX_EIGHTEEN	18
+#define INDEX_NINETEEN	19
+#define INDEX_TWENTY	20
+#define INDEX_TWENTY_ONE	21
+#define INDEX_TWENTY_TWO	22
+#define INDEX_TWENTY_THREE	23
+#define INDEX_TWENTY_FIVE	25
+/****************************************************/
+/**\name	ARRAY PARAMETERS      */
+/***************************************************/
+#define LSB_ZERO	0
+#define MSB_ONE		1
+#define LSB_TWO		2
+#define MSB_THREE	3
+#define LSB_FOUR	4
+#define MSB_FIVE	5
+#define LSB_SIX		6
+#define MSB_SEVEN	7
 /*********************************************************/
 /**\name PAGE0 DATA REGISTERS DEFINITION */
 /*********************************************************/
@@ -1381,30 +1419,30 @@ BNO055_GRAVITY_DATA_Z_MSB_ADDR
 #define BNO055_SELFTEST_MCU__REG             BNO055_SELFTEST_RESULT_ADDR
 
 /*Interrupt status registers*/
-#define BNO055_INT_STAT_GYRO_ANYMOTION__POS		2
-#define BNO055_INT_STAT_GYRO_ANYMOTION__MSK		0X04
-#define BNO055_INT_STAT_GYRO_ANYMOTION__LEN		1
-#define BNO055_INT_STAT_GYRO_ANYMOTION__REG		BNO055_INT_STAT_ADDR
+#define BNO055_INTR_STAT_GYRO_ANY_MOTION__POS		2
+#define BNO055_INTR_STAT_GYRO_ANY_MOTION__MSK		0X04
+#define BNO055_INTR_STAT_GYRO_ANY_MOTION__LEN		1
+#define BNO055_INTR_STAT_GYRO_ANY_MOTION__REG		BNO055_INTR_STAT_ADDR
 
-#define BNO055_INT_STAT_GYRO_HIGHRATE__POS		3
-#define BNO055_INT_STAT_GYRO_HIGHRATE__MSK		0X08
-#define BNO055_INT_STAT_GYRO_HIGHRATE__LEN		1
-#define BNO055_INT_STAT_GYRO_HIGHRATE__REG		BNO055_INT_STAT_ADDR
+#define BNO055_INTR_STAT_GYRO_HIGHRATE__POS		3
+#define BNO055_INTR_STAT_GYRO_HIGHRATE__MSK		0X08
+#define BNO055_INTR_STAT_GYRO_HIGHRATE__LEN		1
+#define BNO055_INTR_STAT_GYRO_HIGHRATE__REG		BNO055_INTR_STAT_ADDR
 
-#define BNO055_INT_STAT_ACCEL_HIGH_G__POS		5
-#define BNO055_INT_STAT_ACCEL_HIGH_G__MSK		0X20
-#define BNO055_INT_STAT_ACCEL_HIGH_G__LEN		1
-#define BNO055_INT_STAT_ACCEL_HIGH_G__REG		BNO055_INT_STAT_ADDR
+#define BNO055_INTR_STAT_ACCEL_HIGH_G__POS		5
+#define BNO055_INTR_STAT_ACCEL_HIGH_G__MSK		0X20
+#define BNO055_INTR_STAT_ACCEL_HIGH_G__LEN		1
+#define BNO055_INTR_STAT_ACCEL_HIGH_G__REG		BNO055_INTR_STAT_ADDR
 
-#define BNO055_INT_STAT_ACCEL_ANYMOTION__POS		6
-#define BNO055_INT_STAT_ACCEL_ANYMOTION__MSK		0X40
-#define BNO055_INT_STAT_ACCEL_ANYMOTION__LEN		1
-#define BNO055_INT_STAT_ACCEL_ANYMOTION__REG		BNO055_INT_STAT_ADDR
+#define BNO055_INTR_STAT_ACCEL_ANY_MOTION__POS		6
+#define BNO055_INTR_STAT_ACCEL_ANY_MOTION__MSK		0X40
+#define BNO055_INTR_STAT_ACCEL_ANY_MOTION__LEN		1
+#define BNO055_INTR_STAT_ACCEL_ANY_MOTION__REG		BNO055_INTR_STAT_ADDR
 
-#define BNO055_INT_STAT_ACCEL_NOMOTION__POS		7
-#define BNO055_INT_STAT_ACCEL_NOMOTION__MSK		0X80
-#define BNO055_INT_STAT_ACCEL_NOMOTION__LEN		1
-#define BNO055_INT_STAT_ACCEL_NOMOTION__REG		BNO055_INT_STAT_ADDR
+#define BNO055_INTR_STAT_ACCEL_NO_MOTION__POS		7
+#define BNO055_INTR_STAT_ACCEL_NO_MOTION__MSK		0X80
+#define BNO055_INTR_STAT_ACCEL_NO_MOTION__LEN		1
+#define BNO055_INTR_STAT_ACCEL_NO_MOTION__REG		BNO055_INTR_STAT_ADDR
 
 /* system clock status register*/
 #define BNO055_SYS_MAIN_CLK__POS		0
@@ -1458,70 +1496,11 @@ BNO055_GRAVITY_DATA_Z_MSB_ADDR
 #define BNO055_DATA_OUTPUT_FORMAT__MSK             0X80
 #define BNO055_DATA_OUTPUT_FORMAT__LEN             1
 #define BNO055_DATA_OUTPUT_FORMAT__REG             BNO055_UNIT_SEL_ADDR
-
-/*Data Select register*/
-/* Accel data select*/
-#define BNO055_ACCEL_DATA_SELECT__POS			0
-#define BNO055_ACCEL_DATA_SELECT__MSK			0X01
-#define BNO055_ACCEL_DATA_SELECT__LEN			1
-#define BNO055_ACCEL_DATA_SELECT__REG			BNO055_DATA_SELECT_ADDR
-
-/* Mag data select*/
-#define BNO055_MAG_DATA_SELECT__POS			1
-#define BNO055_MAG_DATA_SELECT__MSK			0X02
-#define BNO055_MAG_DATA_SELECT__LEN			1
-#define BNO055_MAG_DATA_SELECT__REG			BNO055_DATA_SELECT_ADDR
-
-/* Gyro data select*/
-#define BNO055_GYRO_DATA_SELECT__POS			2
-#define BNO055_GYRO_DATA_SELECT__MSK			0X04
-#define BNO055_GYRO_DATA_SELECT__LEN			1
-#define BNO055_GYRO_DATA_SELECT__REG			BNO055_DATA_SELECT_ADDR
-
-/* Euler data select*/
-#define BNO055_EULER_DATA_SELECT__POS			3
-#define BNO055_EULER_DATA_SELECT__MSK			0X08
-#define BNO055_EULER_DATA_SELECT__LEN			1
-#define BNO055_EULER_DATA_SELECT__REG			BNO055_DATA_SELECT_ADDR
-
-/* Quaternion data select*/
-#define BNO055_QUATERNION_DATA_SELECT__POS			4
-#define BNO055_QUATERNION_DATA_SELECT__MSK			0X10
-#define BNO055_QUATERNION_DATA_SELECT__LEN			1
-#define BNO055_QUATERNION_DATA_SELECT__REG			\
-BNO055_DATA_SELECT_ADDR
-
-/* Linear Accel data select*/
-#define BNO055_LINEAR_ACCEL_DATA_SELECT__POS			5
-#define BNO055_LINEAR_ACCEL_DATA_SELECT__MSK			0X20
-#define BNO055_LINEAR_ACCEL_DATA_SELECT__LEN			1
-#define BNO055_LINEAR_ACCEL_DATA_SELECT__REG			\
-BNO055_DATA_SELECT_ADDR
-
-/* Gravity data select*/
-#define BNO055_GRAVITY_DATA_SELECT__POS			6
-#define BNO055_GRAVITY_DATA_SELECT__MSK			0X40
-#define BNO055_GRAVITY_DATA_SELECT__LEN			1
-#define BNO055_GRAVITY_DATA_SELECT__REG			BNO055_DATA_SELECT_ADDR
-
-/* Temperature data select*/
-#define BNO055_TEMP_DATA_SELECT__POS			7
-#define BNO055_TEMP_DATA_SELECT__MSK			0X80
-#define BNO055_TEMP_DATA_SELECT__LEN			1
-#define BNO055_TEMP_DATA_SELECT__REG			BNO055_DATA_SELECT_ADDR
-
 /*Operation Mode data register*/
 #define BNO055_OPERATION_MODE__POS			0
 #define BNO055_OPERATION_MODE__MSK			0X0F
 #define BNO055_OPERATION_MODE__LEN			4
 #define BNO055_OPERATION_MODE__REG			BNO055_OPR_MODE_ADDR
-
-/* output data rate register*/
-#define BNO055_OUTPUT_DATA_RATE__POS		4
-#define BNO055_OUTPUT_DATA_RATE__MSK		0X70
-#define BNO055_OUTPUT_DATA_RATE__LEN		3
-#define BNO055_OUTPUT_DATA_RATE__REG		BNO055_OPR_MODE_ADDR
-
 /* Power Mode register*/
 #define BNO055_POWER_MODE__POS             0
 #define BNO055_POWER_MODE__MSK             0X03
@@ -1541,10 +1520,10 @@ BNO055_DATA_SELECT_ADDR
 #define BNO055_SYS_RST__REG             BNO055_SYS_TRIGGER_ADDR
 
 /* RST_INT register*/
-#define BNO055_INT_RST__POS             6
-#define BNO055_INT_RST__MSK             0X40
-#define BNO055_INT_RST__LEN             1
-#define BNO055_INT_RST__REG             BNO055_SYS_TRIGGER_ADDR
+#define BNO055_INTR_RST__POS             6
+#define BNO055_INTR_RST__MSK             0X40
+#define BNO055_INTR_RST__LEN             1
+#define BNO055_INTR_RST__REG             BNO055_SYS_TRIGGER_ADDR
 
 /* CLK_SRC register*/
 #define BNO055_CLK_SRC__POS             7
@@ -1852,22 +1831,22 @@ BNO055_DATA_SELECT_ADDR
 #define BNO055_ACCEL_SLEEP_MODE__REG		ACCEL_SLEEP_CONFIG_ADDR
 
 /* Accel sleep duration configuration register*/
-#define BNO055_ACCEL_SLEEP_DUR__POS		1
-#define BNO055_ACCEL_SLEEP_DUR__MSK		0X1E
-#define BNO055_ACCEL_SLEEP_DUR__LEN		4
-#define BNO055_ACCEL_SLEEP_DUR__REG		ACCEL_SLEEP_CONFIG_ADDR
+#define BNO055_ACCEL_SLEEP_DURN__POS		1
+#define BNO055_ACCEL_SLEEP_DURN__MSK		0X1E
+#define BNO055_ACCEL_SLEEP_DURN__LEN		4
+#define BNO055_ACCEL_SLEEP_DURN__REG		ACCEL_SLEEP_CONFIG_ADDR
 
 /* Gyro sleep duration configuration register*/
-#define BNO055_GYRO_SLEEP_DUR__POS		0
-#define BNO055_GYRO_SLEEP_DUR__MSK		0X07
-#define BNO055_GYRO_SLEEP_DUR__LEN		3
-#define BNO055_GYRO_SLEEP_DUR__REG		GYRO_SLEEP_CONFIG_ADDR
+#define BNO055_GYRO_SLEEP_DURN__POS		0
+#define BNO055_GYRO_SLEEP_DURN__MSK		0X07
+#define BNO055_GYRO_SLEEP_DURN__LEN		3
+#define BNO055_GYRO_SLEEP_DURN__REG		GYRO_SLEEP_CONFIG_ADDR
 
 /* Gyro auto sleep duration configuration register*/
-#define BNO055_GYRO_AUTO_SLEEP_DUR__POS		3
-#define BNO055_GYRO_AUTO_SLEEP_DUR__MSK		0X38
-#define BNO055_GYRO_AUTO_SLEEP_DUR__LEN		3
-#define BNO055_GYRO_AUTO_SLEEP_DUR__REG		GYRO_SLEEP_CONFIG_ADDR
+#define BNO055_GYRO_AUTO_SLEEP_DURN__POS		3
+#define BNO055_GYRO_AUTO_SLEEP_DURN__MSK		0X38
+#define BNO055_GYRO_AUTO_SLEEP_DURN__LEN		3
+#define BNO055_GYRO_AUTO_SLEEP_DURN__REG		GYRO_SLEEP_CONFIG_ADDR
 
 /* Mag sleep mode configuration register*/
 #define BNO055_MAG_SLEEP_MODE__POS		0
@@ -1876,121 +1855,121 @@ BNO055_DATA_SELECT_ADDR
 #define BNO055_MAG_SLEEP_MODE__REG		MAG_SLEEP_CONFIG_ADDR
 
 /* Mag sleep duration configuration register*/
-#define BNO055_MAG_SLEEP_DUR__POS		1
-#define BNO055_MAG_SLEEP_DUR__MSK		0X1E
-#define BNO055_MAG_SLEEP_DUR__LEN		4
-#define BNO055_MAG_SLEEP_DUR__REG		MAG_SLEEP_CONFIG_ADDR
+#define BNO055_MAG_SLEEP_DURN__POS		1
+#define BNO055_MAG_SLEEP_DURN__MSK		0X1E
+#define BNO055_MAG_SLEEP_DURN__LEN		4
+#define BNO055_MAG_SLEEP_DURN__REG		MAG_SLEEP_CONFIG_ADDR
 
 /* Interrupt registers*/
 /* Gyro any motion interrupt msk register*/
-#define BNO055_GYRO_ANYMOTION_INT_MASK__POS		2
-#define BNO055_GYRO_ANYMOTION_INT_MASK__MSK		0X04
-#define BNO055_GYRO_ANYMOTION_INT_MASK__LEN		1
-#define BNO055_GYRO_ANYMOTION_INT_MASK__REG		INT_MASK_ADDR
+#define BNO055_GYRO_ANY_MOTION_INTR_MASK__POS		2
+#define BNO055_GYRO_ANY_MOTION_INTR_MASK__MSK		0X04
+#define BNO055_GYRO_ANY_MOTION_INTR_MASK__LEN		1
+#define BNO055_GYRO_ANY_MOTION_INTR_MASK__REG		INT_MASK_ADDR
 
 /* Gyro high rate interrupt msk register*/
-#define BNO055_GYRO_HIGHRATE_INT_MASK__POS		3
-#define BNO055_GYRO_HIGHRATE_INT_MASK__MSK		0X08
-#define BNO055_GYRO_HIGHRATE_INT_MASK__LEN		1
-#define BNO055_GYRO_HIGHRATE_INT_MASK__REG		INT_MASK_ADDR
+#define BNO055_GYRO_HIGHRATE_INTR_MASK__POS		3
+#define BNO055_GYRO_HIGHRATE_INTR_MASK__MSK		0X08
+#define BNO055_GYRO_HIGHRATE_INTR_MASK__LEN		1
+#define BNO055_GYRO_HIGHRATE_INTR_MASK__REG		INT_MASK_ADDR
 
 /* Accel high g interrupt msk register*/
-#define BNO055_ACCEL_HIGH_G_INT_MASK__POS		5
-#define BNO055_ACCEL_HIGH_G_INT_MASK__MSK		0X20
-#define BNO055_ACCEL_HIGH_G_INT_MASK__LEN		1
-#define BNO055_ACCEL_HIGH_G_INT_MASK__REG		INT_MASK_ADDR
+#define BNO055_ACCEL_HIGH_G_INTR_MASK__POS		5
+#define BNO055_ACCEL_HIGH_G_INTR_MASK__MSK		0X20
+#define BNO055_ACCEL_HIGH_G_INTR_MASK__LEN		1
+#define BNO055_ACCEL_HIGH_G_INTR_MASK__REG		INT_MASK_ADDR
 
 /* Accel any motion interrupt msk register*/
-#define BNO055_ACCEL_ANYMOTION_INT_MASK__POS		6
-#define BNO055_ACCEL_ANYMOTION_INT_MASK__MSK		0X40
-#define BNO055_ACCEL_ANYMOTION_INT_MASK__LEN		1
-#define BNO055_ACCEL_ANYMOTION_INT_MASK__REG		INT_MASK_ADDR
+#define BNO055_ACCEL_ANY_MOTION_INTR_MASK__POS		6
+#define BNO055_ACCEL_ANY_MOTION_INTR_MASK__MSK		0X40
+#define BNO055_ACCEL_ANY_MOTION_INTR_MASK__LEN		1
+#define BNO055_ACCEL_ANY_MOTION_INTR_MASK__REG		INT_MASK_ADDR
 
 /* Accel any motion interrupt msk register*/
-#define BNO055_ACCEL_NOMOTION_INT_MASK__POS		7
-#define BNO055_ACCEL_NOMOTION_INT_MASK__MSK		0X80
-#define BNO055_ACCEL_NOMOTION_INT_MASK__LEN		1
-#define BNO055_ACCEL_NOMOTION_INT_MASK__REG		INT_MASK_ADDR
+#define BNO055_ACCEL_NO_MOTION_INTR_MASK__POS		7
+#define BNO055_ACCEL_NO_MOTION_INTR_MASK__MSK		0X80
+#define BNO055_ACCEL_NO_MOTION_INTR_MASK__LEN		1
+#define BNO055_ACCEL_NO_MOTION_INTR_MASK__REG		INT_MASK_ADDR
 
 /* Gyro any motion interrupt register*/
-#define BNO055_GYRO_ANYMOTION_INT__POS		2
-#define BNO055_GYRO_ANYMOTION_INT__MSK		0X04
-#define BNO055_GYRO_ANYMOTION_INT__LEN		1
-#define BNO055_GYRO_ANYMOTION_INT__REG		INT_ADDR
+#define BNO055_GYRO_ANY_MOTION_INTR__POS		2
+#define BNO055_GYRO_ANY_MOTION_INTR__MSK		0X04
+#define BNO055_GYRO_ANY_MOTION_INTR__LEN		1
+#define BNO055_GYRO_ANY_MOTION_INTR__REG		INT_ADDR
 
 /* Gyro high rate interrupt register*/
-#define BNO055_GYRO_HIGHRATE_INT__POS		3
-#define BNO055_GYRO_HIGHRATE_INT__MSK		0X08
-#define BNO055_GYRO_HIGHRATE_INT__LEN		1
-#define BNO055_GYRO_HIGHRATE_INT__REG		INT_ADDR
+#define BNO055_GYRO_HIGHRATE_INTR__POS		3
+#define BNO055_GYRO_HIGHRATE_INTR__MSK		0X08
+#define BNO055_GYRO_HIGHRATE_INTR__LEN		1
+#define BNO055_GYRO_HIGHRATE_INTR__REG		INT_ADDR
 
 /* Accel high g interrupt register*/
-#define BNO055_ACCEL_HIGH_G_INT__POS		5
-#define BNO055_ACCEL_HIGH_G_INT__MSK		0X20
-#define BNO055_ACCEL_HIGH_G_INT__LEN		1
-#define BNO055_ACCEL_HIGH_G_INT__REG		INT_ADDR
+#define BNO055_ACCEL_HIGH_G_INTR__POS		5
+#define BNO055_ACCEL_HIGH_G_INTR__MSK		0X20
+#define BNO055_ACCEL_HIGH_G_INTR__LEN		1
+#define BNO055_ACCEL_HIGH_G_INTR__REG		INT_ADDR
 
 /* Accel any motion interrupt register*/
-#define BNO055_ACCEL_ANYMOTION_INT__POS		6
-#define BNO055_ACCEL_ANYMOTION_INT__MSK		0X40
-#define BNO055_ACCEL_ANYMOTION_INT__LEN		1
-#define BNO055_ACCEL_ANYMOTION_INT__REG		INT_ADDR
+#define BNO055_ACCEL_ANY_MOTION_INTR__POS		6
+#define BNO055_ACCEL_ANY_MOTION_INTR__MSK		0X40
+#define BNO055_ACCEL_ANY_MOTION_INTR__LEN		1
+#define BNO055_ACCEL_ANY_MOTION_INTR__REG		INT_ADDR
 
 /*Accel any motion interrupt register*/
-#define BNO055_ACCEL_NOMOTION_INT__POS		7
-#define BNO055_ACCEL_NOMOTION_INT__MSK		0X80
-#define BNO055_ACCEL_NOMOTION_INT__LEN		1
-#define BNO055_ACCEL_NOMOTION_INT__REG		INT_ADDR
+#define BNO055_ACCEL_NO_MOTION_INTR__POS		7
+#define BNO055_ACCEL_NO_MOTION_INTR__MSK		0X80
+#define BNO055_ACCEL_NO_MOTION_INTR__LEN		1
+#define BNO055_ACCEL_NO_MOTION_INTR__REG		INT_ADDR
 
 /*Accel any motion threshold setting*/
-#define BNO055_ACCEL_ANYMOTION_THRES__POS	0
-#define BNO055_ACCEL_ANYMOTION_THRES__MSK	0XFF
-#define BNO055_ACCEL_ANYMOTION_THRES__LEN	8
-#define BNO055_ACCEL_ANYMOTION_THRES__REG	ACCEL_ANYMOTION_THRES_ADDR
+#define BNO055_ACCEL_ANY_MOTION_THRES__POS	0
+#define BNO055_ACCEL_ANY_MOTION_THRES__MSK	0XFF
+#define BNO055_ACCEL_ANY_MOTION_THRES__LEN	8
+#define BNO055_ACCEL_ANY_MOTION_THRES__REG	ACCEL_ANY_MOTION_THRES_ADDR
 
 /*Accel interrupt setting register*/
-#define BNO055_ACCEL_ANYMOTION_DUR_SET__POS		0
-#define BNO055_ACCEL_ANYMOTION_DUR_SET__MSK		0X03
-#define BNO055_ACCEL_ANYMOTION_DUR_SET__LEN		2
-#define BNO055_ACCEL_ANYMOTION_DUR_SET__REG		ACCEL_INT_SETTINGS_ADDR
+#define BNO055_ACCEL_ANY_MOTION_DURN_SET__POS		0
+#define BNO055_ACCEL_ANY_MOTION_DURN_SET__MSK		0X03
+#define BNO055_ACCEL_ANY_MOTION_DURN_SET__LEN		2
+#define BNO055_ACCEL_ANY_MOTION_DURN_SET__REG		ACCEL_INTR_SETTINGS_ADDR
 
 /* Accel AM/NM axis selection register*/
-#define BNO055_ACCEL_ANYMOTION_X_AXIS__POS		2
-#define BNO055_ACCEL_ANYMOTION_X_AXIS__MSK		0X04
-#define BNO055_ACCEL_ANYMOTION_X_AXIS__LEN		1
-#define BNO055_ACCEL_ANYMOTION_X_AXIS__REG		ACCEL_INT_SETTINGS_ADDR
+#define BNO055_ACCEL_ANY_MOTION_X_AXIS__POS		2
+#define BNO055_ACCEL_ANY_MOTION_X_AXIS__MSK		0X04
+#define BNO055_ACCEL_ANY_MOTION_X_AXIS__LEN		1
+#define BNO055_ACCEL_ANY_MOTION_X_AXIS__REG		ACCEL_INTR_SETTINGS_ADDR
 
-#define BNO055_ACCEL_ANYMOTION_Y_AXIS__POS		3
-#define BNO055_ACCEL_ANYMOTION_Y_AXIS__MSK		0X08
-#define BNO055_ACCEL_ANYMOTION_Y_AXIS__LEN		1
-#define BNO055_ACCEL_ANYMOTION_Y_AXIS__REG		ACCEL_INT_SETTINGS_ADDR
+#define BNO055_ACCEL_ANY_MOTION_Y_AXIS__POS		3
+#define BNO055_ACCEL_ANY_MOTION_Y_AXIS__MSK		0X08
+#define BNO055_ACCEL_ANY_MOTION_Y_AXIS__LEN		1
+#define BNO055_ACCEL_ANY_MOTION_Y_AXIS__REG		ACCEL_INTR_SETTINGS_ADDR
 
-#define BNO055_ACCEL_ANYMOTION_Z_AXIS__POS		4
-#define BNO055_ACCEL_ANYMOTION_Z_AXIS__MSK		0X10
-#define BNO055_ACCEL_ANYMOTION_Z_AXIS__LEN		1
-#define BNO055_ACCEL_ANYMOTION_Z_AXIS__REG		ACCEL_INT_SETTINGS_ADDR
+#define BNO055_ACCEL_ANY_MOTION_Z_AXIS__POS		4
+#define BNO055_ACCEL_ANY_MOTION_Z_AXIS__MSK		0X10
+#define BNO055_ACCEL_ANY_MOTION_Z_AXIS__LEN		1
+#define BNO055_ACCEL_ANY_MOTION_Z_AXIS__REG		ACCEL_INTR_SETTINGS_ADDR
 
 /* Accel high g axis selection register*/
 #define BNO055_ACCEL_HIGH_G_X_AXIS__POS		5
 #define BNO055_ACCEL_HIGH_G_X_AXIS__MSK		0X20
 #define BNO055_ACCEL_HIGH_G_X_AXIS__LEN		1
-#define BNO055_ACCEL_HIGH_G_X_AXIS__REG		ACCEL_INT_SETTINGS_ADDR
+#define BNO055_ACCEL_HIGH_G_X_AXIS__REG		ACCEL_INTR_SETTINGS_ADDR
 
 #define BNO055_ACCEL_HIGH_G_Y_AXIS__POS		6
 #define BNO055_ACCEL_HIGH_G_Y_AXIS__MSK		0X40
 #define BNO055_ACCEL_HIGH_G_Y_AXIS__LEN		1
-#define BNO055_ACCEL_HIGH_G_Y_AXIS__REG		ACCEL_INT_SETTINGS_ADDR
+#define BNO055_ACCEL_HIGH_G_Y_AXIS__REG		ACCEL_INTR_SETTINGS_ADDR
 
 #define BNO055_ACCEL_HIGH_G_Z_AXIS__POS		7
 #define BNO055_ACCEL_HIGH_G_Z_AXIS__MSK		0X80
 #define BNO055_ACCEL_HIGH_G_Z_AXIS__LEN		1
-#define BNO055_ACCEL_HIGH_G_Z_AXIS__REG		ACCEL_INT_SETTINGS_ADDR
+#define BNO055_ACCEL_HIGH_G_Z_AXIS__REG		ACCEL_INTR_SETTINGS_ADDR
 
 /* Accel High g duration setting register*/
-#define BNO055_ACCEL_HIGH_G_DUR__POS		0
-#define BNO055_ACCEL_HIGH_G_DUR__MSK		0XFF
-#define BNO055_ACCEL_HIGH_G_DUR__LEN		8
-#define BNO055_ACCEL_HIGH_G_DUR__REG		ACCEL_HIGH_G_DUR_ADDR
+#define BNO055_ACCEL_HIGH_G_DURN__POS		0
+#define BNO055_ACCEL_HIGH_G_DURN__MSK		0XFF
+#define BNO055_ACCEL_HIGH_G_DURN__LEN		8
+#define BNO055_ACCEL_HIGH_G_DURN__REG		ACCEL_HIGH_G_DURN_ADDR
 
 /* Accel High g threshold setting register*/
 #define BNO055_ACCEL_HIGH_G_THRES__POS		0
@@ -2003,63 +1982,63 @@ BNO055_DATA_SELECT_ADDR
 #define BNO055_ACCEL_SLOW_NO_MOTION_THRES__MSK		0XFF
 #define BNO055_ACCEL_SLOW_NO_MOTION_THRES__LEN		8
 #define BNO055_ACCEL_SLOW_NO_MOTION_THRES__REG		\
-ACCEL_NOMOTION_THRES_ADDR
+ACCEL_NO_MOTION_THRES_ADDR
 
 /* Accel no/slow motion enable setting*/
 #define BNO055_ACCEL_SLOW_NO_MOTION_ENABLE__POS		0
 #define BNO055_ACCEL_SLOW_NO_MOTION_ENABLE__MSK		0X01
 #define BNO055_ACCEL_SLOW_NO_MOTION_ENABLE__LEN		1
-#define BNO055_ACCEL_SLOW_NO_MOTION_ENABLE__REG		ACCEL_NOMOTION_SET_ADDR
+#define BNO055_ACCEL_SLOW_NO_MOTION_ENABLE__REG		ACCEL_NO_MOTION_SET_ADDR
 
 /* Accel no/slow motion duration setting*/
-#define BNO055_ACCEL_SLOW_NO_MOTION_DUR__POS		1
-#define BNO055_ACCEL_SLOW_NO_MOTION_DUR__MSK		0X7E
-#define BNO055_ACCEL_SLOW_NO_MOTION_DUR__LEN		6
-#define BNO055_ACCEL_SLOW_NO_MOTION_DUR__REG		ACCEL_NOMOTION_SET_ADDR
+#define BNO055_ACCEL_SLOW_NO_MOTION_DURN__POS		1
+#define BNO055_ACCEL_SLOW_NO_MOTION_DURN__MSK		0X7E
+#define BNO055_ACCEL_SLOW_NO_MOTION_DURN__LEN		6
+#define BNO055_ACCEL_SLOW_NO_MOTION_DURN__REG		ACCEL_NO_MOTION_SET_ADDR
 
 /*Gyro interrupt setting register*/
 /*Gyro any motion axis setting*/
-#define BNO055_GYRO_ANYMOTION_X_AXIS__POS		0
-#define BNO055_GYRO_ANYMOTION_X_AXIS__MSK		0X01
-#define BNO055_GYRO_ANYMOTION_X_AXIS__LEN		1
-#define BNO055_GYRO_ANYMOTION_X_AXIS__REG		GYRO_INT_SETING_ADDR
+#define BNO055_GYRO_ANY_MOTION_X_AXIS__POS		0
+#define BNO055_GYRO_ANY_MOTION_X_AXIS__MSK		0X01
+#define BNO055_GYRO_ANY_MOTION_X_AXIS__LEN		1
+#define BNO055_GYRO_ANY_MOTION_X_AXIS__REG		GYRO_INTR_SETING_ADDR
 
-#define BNO055_GYRO_ANYMOTION_Y_AXIS__POS		1
-#define BNO055_GYRO_ANYMOTION_Y_AXIS__MSK		0X02
-#define BNO055_GYRO_ANYMOTION_Y_AXIS__LEN		1
-#define BNO055_GYRO_ANYMOTION_Y_AXIS__REG		GYRO_INT_SETING_ADDR
+#define BNO055_GYRO_ANY_MOTION_Y_AXIS__POS		1
+#define BNO055_GYRO_ANY_MOTION_Y_AXIS__MSK		0X02
+#define BNO055_GYRO_ANY_MOTION_Y_AXIS__LEN		1
+#define BNO055_GYRO_ANY_MOTION_Y_AXIS__REG		GYRO_INTR_SETING_ADDR
 
-#define BNO055_GYRO_ANYMOTION_Z_AXIS__POS		2
-#define BNO055_GYRO_ANYMOTION_Z_AXIS__MSK		0X04
-#define BNO055_GYRO_ANYMOTION_Z_AXIS__LEN		1
-#define BNO055_GYRO_ANYMOTION_Z_AXIS__REG		GYRO_INT_SETING_ADDR
+#define BNO055_GYRO_ANY_MOTION_Z_AXIS__POS		2
+#define BNO055_GYRO_ANY_MOTION_Z_AXIS__MSK		0X04
+#define BNO055_GYRO_ANY_MOTION_Z_AXIS__LEN		1
+#define BNO055_GYRO_ANY_MOTION_Z_AXIS__REG		GYRO_INTR_SETING_ADDR
 
 /*Gyro high rate axis setting*/
 #define BNO055_GYRO_HIGHRATE_X_AXIS__POS		3
 #define BNO055_GYRO_HIGHRATE_X_AXIS__MSK		0X08
 #define BNO055_GYRO_HIGHRATE_X_AXIS__LEN		1
-#define BNO055_GYRO_HIGHRATE_X_AXIS__REG		GYRO_INT_SETING_ADDR
+#define BNO055_GYRO_HIGHRATE_X_AXIS__REG		GYRO_INTR_SETING_ADDR
 
 #define BNO055_GYRO_HIGHRATE_Y_AXIS__POS		4
 #define BNO055_GYRO_HIGHRATE_Y_AXIS__MSK		0X10
 #define BNO055_GYRO_HIGHRATE_Y_AXIS__LEN		1
-#define BNO055_GYRO_HIGHRATE_Y_AXIS__REG		GYRO_INT_SETING_ADDR
+#define BNO055_GYRO_HIGHRATE_Y_AXIS__REG		GYRO_INTR_SETING_ADDR
 
 #define BNO055_GYRO_HIGHRATE_Z_AXIS__POS		5
 #define BNO055_GYRO_HIGHRATE_Z_AXIS__MSK		0X20
 #define BNO055_GYRO_HIGHRATE_Z_AXIS__LEN		1
-#define BNO055_GYRO_HIGHRATE_Z_AXIS__REG		GYRO_INT_SETING_ADDR
+#define BNO055_GYRO_HIGHRATE_Z_AXIS__REG		GYRO_INTR_SETING_ADDR
 
 /* Gyro filter setting*/
-#define BNO055_GYRO_ANYMOTION_FILTER__POS		6
-#define BNO055_GYRO_ANYMOTION_FILTER__MSK		0X40
-#define BNO055_GYRO_ANYMOTION_FILTER__LEN		1
-#define BNO055_GYRO_ANYMOTION_FILTER__REG		GYRO_INT_SETING_ADDR
+#define BNO055_GYRO_ANY_MOTION_FILTER__POS		6
+#define BNO055_GYRO_ANY_MOTION_FILTER__MSK		0X40
+#define BNO055_GYRO_ANY_MOTION_FILTER__LEN		1
+#define BNO055_GYRO_ANY_MOTION_FILTER__REG		GYRO_INTR_SETING_ADDR
 
 #define BNO055_GYRO_HIGHRATE_FILTER__POS		7
 #define BNO055_GYRO_HIGHRATE_FILTER__MSK		0X80
 #define BNO055_GYRO_HIGHRATE_FILTER__LEN		1
-#define BNO055_GYRO_HIGHRATE_FILTER__REG		GYRO_INT_SETING_ADDR
+#define BNO055_GYRO_HIGHRATE_FILTER__REG		GYRO_INTR_SETING_ADDR
 
 /* Gyro high rate X axis settings*/
 #define BNO055_GYRO_HIGHRATE_X_THRES__POS		0
@@ -2072,10 +2051,10 @@ ACCEL_NOMOTION_THRES_ADDR
 #define BNO055_GYRO_HIGHRATE_X_HYST__LEN		2
 #define BNO055_GYRO_HIGHRATE_X_HYST__REG		GYRO_HIGHRATE_X_SET_ADDR
 
-#define BNO055_GYRO_HIGHRATE_X_DUR__POS		0
-#define BNO055_GYRO_HIGHRATE_X_DUR__MSK		0XFF
-#define BNO055_GYRO_HIGHRATE_X_DUR__LEN		8
-#define BNO055_GYRO_HIGHRATE_X_DUR__REG		GYRO_DUR_X_ADDR
+#define BNO055_GYRO_HIGHRATE_X_DURN__POS		0
+#define BNO055_GYRO_HIGHRATE_X_DURN__MSK		0XFF
+#define BNO055_GYRO_HIGHRATE_X_DURN__LEN		8
+#define BNO055_GYRO_HIGHRATE_X_DURN__REG		GYRO_DURN_X_ADDR
 
 /* Gyro high rate Y axis settings*/
 #define BNO055_GYRO_HIGHRATE_Y_THRES__POS		0
@@ -2088,10 +2067,10 @@ ACCEL_NOMOTION_THRES_ADDR
 #define BNO055_GYRO_HIGHRATE_Y_HYST__LEN		2
 #define BNO055_GYRO_HIGHRATE_Y_HYST__REG		GYRO_HIGHRATE_Y_SET_ADDR
 
-#define BNO055_GYRO_HIGHRATE_Y_DUR__POS		0
-#define BNO055_GYRO_HIGHRATE_Y_DUR__MSK		0XFF
-#define BNO055_GYRO_HIGHRATE_Y_DUR__LEN		8
-#define BNO055_GYRO_HIGHRATE_Y_DUR__REG		GYRO_DUR_Y_ADDR
+#define BNO055_GYRO_HIGHRATE_Y_DURN__POS		0
+#define BNO055_GYRO_HIGHRATE_Y_DURN__MSK		0XFF
+#define BNO055_GYRO_HIGHRATE_Y_DURN__LEN		8
+#define BNO055_GYRO_HIGHRATE_Y_DURN__REG		GYRO_DURN_Y_ADDR
 
 /* Gyro high rate Z axis settings*/
 #define BNO055_GYRO_HIGHRATE_Z_THRES__POS		0
@@ -2104,29 +2083,29 @@ ACCEL_NOMOTION_THRES_ADDR
 #define BNO055_GYRO_HIGHRATE_Z_HYST__LEN		2
 #define BNO055_GYRO_HIGHRATE_Z_HYST__REG		GYRO_HIGHRATE_Z_SET_ADDR
 
-#define BNO055_GYRO_HIGHRATE_Z_DUR__POS		0
-#define BNO055_GYRO_HIGHRATE_Z_DUR__MSK		0XFF
-#define BNO055_GYRO_HIGHRATE_Z_DUR__LEN		8
-#define BNO055_GYRO_HIGHRATE_Z_DUR__REG		GYRO_DUR_Z_ADDR
+#define BNO055_GYRO_HIGHRATE_Z_DURN__POS		0
+#define BNO055_GYRO_HIGHRATE_Z_DURN__MSK		0XFF
+#define BNO055_GYRO_HIGHRATE_Z_DURN__LEN		8
+#define BNO055_GYRO_HIGHRATE_Z_DURN__REG		GYRO_DURN_Z_ADDR
 
 /*Gyro any motion threshold setting*/
-#define BNO055_GYRO_ANYMOTION_THRES__POS		0
-#define BNO055_GYRO_ANYMOTION_THRES__MSK		0X7F
-#define BNO055_GYRO_ANYMOTION_THRES__LEN		7
-#define BNO055_GYRO_ANYMOTION_THRES__REG		\
-GYRO_ANYMOTION_THRES_ADDR
+#define BNO055_GYRO_ANY_MOTION_THRES__POS		0
+#define BNO055_GYRO_ANY_MOTION_THRES__MSK		0X7F
+#define BNO055_GYRO_ANY_MOTION_THRES__LEN		7
+#define BNO055_GYRO_ANY_MOTION_THRES__REG		\
+GYRO_ANY_MOTION_THRES_ADDR
 
 /* Gyro any motion slope sample setting*/
 #define BNO055_GYRO_SLOPE_SAMPLES__POS		0
 #define BNO055_GYRO_SLOPE_SAMPLES__MSK		0X03
 #define BNO055_GYRO_SLOPE_SAMPLES__LEN		2
-#define BNO055_GYRO_SLOPE_SAMPLES__REG		GYRO_ANYMOTION_SET_ADDR
+#define BNO055_GYRO_SLOPE_SAMPLES__REG		GYRO_ANY_MOTION_SET_ADDR
 
 /* Gyro awake duration setting*/
-#define BNO055_GYRO_AWAKE_DUR__POS		2
-#define BNO055_GYRO_AWAKE_DUR__MSK		0X0C
-#define BNO055_GYRO_AWAKE_DUR__LEN		2
-#define BNO055_GYRO_AWAKE_DUR__REG		GYRO_ANYMOTION_SET_ADDR
+#define BNO055_GYRO_AWAKE_DURN__POS		2
+#define BNO055_GYRO_AWAKE_DURN__MSK		0X0C
+#define BNO055_GYRO_AWAKE_DURN__LEN		2
+#define BNO055_GYRO_AWAKE_DURN__REG		GYRO_ANY_MOTION_SET_ADDR
 
 /* PAGE1 DATA REGISTERS DEFINITION END*/
 /*************************************************/
@@ -2173,9 +2152,9 @@ BNO055_RETURN_FUNCTION_TYPE bno055_init(struct bno055_t *bno055);
  *	This API gives data to the given register and
  *	the data is written in the corresponding register address
  *
- *  @param addr : Address of the register
- *	@param data : Data to be written to the register
- *	@param len  : Length of the Data
+ *  @param v_addr_u_8 : Address of the register
+ *	@param p_data_u_8 : Data to be written to the register
+ *	@param v_len_u_8  : Length of the Data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2183,15 +2162,16 @@ BNO055_RETURN_FUNCTION_TYPE bno055_init(struct bno055_t *bno055);
  *
  *
 */
-BNO055_RETURN_FUNCTION_TYPE bno055_write_register(
-_u8 addr, _u8 *data, _u8 len);
+BNO055_RETURN_FUNCTION_TYPE bno055_write_register(u_8 v_addr_u_8,
+u_8 *p_data_u_8, u_8 v_len_u_8);
 /*!
  *	@brief This API reads the data from
  *	the given register address
  *
- *  @param addr : Address of the register
- *  @param data : address of the variable, read value will be kept
- *  @param len  : Length of the data
+ *  @param v_addr_u_8 : Address of the register
+ *  @param p_data_u_8 : address of the variable,
+ *	read value will be kept
+ *  @param v_len_u_8  : Length of the data
  *
  *
  *	@return results of bus communication function
@@ -2199,25 +2179,25 @@ _u8 addr, _u8 *data, _u8 len);
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_register(_u8 addr,
-_u8 *data, _u8 len);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_register(u_8 v_addr_u_8,
+u_8 *p_data_u_8, u_8 v_len_u_8);
 /*!
  *	@brief This API reads chip id
  *	from register 0x00 it is a byte of data
  *
  *
- *	@param chip_id : The chip id value 0xA0
+ *	@param v_chip_id_u_8 : The chip id value 0xA0
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_chip_id(_u8 *chip_id);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_chip_id(u_8 *v_chip_id_u_8);
 /*!
  *	@brief This API reads software revision id
  *	from register 0x04 and 0x05 it is a two byte of data
  *
- *	@param sw_id : The SW revision id
+ *	@param v_sw_id_u_8 : The SW revision id
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2225,13 +2205,13 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_chip_id(_u8 *chip_id);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_sw_rev_id(_u16 *sw_id);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_sw_rev_id(u_16 *v_sw_id_u_8);
 /*!
  *	@brief This API reads page id
  *	from register 0x07 it is a byte of data
  *
  *
- *	@param page_id : The value of page id
+ *	@param v_page_id_u_8 : The value of page id
  *
  *	PAGE_ZERO -> 0x00
  *	PAGE_ONE  -> 0x01
@@ -2242,12 +2222,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_sw_rev_id(_u16 *sw_id);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_page_id(_u8 *page_id);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_page_id(u_8 *v_page_id_u_8);
 /*!
  *	@brief This API used to write
  *	the page id register 0x07
  *
- *	@param page_id : The value of page id
+ *	@param v_page_id_u_8 : The value of page id
  *
  *	PAGE_ZERO -> 0x00
  *	PAGE_ONE  -> 0x01
@@ -2258,12 +2238,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_page_id(_u8 *page_id);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_write_page_id(_u8 page_id);
+BNO055_RETURN_FUNCTION_TYPE bno055_write_page_id(u_8 v_page_id_u_8);
 /*!
  *	@brief This API reads accel revision id
  *	from register 0x01 it is a byte of value
  *
- *	@param accel_rev_id : The accel revision id 0xFB
+ *	@param v_accel_rev_id_u_8 : The accel revision id 0xFB
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2272,12 +2252,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_write_page_id(_u8 page_id);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_rev_id(
-_u8 *accel_rev_id);
+u_8 *v_accel_rev_id_u_8);
 /*!
  *	@brief This API reads mag revision id
  *	from register 0x02 it is a byte of value
  *
- *	@param mag_rev_id : The mag revision id 0x32
+ *	@param v_mag_rev_id_u_8 : The mag revision id 0x32
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2286,12 +2266,12 @@ _u8 *accel_rev_id);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_rev_id(
-_u8 *mag_rev_id);
+u_8 *v_mag_rev_id_u_8);
 /*!
  *	@brief This API reads gyro revision id
  *	from register 0x03 it is a byte of value
  *
- *	@param gyro_rev_id : The gyro revision id 0xF0
+ *	@param v_gyro_rev_id_u_8 : The gyro revision id 0xF0
  *
  *
  *
@@ -2302,12 +2282,12 @@ _u8 *mag_rev_id);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_rev_id(
-_u8 *gyro_rev_id);
+u_8 *v_gyro_rev_id_u_8);
 /*!
  *	@brief This API used to read boot loader revision id
  *	from register 0x06 it is a byte of value
  *
- *	@param bl_rev_id : The boot loader revision id
+ *	@param v_bl_rev_id_u_8 : The boot loader revision id
  *
  *
  *	@return results of bus communication function
@@ -2317,7 +2297,7 @@ _u8 *gyro_rev_id);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_bl_rev_id(
-_u8 *bl_rev_id);
+u_8 *v_bl_rev_id_u_8);
 /**************************************************/
 /**\name ACCEL DATA READ FUNCTIONS */
 /**************************************************/
@@ -2328,7 +2308,7 @@ _u8 *bl_rev_id);
  *
  *
  *
- *	@param accel_x : The X raw data
+ *	@param v_accel_x_s_16 : The X raw data
  *
  *
  *
@@ -2338,7 +2318,7 @@ _u8 *bl_rev_id);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_x(_s16 *accel_x);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_x(s_16 *v_accel_x_s_16);
 /*!
  *	@brief This API reads acceleration data Y values
  *	from register 0x0A and 0x0B it is a two byte data
@@ -2346,7 +2326,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_x(_s16 *accel_x);
  *
  *
  *
- *	@param accel_y : The Y raw data
+ *	@param v_accel_y_s_16 : The Y raw data
  *
  *
  *
@@ -2356,7 +2336,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_x(_s16 *accel_x);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_y(_s16 *accel_y);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_y(s_16 *v_accel_y_s_16);
 /*!
  *	@brief This API reads acceleration data z values
  *	from register 0x0C and 0x0D it is a two byte data
@@ -2364,7 +2344,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_y(_s16 *accel_y);
  *
  *
  *
- *	@param accel_z : The z raw data
+ *	@param v_accel_z_s_16 : The z raw data
  *
  *
  *
@@ -2374,7 +2354,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_y(_s16 *accel_y);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_z(_s16 *accel_z);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_z(s_16 *v_accel_z_s_16);
 /*!
  *	@brief This API reads acceleration data xyz values
  *	from register 0x08 to 0x0D it is a six byte data
@@ -2396,7 +2376,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_z(_s16 *accel_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_xyz(
-struct bno055_accel *accel);
+struct bno055_accel_t *accel);
 /**************************************************/
 /**\name MAG DATA READ FUNCTIONS */
 /**************************************************/
@@ -2407,7 +2387,7 @@ struct bno055_accel *accel);
  *
  *
  *
- *	@param mag_x : The x raw data
+ *	@param v_mag_x_s_16 : The x raw data
  *
  *
  *
@@ -2418,7 +2398,7 @@ struct bno055_accel *accel);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_x(_s16 *mag_x);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_x(s_16 *v_mag_x_s_16);
 /*!
  *	@brief This API reads mag data y values
  *	from register 0x10 and 0x11 it is a two byte data
@@ -2426,7 +2406,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_x(_s16 *mag_x);
  *
  *
  *
- *	@param mag_y : The y raw data
+ *	@param v_mag_y_s_16 : The y raw data
  *
  *
  *
@@ -2436,7 +2416,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_x(_s16 *mag_x);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_y(_s16 *mag_y);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_y(s_16 *v_mag_y_s_16);
 /*!
  *	@brief This API reads mag data z values
  *	from register 0x12 and 0x13 it is a two byte data
@@ -2444,7 +2424,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_y(_s16 *mag_y);
  *
  *
  *
- *	@param mag_z : The z raw data
+ *	@param v_mag_z_s_16 : The z raw data
  *
  *
  *
@@ -2455,7 +2435,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_y(_s16 *mag_y);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_z(_s16 *mag_z);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_z(s_16 *v_mag_z_s_16);
 /*!
  *	@brief This API reads mag data xyz values
  *	from register 0x0E to 0x13 it is a six byte data
@@ -2476,7 +2456,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_z(_s16 *mag_z);
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_xyz(struct bno055_mag *mag);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_xyz(struct bno055_mag_t *mag);
 /**************************************************/
 /**\name GYRO DATA READ FUNCTIONS */
 /**************************************************/
@@ -2487,7 +2467,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_xyz(struct bno055_mag *mag);
  *
  *
  *
- *	@param gyro_x : The x raw data
+ *	@param v_gyro_x_s_16 : The x raw data
  *
  *
  *
@@ -2497,7 +2477,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_xyz(struct bno055_mag *mag);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_x(_s16 *gyro_x);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_x(s_16 *v_gyro_x_s_16);
 /*!
  *	@brief This API reads gyro data y values
  *	from register 0x16 and 0x17 it is a two byte data
@@ -2505,7 +2485,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_x(_s16 *gyro_x);
  *
  *
  *
- *	@param gyro_y : The y raw data
+ *	@param v_gyro_y_s_16 : The y raw data
  *
  *
  *
@@ -2515,12 +2495,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_x(_s16 *gyro_x);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_y(_s16 *gyro_y);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_y(s_16 *v_gyro_y_s_16);
 /*!
  *	@brief This API reads gyro data z values
  *	from register 0x18 and 0x19 it is a two byte data
  *
- *	@param gyro_z : The z raw data
+ *	@param v_gyro_z_s_16 : The z raw data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2528,7 +2508,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_y(_s16 *gyro_y);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_z(_s16 *gyro_z);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_z(s_16 *v_gyro_z_s_16);
 /*!
  *	@brief This API reads gyro data xyz values
  *	from register 0x14 to 0x19 it is a six byte data
@@ -2549,7 +2529,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_z(_s16 *gyro_z);
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_xyz(struct bno055_gyro *gyro);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_xyz(struct bno055_gyro_t *gyro);
 /**************************************************/
 /**\name EULER DATA READ FUNCTIONS */
 /**************************************************/
@@ -2557,31 +2537,31 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_xyz(struct bno055_gyro *gyro);
  *	@brief This API reads gyro data z values
  *	from register 0x1A and 0x1B it is a two byte data
  *
- *	@param euler_h : The raw h data
+ *	@param v_euler_h_s_16 : The raw h data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_euler_h(_s16 *euler_h);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_euler_h(s_16 *v_euler_h_s_16);
 /*!
  *	@brief This API reads Euler data r values
  *	from register 0x1C and 0x1D it is a two byte data
  *
- *	@param euler_r : The raw r data
+ *	@param v_euler_r_s_16 : The raw r data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_euler_r(_s16 *euler_r);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_euler_r(s_16 *v_euler_r_s_16);
 /*!
  *	@brief This API reads Euler data p values
  *	from register 0x1E and 0x1F it is a two byte data
  *
- *	@param euler_p : The raw p data
+ *	@param v_euler_p_s_16 : The raw p data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2589,7 +2569,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_euler_r(_s16 *euler_r);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_euler_p(_s16 *euler_p);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_euler_p(s_16 *v_euler_p_s_16);
 /*!
  *	@brief This API reads Euler data hrp values
  *	from register 0x1A to 0x1F it is a six byte data
@@ -2610,7 +2590,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_euler_p(_s16 *euler_p);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_euler_hrp(
-struct bno055_euler *euler);
+struct bno055_euler_t *euler);
 /**************************************************/
 /**\name QUATERNION DATA READ FUNCTIONS */
 /**************************************************/
@@ -2618,7 +2598,7 @@ struct bno055_euler *euler);
  *	@brief This API reads quaternion data w values
  *	from register 0x20 and 0x21 it is a two byte data
  *
- *	@param quaternion_w : The raw w data
+ *	@param v_quaternion_w_s_16 : The raw w data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2626,12 +2606,13 @@ struct bno055_euler *euler);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_w(_s16 *quaternion_w);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_w(
+s_16 *v_quaternion_w_s_16);
 /*!
  *	@brief This API reads quaternion data x values
  *	from register 0x22 and 0x23 it is a two byte data
  *
- *	@param quaternion_x : The raw x data
+ *	@param v_quaternion_x_s_16 : The raw x data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2639,12 +2620,13 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_w(_s16 *quaternion_w);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_x(_s16 *quaternion_x);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_x(
+s_16 *v_quaternion_x_s_16);
 /*!
  *	@brief This API reads quaternion data y values
  *	from register 0x24 and 0x25 it is a two byte data
  *
- *	@param quaternion_y : The raw y data
+ *	@param v_quaternion_y_s_16 : The raw y data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2652,12 +2634,13 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_x(_s16 *quaternion_x);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_y(_s16 *quaternion_y);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_y(
+s_16 *v_quaternion_y_s_16);
 /*!
  *	@brief This API reads quaternion data z values
  *	from register 0x26 and 0x27 it is a two byte data
  *
- *	@param quaternion_z : The raw z data
+ *	@param v_quaternion_z_s_16 : The raw z data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2665,7 +2648,8 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_y(_s16 *quaternion_y);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_z(_s16 *quaternion_z);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_z(
+s_16 *v_quaternion_z_s_16);
 /*!
  *	@brief This API reads Quaternion data wxyz values
  *	from register 0x20 to 0x27 it is a six byte data
@@ -2688,7 +2672,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_z(_s16 *quaternion_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_quaternion_wxyz(
-struct bno055_quaternion *quaternion);
+struct bno055_quaternion_t *quaternion);
 /**************************************************/
 /**\name LINEAR ACCEL DATA READ FUNCTIONS */
 /**************************************************/
@@ -2696,7 +2680,7 @@ struct bno055_quaternion *quaternion);
  *	@brief This API reads Linear accel data x values
  *	from register 0x29 and 0x2A it is a two byte data
  *
- *	@param linear_accel_x : The raw x data
+ *	@param v_linear_accel_x_s_16 : The raw x data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2705,12 +2689,12 @@ struct bno055_quaternion *quaternion);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_linear_accel_x(
-_s16 *linear_accel_x);
+s_16 *v_linear_accel_x_s_16);
 /*!
  *	@brief This API reads Linear accel data x values
  *	from register 0x2B and 0x2C it is a two byte data
  *
- *	@param linear_accel_y : The raw y data
+ *	@param v_linear_accel_y_s_16 : The raw y data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2719,12 +2703,12 @@ _s16 *linear_accel_x);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_linear_accel_y(
-_s16 *linear_accel_y);
+s_16 *v_linear_accel_y_s_16);
 /*!
  *	@brief This API reads Linear accel data x values
  *	from register 0x2C and 0x2D it is a two byte data
  *
- *	@param linear_accel_z : The raw z data
+ *	@param v_linear_accel_z_s_16 : The raw z data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2733,7 +2717,7 @@ _s16 *linear_accel_y);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_linear_accel_z(
-_s16 *linear_accel_z);
+s_16 *v_linear_accel_z_s_16);
 /*!
  *	@brief This API reads Linear accel data xyz values
  *	from register 0x28 to 0x2D it is a six byte data
@@ -2753,7 +2737,7 @@ _s16 *linear_accel_z);
  *	@retval 1 -> Error
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_linear_accel_xyz(
-struct bno055_linear_accel *linear_accel);
+struct bno055_linear_accel_t *linear_accel);
 /**************************************************/
 /**\name GRAVITY DATA READ FUNCTIONS */
 /**************************************************/
@@ -2761,7 +2745,7 @@ struct bno055_linear_accel *linear_accel);
  *	@brief This API reads gravity data x values
  *	from register 0x2E and 0x2F it is a two byte data
  *
- *	@param gravity_x : The raw x data
+ *	@param v_gravity_x_s_16 : The raw x data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2769,12 +2753,13 @@ struct bno055_linear_accel *linear_accel);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_gravity_x(_s16 *gravity_x);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_gravity_x(
+s_16 *v_gravity_x_s_16);
 /*!
  *	@brief This API reads gravity data y values
  *	from register 0x30 and 0x31 it is a two byte data
  *
- *	@param gravity_y : The raw y data
+ *	@param v_gravity_y_s_16 : The raw y data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2782,12 +2767,13 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_gravity_x(_s16 *gravity_x);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_gravity_y(_s16 *gravity_y);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_gravity_y(
+s_16 *v_gravity_y_s_16);
 /*!
  *	@brief This API reads gravity data z values
  *	from register 0x32 and 0x33 it is a two byte data
  *
- *	@param gravity_z : The raw z data
+ *	@param v_gravity_z_s_16 : The raw z data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2795,7 +2781,8 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_gravity_y(_s16 *gravity_y);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_gravity_z(_s16 *gravity_z);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_gravity_z(
+s_16 *v_gravity_z_s_16);
 /*!
   *	@brief This API reads gravity data xyz values
  *	from register 0x2E to 0x33 it is a six byte data
@@ -2816,7 +2803,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_gravity_z(_s16 *gravity_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_gravity_xyz(
-struct bno055_gravity *gravity);
+struct bno055_gravity_t *gravity);
 /**************************************************/
 /**\name TEMPERATURE DATA READ FUNCTIONS */
 /**************************************************/
@@ -2824,7 +2811,7 @@ struct bno055_gravity *gravity);
  *	@brief This API reads temperature values
  *	from register 0x33 it is a byte data
  *
- *	@param temp : The raw temperature data
+ *	@param v_temp_s_8 : The raw temperature data
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -2832,7 +2819,7 @@ struct bno055_gravity *gravity);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_read_temp_data(_s16 *temp);
+BNO055_RETURN_FUNCTION_TYPE bno055_read_temp_data(s_8 *v_temp_s_8);
 #ifdef	BNO055_FLOAT_ENABLE
 /********************************************************************/
 /**\name FUNCTIONS FOR READING ACCEL DATA OUTPUT AS FLOAT PRECISION */
@@ -2841,7 +2828,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_temp_data(_s16 *temp);
  *	@brief This API is used to convert the accel x raw data
  *	to meterpersecseq output as float
  *
- *	@param accel_x : The accel x meterpersecseq data
+ *	@param v_accel_x_f : The accel x meterpersecseq data
  *
  *
  *
@@ -2852,12 +2839,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_read_temp_data(_s16 *temp);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_accel_x_msq(
-float *accel_x);
+float *v_accel_x_f);
 /*!
  *	@brief This API is used to convert the accel x raw data
  *	to meterpersecseq output as float
  *
- *	@param accel_y : The accel y meterpersecseq data
+ *	@param v_accel_y_f : The accel y meterpersecseq data
  *
  *
  *
@@ -2868,12 +2855,12 @@ float *accel_x);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_accel_y_msq(
-float *accel_y);
+float *v_accel_y_f);
 /*!
  *	@brief This API is used to convert the accel z raw data
  *	to meterpersecseq output as float
  *
- *	@param accel_z : The accel z meterpersecseq data
+ *	@param v_accel_z_f : The accel z meterpersecseq data
  *
  *
  *
@@ -2884,12 +2871,12 @@ float *accel_y);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_accel_z_msq(
-float *accel_z);
+float *v_accel_z_f);
 /*!
- *	@brief This API is used to convert the accel x raw data
+ *	@brief This API is used to convert the accel y raw data
  *	to millig output as float
  *
- *	@param accel_x : The accel x millig data
+ *	@param v_accel_x_f : The accel y millig data
  *
  *
  *
@@ -2897,16 +2884,14 @@ float *accel_z);
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
- *
- *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_accel_x_mg(
-float *accel_x);
+float *v_accel_x_f);
 /*!
  *	@brief This API is used to convert the accel y raw data
  *	to millig output as float
  *
- *	@param accel_y : The accel y millig data
+ *	@param v_accel_y_f : The accel y millig data
  *
  *
  *
@@ -2916,12 +2901,12 @@ float *accel_x);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_accel_y_mg(
-float *accel_y);
+float *v_accel_y_f);
 /*!
  *	@brief This API is used to convert the accel z raw data
  *	to millig output as float
  *
- *	@param accel_z : The accel z millig data
+ *	@param v_accel_z_f : The accel z millig data
  *
  *
  *
@@ -2932,7 +2917,7 @@ float *accel_y);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_accel_z_mg(
-float *accel_z);
+float *v_accel_z_f);
 /*!
  *	@brief This API is used to convert the accel xyz raw data
  *	to meterpersecseq output as float
@@ -2952,7 +2937,7 @@ float *accel_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_accel_xyz_msq(
-struct bno055_accel_float *accel_xyz);
+struct bno055_accel_float_t *accel_xyz);
 /*!
  *	@brief This API is used to convert the accel xyz raw data
  *	to millig output as float
@@ -2973,7 +2958,7 @@ struct bno055_accel_float *accel_xyz);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_accel_xyz_mg(
-struct bno055_accel_float *accel_xyz);
+struct bno055_accel_float_t *accel_xyz);
 /********************************************************************/
 /**\name FUNCTIONS FOR READING MAG DATA OUTPUT AS FLOAT PRECISION */
 /********************************************************************/
@@ -2981,7 +2966,7 @@ struct bno055_accel_float *accel_xyz);
  *	@brief This API is used to convert the mag x raw data
  *	to microTesla output as float
  *
- *	@param mag_x : The mag x microTesla data
+ *	@param v_mag_x_f : The mag x microTesla data
  *
  *
  *
@@ -2991,13 +2976,13 @@ struct bno055_accel_float *accel_xyz);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_mag_x_microtesla(
-float *mag_x);
+BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_mag_x_uT(
+float *v_mag_x_f);
 /*!
  *	@brief This API is used to convert the mag y raw data
  *	to microTesla output as float
  *
- *	@param mag_y : The mag y microTesla data
+ *	@param v_mag_y_f : The mag y microTesla data
  *
  *
  *
@@ -3006,13 +2991,13 @@ float *mag_x);
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_mag_y_microtesla(
-float *mag_y);
+BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_mag_y_uT(
+float *v_mag_y_f);
 /*!
  *	@brief This API is used to convert the mag z raw data
  *	to microTesla output as float
  *
- *	@param mag_z : The mag z microTesla data
+ *	@param v_mag_z_f : The mag z microTesla data
  *
  *
  *
@@ -3021,8 +3006,8 @@ float *mag_y);
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_mag_z_microtesla(
-float *mag_z);
+BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_mag_z_uT(
+float *v_mag_z_f);
 /*!
  *	@brief This API is used to convert the mag yz raw data
  *	to microTesla output as float
@@ -3041,8 +3026,8 @@ float *mag_z);
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_mag_xyz_microtesla(
-struct bno055_mag_float *mag_xyz_data);
+BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_mag_xyz_uT(
+struct bno055_mag_float_t *mag_xyz_data);
 /********************************************************************/
 /**\name FUNCTIONS FOR READING GYRO DATA OUTPUT AS FLOAT PRECISION */
 /********************************************************************/
@@ -3050,7 +3035,7 @@ struct bno055_mag_float *mag_xyz_data);
  *	@brief This API is used to convert the gyro x raw data
  *	to dps output as float
  *
- *	@param gyro_x : The gyro x dps float data
+ *	@param v_gyro_x_f : The gyro x dps float data
  *
  *
  *
@@ -3059,12 +3044,12 @@ struct bno055_mag_float *mag_xyz_data);
  *	@retval 1 -> Error
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_gyro_x_dps(
-float *gyro_x);
+float *v_gyro_x_f);
 /*!
  *	@brief This API is used to convert the gyro x raw data
  *	to rps output as float
  *
- *	@param gyro_x : The gyro x dps float data
+ *	@param v_gyro_x_f : The gyro x dps float data
  *
  *
  *
@@ -3074,12 +3059,12 @@ float *gyro_x);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_gyro_x_rps(
-float *gyro_x);
+float *v_gyro_x_f);
 /*!
  *	@brief This API is used to convert the gyro y raw data
  *	to dps output as float
  *
- *	@param gyro_y : The gyro y dps float data
+ *	@param v_gyro_y_f : The gyro y dps float data
  *
  *
  *
@@ -3089,12 +3074,12 @@ float *gyro_x);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_gyro_y_dps(
-float *gyro_y);
+float *v_gyro_y_f);
 /*!
  *	@brief This API is used to convert the gyro y raw data
  *	to rps output as float
  *
- *	@param gyro_y : The gyro y dps float data
+ *	@param v_gyro_y_f : The gyro y dps float data
  *
  *
  *
@@ -3105,12 +3090,12 @@ float *gyro_y);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_gyro_y_rps(
-float *gyro_y);
+float *v_gyro_y_f);
 /*!
  *	@brief This API is used to convert the gyro z raw data
  *	to dps output as float
  *
- *	@param gyro_z : The gyro z dps float data
+ *	@param v_gyro_z_f : The gyro z dps float data
  *
  *
  *
@@ -3120,12 +3105,12 @@ float *gyro_y);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_gyro_z_dps(
-float *gyro_z);
+float *v_gyro_z_f);
 /*!
  *	@brief This API is used to convert the gyro z raw data
  *	to rps output as float
  *
- *	@param gyro_z : The gyro z rps float data
+ *	@param v_gyro_z_f : The gyro z rps float data
  *
  *
  *
@@ -3135,7 +3120,7 @@ float *gyro_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_gyro_z_rps(
-float *gyro_z);
+float *v_gyro_z_f);
 /*!
  *	@brief This API is used to convert the gyro xyz raw data
  *	to dps output as float
@@ -3156,7 +3141,7 @@ float *gyro_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_gyro_xyz_dps(
-struct bno055_gyro_float *gyro_xyz_data);
+struct bno055_gyro_float_t *gyro_xyz_data);
 /*!
  *	@brief This API is used to convert the gyro xyz raw data
  *	to rps output as float
@@ -3177,7 +3162,7 @@ struct bno055_gyro_float *gyro_xyz_data);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_gyro_xyz_rps(
-struct bno055_gyro_float *gyro_xyz_data);
+struct bno055_gyro_float_t *gyro_xyz_data);
 /********************************************************************/
 /**\name FUNCTIONS FOR READING EULER DATA OUTPUT AS FLOAT PRECISION */
 /********************************************************************/
@@ -3185,7 +3170,7 @@ struct bno055_gyro_float *gyro_xyz_data);
  *	@brief This API is used to convert the Euler h raw data
  *	to degree output as float
  *
- *	@param euler_h : The float value of Euler h degree
+ *	@param v_euler_h_f : The float value of Euler h degree
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3194,12 +3179,12 @@ struct bno055_gyro_float *gyro_xyz_data);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_euler_h_deg(
-float *euler_h);
+float *v_euler_h_f);
 /*!
  *	@brief This API is used to convert the Euler h raw data
  *	to radians output as float
  *
- *	@param euler_h : The float value of Euler h radians
+ *	@param v_euler_h_f : The float value of Euler h radians
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3208,12 +3193,12 @@ float *euler_h);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_euler_h_rad(
-float *euler_h);
+float *v_euler_h_f);
 /*!
  *	@brief This API is used to convert the Euler r raw data
  *	to degree output as float
  *
- *	@param euler_r : The float value of Euler r degree
+ *	@param v_euler_r_f : The float value of Euler r degree
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3221,12 +3206,12 @@ float *euler_h);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_euler_r_deg(
-float *euler_r);
+float *v_euler_r_f);
 /*!
  *	@brief This API is used to convert the Euler r raw data
  *	to radians output as float
  *
- *	@param euler_r : The float value of Euler r radians
+ *	@param v_euler_r_f : The float value of Euler r radians
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3234,12 +3219,12 @@ float *euler_r);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_euler_r_rad(
-float *euler_r);
+float *v_euler_r_f);
 /*!
  *	@brief This API is used to convert the Euler p raw data
  *	to degree output as float
  *
- *	@param euler_p : The float value of Euler p degree
+ *	@param v_euler_p_f : The float value of Euler p degree
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3247,12 +3232,12 @@ float *euler_r);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_euler_p_deg(
-float *euler_p);
+float *v_euler_p_f);
 /*!
  *	@brief This API is used to convert the Euler p raw data
  *	to radians output as float
  *
- *	@param euler_p : The float value of Euler p radians
+ *	@param v_euler_p_f : The float value of Euler p radians
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3261,7 +3246,7 @@ float *euler_p);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_euler_p_rad(
-float *euler_p);
+float *v_euler_p_f);
 /*!
  *	@brief This API is used to convert the Euler hrp raw data
  *	to degree output as float
@@ -3281,7 +3266,7 @@ float *euler_p);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_euler_hpr_deg(
-struct bno055_euler_float *euler_hpr);
+struct bno055_euler_float_t *euler_hpr);
 /*!
  *	@brief This API is used to convert the Euler xyz raw data
  *	to radians output as float
@@ -3301,7 +3286,7 @@ struct bno055_euler_float *euler_hpr);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_euler_hpr_rad(
-struct bno055_euler_float *euler_hpr);
+struct bno055_euler_float_t *euler_hpr);
 /***************************************************************************/
 /**\name FUNCTIONS FOR READING LINEAR ACCEL DATA OUTPUT AS FLOAT PRECISION */
 /**************************************************************************/
@@ -3309,31 +3294,31 @@ struct bno055_euler_float *euler_hpr);
  *	@brief This API is used to convert the linear
  *	accel x raw data to meterpersecseq output as float
  *
- *	@param linear_accel_x : The float value of linear accel x meterpersecseq
+ *	@param v_linear_accel_x_f : The float value of linear accel x meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_linear_accel_x_msq(
-float *linear_accel_x);
+float *v_linear_accel_x_f);
 /*!
  *	@brief This API is used to convert the linear
  *	accel y raw data to meterpersecseq output as float
  *
- *	@param linear_accel_y : The float value of linear accel y meterpersecseq
+ *	@param v_linear_accel_y_f : The float value of linear accel y meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_linear_accel_y_msq(
-float *linear_accel_y);
+float *v_linear_accel_y_f);
 /*!
  *	@brief This API is used to convert the linear
  *	accel z raw data to meterpersecseq output as float
  *
- *	@param linear_accel_z : The float value of linear accel z meterpersecseq
+ *	@param v_linear_accel_z_f : The float value of linear accel z meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3341,7 +3326,7 @@ float *linear_accel_y);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_linear_accel_z_msq(
-float *linear_accel_z);
+float *v_linear_accel_z_f);
 /*!
  *	@brief This API is used to convert the linear accel xyz raw data
  *	to meterpersecseq output as float
@@ -3362,7 +3347,7 @@ float *linear_accel_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_linear_accel_xyz_msq(
-struct bno055_linear_accel_float *linear_accel_xyz);
+struct bno055_linear_accel_float_t *linear_accel_xyz);
 /********************************************************************/
 /**\name FUNCTIONS FOR READING GRAVITY DATA OUTPUT AS FLOAT PRECISION */
 /********************************************************************/
@@ -3370,7 +3355,7 @@ struct bno055_linear_accel_float *linear_accel_xyz);
  *	@brief This API is used to convert the gravity
  *	x raw data to meterpersecseq output as float
  *
- *	@param gravity_x : The float value of gravity x meterpersecseq
+ *	@param v_gravity_x_f : The float value of gravity x meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3379,12 +3364,12 @@ struct bno055_linear_accel_float *linear_accel_xyz);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_gravity_float_x_msq(
-float *gravity_x);
+float *v_gravity_x_f);
 /*!
  *	@brief This API is used to convert the gravity
  *	y raw data to meterpersecseq output as float
  *
- *	@param gravity_y : The float value of gravity y meterpersecseq
+ *	@param v_gravity_y_f : The float value of gravity y meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3393,12 +3378,12 @@ float *gravity_x);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_gravity_float_y_msq(
-float *gravity_y);
+float *v_gravity_y_f);
 /*!
  *	@brief This API is used to convert the gravity
  *	z raw data to meterpersecseq output as float
  *
- *	@param gravity_z : The float value of gravity z meterpersecseq
+ *	@param v_gravity_z_f : The float value of gravity z meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3427,7 +3412,7 @@ float *gravity_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_gravity_xyz_msq(
-struct bno055_gravity_float *gravity_xyz);
+struct bno055_gravity_float_t *gravity_xyz);
 /**************************************************************************/
 /**\name FUNCTIONS FOR READING TEMPERATURE DATA OUTPUT AS FLOAT PRECISION */
 /*************************************************************************/
@@ -3435,7 +3420,7 @@ struct bno055_gravity_float *gravity_xyz);
  *	@brief This API is used to convert the temperature
  *	data to Fahrenheit output as float
  *
- *	@param temp : The float value of temperature Fahrenheit
+ *	@param v_temp_f : The float value of temperature Fahrenheit
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3444,12 +3429,12 @@ struct bno055_gravity_float *gravity_xyz);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_temp_fahrenheit(
-float *temp);
+float *v_temp_f);
 /*!
  *	@brief This API is used to convert the temperature
  *	data to Celsius output as float
  *
- *	@param temp : The float value of temperature Celsius
+ *	@param v_temp_f : The float value of temperature Celsius
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3459,7 +3444,7 @@ float *temp);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_float_temp_celsius(
-float *temp);
+float *v_temp_f);
 #endif
 #ifdef	BNO055_DOUBLE_ENABLE
 /**************************************************************************/
@@ -3469,7 +3454,7 @@ float *temp);
  *	@brief This API is used to convert the accel x raw data
  *	to meterpersecseq output as double
  *
- *	@param accel_x : The accel x meterpersecseq data
+ *	@param v_accel_x_d : The accel x meterpersecseq data
  *
  *
  *
@@ -3480,12 +3465,12 @@ float *temp);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_accel_x_msq(
-double *accel_x);
+double *v_accel_x_d);
 /*!
  *	@brief This API is used to convert the accel y raw data
  *	to meterpersecseq output as double
  *
- *	@param accel_y : The accel y meterpersecseq data
+ *	@param v_accel_y_d : The accel y meterpersecseq data
  *
  *
  *
@@ -3497,12 +3482,12 @@ double *accel_x);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_accel_y_msq(
-double *accel_y);
+double *v_accel_y_d);
 /*!
  *	@brief This API is used to convert the accel z raw data
  *	to meterpersecseq output as double
  *
- *	@param accel_z : The accel z meterpersecseq data
+ *	@param v_accel_z_d : The accel z meterpersecseq data
  *
  *
  *
@@ -3511,12 +3496,12 @@ double *accel_y);
  *	@retval 1 -> Error
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_accel_z_msq(
-double *accel_z);
+double *v_accel_z_d);
 /*!
  *	@brief This API is used to convert the accel x raw data
  *	to millig output as double
  *
- *	@param accel_x : The accel x millig data
+ *	@param v_accel_x_d : The accel x millig data
  *
  *
  *
@@ -3528,12 +3513,12 @@ double *accel_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_accel_x_mg(
-double *accel_x);
+double *v_accel_x_d);
 /*!
  *	@brief This API is used to convert the accel y raw data
  *	to millig output as double
  *
- *	@param accel_y : The accel y millig data
+ *	@param v_accel_y_d : The accel y millig data
  *
  *
  *
@@ -3544,12 +3529,12 @@ double *accel_x);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_accel_y_mg(
-double *accel_y);
+double *v_accel_y_d);
 /*!
  *	@brief This API is used to convert the accel z raw data
  *	to millig output as double
  *
- *	@param accel_z : The accel z millig data
+ *	@param v_accel_z_d : The accel z millig data
  *
  *
  *
@@ -3559,7 +3544,7 @@ double *accel_y);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_accel_z_mg(
-double *accel_z);
+double *v_accel_z_d);
 /*!
  *	@brief This API is used to convert the accel xyz raw data
  *	to meterpersecseq output as double
@@ -3580,7 +3565,7 @@ double *accel_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_accel_xyz_msq(
-struct bno055_accel_double *accel_xyz);
+struct bno055_accel_double_t *accel_xyz);
 /*!
  *	@brief This API is used to convert the accel xyz raw data
  *	to millig output as double
@@ -3600,7 +3585,7 @@ struct bno055_accel_double *accel_xyz);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_accel_xyz_mg(
-struct bno055_accel_double *accel_xyz);
+struct bno055_accel_double_t *accel_xyz);
 /**************************************************************************/
 /**\name FUNCTIONS FOR READING MAG DATA OUTPUT AS DOUBLE PRECISION */
 /*************************************************************************/
@@ -3608,7 +3593,7 @@ struct bno055_accel_double *accel_xyz);
  *	@brief This API is used to convert the mag x raw data
  *	to microTesla output as double
  *
- *	@param mag_x : The mag x microTesla data
+ *	@param v_mag_x_d : The mag x microTesla data
  *
  *
  *
@@ -3619,13 +3604,13 @@ struct bno055_accel_double *accel_xyz);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_mag_x_microtesla(
-double *mag_x);
+BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_mag_x_uT(
+double *v_mag_x_d);
 /*!
- *	@brief This API is used to convert the mag y raw data
+ *	@brief This API is used to convert the mag x raw data
  *	to microTesla output as double
  *
- *	@param mag_y : The mag y microTesla data
+ *	@param v_mag_y_d : The mag x microTesla data
  *
  *
  *
@@ -3634,14 +3619,15 @@ double *mag_x);
  *	@retval 1 -> Error
  *
  *
+ *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_mag_y_microtesla(
-double *mag_y);
+BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_mag_y_uT(
+double *v_mag_y_d);
 /*!
  *	@brief This API is used to convert the mag z raw data
  *	to microTesla output as double
  *
- *	@param mag_z : The mag z microTesla data
+ *	@param v_mag_z_d : The mag z microTesla data
  *
  *
  *
@@ -3651,8 +3637,8 @@ double *mag_y);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_mag_z_microtesla(
-double *mag_z);
+BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_mag_z_uT(
+double *v_mag_z_d);
 /*!
  *	@brief This API is used to convert the mag yz raw data
  *	to microTesla output as double
@@ -3671,8 +3657,8 @@ double *mag_z);
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_mag_xyz_microtesla(
-struct bno055_mag_double *mag_xyz);
+BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_mag_xyz_uT(
+struct bno055_mag_double_t *mag_xyz);
 /**************************************************************************/
 /**\name FUNCTIONS FOR READING GYRO DATA OUTPUT AS DOUBLE PRECISION */
 /*************************************************************************/
@@ -3680,7 +3666,7 @@ struct bno055_mag_double *mag_xyz);
  *	@brief This API is used to convert the gyro x raw data
  *	to dps output as double
  *
- *	@param gyro_x : The gyro x dps double data
+ *	@param v_gyro_x_d : The gyro x dps double data
  *
  *
  *
@@ -3691,12 +3677,12 @@ struct bno055_mag_double *mag_xyz);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_gyro_x_dps(
-double *gyro_x);
+double *v_gyro_x_d);
 /*!
  *	@brief This API is used to convert the gyro y raw data
  *	to dps output as double
  *
- *	@param gyro_y : The gyro y dps double data
+ *	@param v_gyro_y_d : The gyro y dps double data
  *
  *
  *
@@ -3707,12 +3693,12 @@ double *gyro_x);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_gyro_y_dps(
-double *gyro_y);
+double *v_gyro_y_d);
 /*!
  *	@brief This API is used to convert the gyro z raw data
  *	to dps output as double
  *
- *	@param gyro_z : The gyro z dps double data
+ *	@param v_gyro_z_d : The gyro z dps double data
  *
  *
  *
@@ -3723,12 +3709,12 @@ double *gyro_y);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_gyro_z_dps(
-double *gyro_z);
+double *v_gyro_z_d);
 /*!
  *	@brief This API is used to convert the gyro x raw data
  *	to rps output as double
  *
- *	@param gyro_x : The gyro x dps double data
+ *	@param v_gyro_x_d : The gyro x dps double data
  *
  *
  *
@@ -3739,12 +3725,12 @@ double *gyro_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_gyro_x_rps(
-double *gyro_x);
+double *v_gyro_x_d);
 /*!
  *	@brief This API is used to convert the gyro y raw data
  *	to rps output as double
  *
- *	@param gyro_y : The gyro y dps double data
+ *	@param v_gyro_y_d : The gyro y dps double data
  *
  *
  *
@@ -3755,12 +3741,12 @@ double *gyro_x);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_gyro_y_rps(
-double *gyro_y);
+double *v_gyro_y_d);
 /*!
  *	@brief This API is used to convert the gyro z raw data
  *	to rps output as double
  *
- *	@param gyro_z : The gyro z rps double data
+ *	@param v_gyro_z_d : The gyro z rps double data
  *
  *
  *
@@ -3771,7 +3757,7 @@ double *gyro_y);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_gyro_z_rps(
-double *gyro_z);
+double *v_gyro_z_d);
 /*!
  *	@brief This API is used to convert the gyro xyz raw data
  *	to dps output as double
@@ -3791,7 +3777,7 @@ double *gyro_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_gyro_xyz_dps(
-struct bno055_gyro_double *gyro_xyz);
+struct bno055_gyro_double_t *gyro_xyz);
 /*!
  *	@brief This API is used to convert the gyro xyz raw data
  *	to rps output as double
@@ -3811,7 +3797,7 @@ struct bno055_gyro_double *gyro_xyz);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_gyro_xyz_rps(
-struct bno055_gyro_double *gyro_xyz);
+struct bno055_gyro_double_t *gyro_xyz);
 /**************************************************************************/
 /**\name FUNCTIONS FOR READING EULER DATA OUTPUT AS DOUBLE PRECISION */
 /*************************************************************************/
@@ -3819,7 +3805,7 @@ struct bno055_gyro_double *gyro_xyz);
  *	@brief This API is used to convert the Euler h raw data
  *	to degree output as double
  *
- *	@param euler_h : The double value of Euler h degree
+ *	@param v_euler_h_d : The double value of Euler h degree
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3828,12 +3814,12 @@ struct bno055_gyro_double *gyro_xyz);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_euler_h_deg(
-double *euler_h);
+double *v_euler_h_d);
 /*!
  *	@brief This API is used to convert the Euler p raw data
  *	to degree output as double
  *
- *	@param euler_p : The double value of Euler p degree
+ *	@param v_euler_p_d : The double value of Euler p degree
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3842,12 +3828,12 @@ double *euler_h);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_euler_p_deg(
-double *euler_p);
+double *v_euler_p_d);
 /*!
  *	@brief This API is used to convert the Euler r raw data
  *	to degree output as double
  *
- *	@param euler_r : The double value of Euler r degree
+ *	@param v_euler_r_d : The double value of Euler r degree
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3856,12 +3842,12 @@ double *euler_p);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_euler_r_deg(
-double *euler_r);
+double *v_euler_r_d);
 /*!
  *	@brief This API is used to convert the Euler h raw data
  *	to radians output as double
  *
- *	@param euler_h : The double value of Euler h radians
+ *	@param v_euler_h_d : The double value of Euler h radians
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3870,12 +3856,12 @@ double *euler_r);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_euler_h_rad(
-double *euler_h);
+double *v_euler_h_d);
 /*!
  *	@brief This API is used to convert the Euler p raw data
  *	to radians output as double
  *
- *	@param euler_p : The double value of Euler p radians
+ *	@param v_euler_p_d : The double value of Euler p radians
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3885,12 +3871,12 @@ double *euler_h);
  */
 
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_euler_p_rad(
-double *euler_p);
+double *v_euler_p_d);
 /*!
  *	@brief This API is used to convert the Euler r raw data
  *	to radians output as double
  *
- *	@param euler_r : The double value of Euler r radians
+ *	@param v_euler_r_d : The double value of Euler r radians
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3899,7 +3885,7 @@ double *euler_p);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_euler_r_rad(
-double *euler_r);
+double *v_euler_r_d);
 /*!
  *	@brief This API is used to convert the Euler hpr raw data
  *	to degree output as double
@@ -3918,9 +3904,8 @@ double *euler_r);
  *	@retval 1 -> Error
  *
  */
-
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_euler_hpr_deg(
-struct bno055_euler_double *euler_hpr);
+struct bno055_euler_double_t *euler_hpr);
 /*!
  *	@brief This API is used to convert the Euler hpr raw data
  *	to radians output as double
@@ -3939,9 +3924,8 @@ struct bno055_euler_double *euler_hpr);
  *	@retval 1 -> Error
  *
  */
-
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_euler_hpr_rad(
-struct bno055_euler_double *euler_hpr);
+struct bno055_euler_double_t *euler_hpr);
 /****************************************************************************/
 /**\name FUNCTIONS FOR READING LINEAR ACCEL DATA OUTPUT AS DOUBLE PRECISION */
 /****************************************************************************/
@@ -3949,7 +3933,8 @@ struct bno055_euler_double *euler_hpr);
  *	@brief This API is used to convert the linear
  *	accel x raw data to meterpersecseq output as double
  *
- *	@param linear_accel_x : The double value of linear accel x meterpersecseq
+ *	@param v_linear_accel_x_d : The double value of
+ *	linear accel x meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3958,12 +3943,13 @@ struct bno055_euler_double *euler_hpr);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_linear_accel_x_msq(
-double *linear_accel_x);
+double *v_linear_accel_x_d);
 /*!
  *	@brief This API is used to convert the linear
  *	accel y raw data to meterpersecseq output as double
  *
- *	@param linear_accel_y : The double value of linear accel y meterpersecseq
+ *	@param v_linear_accel_y_d : The double value of
+ *	linear accel y meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3971,14 +3957,14 @@ double *linear_accel_x);
  *
  *
  */
-
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_linear_accel_y_msq(
-double *linear_accel_y);
+double *v_linear_accel_y_d);
 /*!
  *	@brief This API is used to convert the linear
  *	accel z raw data to meterpersecseq output as double
  *
- *	@param linear_accel_z : The double value of linear accel z meterpersecseq
+ *	@param v_linear_accel_z_d : The double value of
+ *	linear accel z meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -3988,7 +3974,7 @@ double *linear_accel_y);
  */
 
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_linear_accel_z_msq(
-double *linear_accel_z);
+double *v_linear_accel_z_d);
 /*!
  *	@brief This API is used to convert the linear accel xyz raw data
  *	to meterpersecseq output as double
@@ -4009,7 +3995,7 @@ double *linear_accel_z);
  */
 
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_linear_accel_xyz_msq(
-struct bno055_linear_accel_double *linear_accel_xyz);
+struct bno055_linear_accel_double_t *linear_accel_xyz);
 /**************************************************************************/
 /**\name FUNCTIONS FOR READING GRAVITY DATA OUTPUT AS DOUBLE PRECISION */
 /*************************************************************************/
@@ -4017,7 +4003,7 @@ struct bno055_linear_accel_double *linear_accel_xyz);
  *	@brief This API is used to convert the gravity
  *	x raw data to meterpersecseq output as double
  *
- *	@param gravity_x : The double value of gravity x meterpersecseq
+ *	@param v_gravity_x_d : The double value of gravity x meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4026,12 +4012,12 @@ struct bno055_linear_accel_double *linear_accel_xyz);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_gravity_double_x_msq(
-double *gravity_x);
+double *v_gravity_x_d);
 /*!
  *	@brief This API is used to convert the gravity
  *	y raw data to meterpersecseq output as double
  *
- *	@param gravity_y : The double value of gravity y meterpersecseq
+ *	@param v_gravity_y_d : The double value of gravity y meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4040,12 +4026,12 @@ double *gravity_x);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_gravity_double_y_msq(
-double *gravity_y);
+double *v_gravity_y_d);
 /*!
  *	@brief This API is used to convert the gravity
  *	z raw data to meterpersecseq output as double
  *
- *	@param gravity_z : The double value of gravity z meterpersecseq
+ *	@param v_gravity_z_d : The double value of gravity z meterpersecseq
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4053,9 +4039,8 @@ double *gravity_y);
  *
  *
  */
-
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_gravity_double_z_msq(
-double *gravity_z);
+double *v_gravity_z_d);
 /*!
  *	@brief This API is used to convert the gravity xyz raw data
  *	to meterpersecseq output as double
@@ -4075,7 +4060,7 @@ double *gravity_z);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_gravity_xyz_msq(
-struct bno055_gravity_double *gravity_xyz);
+struct bno055_gravity_double_t *gravity_xyz);
 /**************************************************************************/
 /**\name FUNCTIONS FOR READING TEMPERATURE DATA OUTPUT AS DOUBLE PRECISION*/
 /*************************************************************************/
@@ -4083,7 +4068,7 @@ struct bno055_gravity_double *gravity_xyz);
  *	@brief This API is used to convert the temperature
  *	data to Fahrenheit output as double
  *
- *	@param temp : The double value of temperature Fahrenheit
+ *	@param v_temp_d : The double value of temperature Fahrenheit
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4092,12 +4077,12 @@ struct bno055_gravity_double *gravity_xyz);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_temp_fahrenheit(
-double *temp);
+double *v_temp_d);
 /*!
  *	@brief This API is used to convert the temperature
  *	data to Celsius output as double
  *
- *	@param temp : The double value of temperature Celsius
+ *	@param v_temp_d : The double value of temperature Celsius
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4106,7 +4091,7 @@ double *temp);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_convert_double_temp_celsius(
-double *temp);
+double *v_temp_d);
 #endif
 /**************************************************************************/
 /**\name FUNCTIONS FOR READING ACCEL,MAG,GYRO AND SYTEM CALIBRATION STATUS*/
@@ -4115,7 +4100,7 @@ double *temp);
  *	@brief This API used to read
  *	mag calibration status from register from 0x35 bit 0 and 1
  *
- *	@param mag_calib : The value of mag calib status
+ *	@param v_mag_calib_u_8 : The value of mag calib status
  *
  *
  *	@return results of bus communication function
@@ -4124,12 +4109,12 @@ double *temp);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_mag_calib_stat(
-_u8 *mag_calib);
+u_8 *v_mag_calib_u_8);
 /*!
  *	@brief This API used to read
  *	accel calibration status from register from 0x35 bit 2 and 3
  *
- *	@param accel_calib : The value of accel calib status
+ *	@param v_accel_calib_u_8 : The value of accel calib status
  *
  *
  *	@return results of bus communication function
@@ -4138,12 +4123,12 @@ _u8 *mag_calib);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_calib_stat(
-_u8 *accel_calib);
+u_8 *v_accel_calib_u_8);
 /*!
  *	@brief This API used to read
  *	gyro calibration status from register from 0x35 bit 4 and 5
  *
- *	@param gyro_calib : The value of gyro calib status
+ *	@param v_gyro_calib_u_8 : The value of gyro calib status
  *
  *
  *	@return results of bus communication function
@@ -4152,12 +4137,12 @@ _u8 *accel_calib);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_calib_stat(
-_u8 *gyro_calib);
+u_8 *v_gyro_calib_u_8);
 /*!
  *	@brief This API used to read
  *	system calibration status from register from 0x35 bit 6 and 7
  *
- *	@param sys_calib : The value of system calib status
+ *	@param v_sys_calib_u_8 : The value of system calib status
  *
  *
  *	@return results of bus communication function
@@ -4166,7 +4151,7 @@ _u8 *gyro_calib);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_sys_calib_stat(
-_u8 *sys_calib);
+u_8 *v_sys_calib_u_8);
 /******************************************************************/
 /**\name FUNCTIONS FOR READING ACCEL,MAG,GYRO AND SYTEM SELF TEST */
 /******************************************************************/
@@ -4174,12 +4159,12 @@ _u8 *sys_calib);
  *	@brief This API used to read
  *	self test of accel from register from 0x36 bit 0
  *
- *	@param selftest_accel : The value of self test of accel
+ *	@param v_selftest_accel_u_8 : The value of self test of accel
  *
- *     selftest_accel|  result
- *   --------------- | ---------------------
- *     0x00          | indicates test failed
- *     0x01          | indicated test passed
+ *    v_selftest_accel_u_8 |  result
+ *   -------------------- | ---------------------
+ *     0x00               | indicates test failed
+ *     0x01               | indicated test passed
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4187,17 +4172,17 @@ _u8 *sys_calib);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_selftest_accel(
-_u8 *selftest_accel);
+u_8 *v_selftest_accel_u_8);
 /*!
  *	@brief This API used to read
  *	self test of mag from register from 0x36 bit 1
  *
- *	@param selftest_mag : The value of self test of mag
+ *	@param v_selftest_mag_u_8 : The value of self test of mag
  *
- *     selftest_mag  |  result
- *   --------------  | ---------------------
- *     0x00          | indicates test failed
- *     0x01          | indicated test passed
+ *     v_selftest_mag_u_8  |  result
+ *   -------------------- | ---------------------
+ *     0x00               | indicates test failed
+ *     0x01               | indicated test passed
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4205,17 +4190,17 @@ _u8 *selftest_accel);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_selftest_mag(
-_u8 *selftest_mag);
+u_8 *v_selftest_mag_u_8);
 /*!
  *	@brief This API used to read
  *	self test of gyro from register from 0x36 bit 2
  *
- *	@param selftest_gyro : The value of self test of gyro
+ *	@param v_selftest_gyro_u_8 : The value of self test of gyro
  *
- *     selftest_gyro  |  result
- *   ---------------  | ---------------------
- *     0x00           | indicates test failed
- *     0x01           | indicated test passed
+ *     v_selftest_gyro_u_8 |  result
+ *   -------------------- | ---------------------
+ *     0x00               | indicates test failed
+ *     0x01               | indicated test passed
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4223,17 +4208,17 @@ _u8 *selftest_mag);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_selftest_gyro(
-_u8 *selftest_gyro);
+u_8 *v_selftest_gyro_u_8);
 /*!
  *	@brief This API used to read
  *	self test of micro controller from register from 0x36 bit 3
  *
- *	@param selftest_mcu : The value of self test of micro controller
+ *	@param v_selftest_mcu_u_8 : The value of self test of micro controller
  *
- *     selftest_mcu  |  result
- *   --------------- | ---------------------
- *     0x00          | indicates test failed
- *     0x01          | indicated test passed
+ *     v_selftest_mcu_u_8  |  result
+ *   -------------------- | ---------------------
+ *     0x00               | indicates test failed
+ *     0x01               | indicated test passed
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4241,20 +4226,20 @@ _u8 *selftest_gyro);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_selftest_mcu(
-_u8 *selftest_mcu);
+u_8 *v_selftest_mcu_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR READING GYRO INTERRUPT STATUS */
 /*****************************************************/
 /*!
- *	@brief This API used to read the status of
+ *	@brief This API used to read the v_stat_s_8 of
  *	gyro anymotion interrupt from register from 0x37 bit 2
  *
- *	@param gyro_anymotion : The value of gyro anymotion interrupt
+ *	@param v_gyro_any_motion_u_8 : The value of gyro anymotion interrupt
  *
- *     gyro_anymotion  |  result
- *    --------------   | ---------------------
- *     0x00            | indicates no interrupt triggered
- *     0x01            | indicates interrupt triggered
+ *     v_gyro_any_motion_u_8  |  result
+ *    --------------------   | ---------------------
+ *     0x00                  | indicates no interrupt triggered
+ *     0x01                  | indicates interrupt triggered
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4263,23 +4248,23 @@ _u8 *selftest_mcu);
  *	@note Gyro anymotion interrupt can be enabled
  *	by the following APIs
  *
- *	bno055_set_intmsk_gyro_anymotion()
+ *	bno055_set_intr_mask_gyro_any_motion()
  *
- *	bno055_set_int_gyro_anymotion()
+ *	bno055_set_intr_gyro_any_motion()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_interrupt_stat_gyro_anymotion(
-_u8 *gyro_anymotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_stat_gyro_any_motion(
+u_8 *v_gyro_any_motion_u_8);
 /*!
- *	@brief This API used to read the status of
+ *	@brief This API used to read the v_stat_s_8 of
  *	gyro highrate interrupt from register from 0x37 bit 3
  *
- *	@param gyro_highrate : The value of gyro highrate interrupt
+ *	@param v_gyro_highrate_u_8 : The value of gyro highrate interrupt
  *
- *     gyro_highrate  |  result
- *    --------------  | ---------------------
- *     0x00           | indicates no interrupt triggered
- *     0x01           | indicates interrupt triggered
+ *     v_gyro_highrate_u_8   |  result
+ *    -------------------   | ---------------------
+ *     0x00                 | indicates no interrupt triggered
+ *     0x01                 | indicates interrupt triggered
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4288,13 +4273,12 @@ _u8 *gyro_anymotion);
  *	@note Gyro highrate interrupt can be configured
  *			by the following APIs
  *
- *	bno055_set_int_mask_gyro_highrate()
+ *	bno055_set_intr_mask_gyro_highrate()
  *
- *	bno055_set_int_gyro_highrate()
- *
+ *	bno055_set_intr_gyro_highrate()
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_interrupt_stat_gyro_highrate(
-_u8 *gyro_highrate);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_stat_gyro_highrate(
+u_8 *v_gyro_highrate_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR READING ACCEL INTERRUPT STATUS */
 /*****************************************************/
@@ -4302,12 +4286,12 @@ _u8 *gyro_highrate);
  *	@brief This API used to read the status of
  *	accel highg interrupt from register from 0x37 bit 5
  *
- *	@param accel_high_g : The value of accel highg interrupt
+ *	@param v_accel_high_g_u_8 : The value of accel highg interrupt
  *
- *     accel_high_g  |  result
- *    -------------  | -------------------------------
- *     0x00          | indicates no interrupt triggered
- *     0x01          | indicates interrupt triggered
+ *     v_accel_high_g_u_8    |  result
+ *    -------------------   | ---------------------
+ *     0x00                 | indicates no interrupt triggered
+ *     0x01                 | indicates interrupt triggered
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4316,23 +4300,23 @@ _u8 *gyro_highrate);
  *	@note Accel highg interrupt can be configured
  *			by the following APIs
  *
- *	bno055_set_int_mask_accel_high_g()
+ *	bno055_set_intr_mask_accel_high_g()
  *
- *	bno055_set_int_accel_high_g()
+ *	bno055_set_intr_accel_high_g()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_interrupt_stat_accel_highg(
-_u8 *accel_high_g);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_stat_accel_high_g(
+u_8 *v_accel_high_g_u_8);
 /*!
- *	@brief This API used to read the status of
+ *	@brief This API used to read the v_stat_s_8 of
  *	accel anymotion interrupt from register from 0x37 bit 6
  *
- *	@param accel_anymotion : The value of accel anymotion interrupt
+ *	@param v_accel_any_motion_u_8 : The value of accel anymotion interrupt
  *
- *     accel_anymotion  |  result
- *    --------------  | -------------------------------
- *     0x00           | indicates no interrupt triggered
- *     0x01           | indicates interrupt triggered
+ *     v_accel_any_motion_u_8 |  result
+ *    -------------------   | ---------------------
+ *     0x00                 | indicates no interrupt triggered
+ *     0x01                 | indicates interrupt triggered
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4341,24 +4325,23 @@ _u8 *accel_high_g);
  *	@note Accel anymotion interrupt can be configured
  *			by the following APIs
  *
- *	bno055_set_int_mask_accel_anymotion()
+ *	bno055_set_intr_mask_accel_any_motion()
  *
- *	bno055_set_int_accel_anymotion()
- *
- *
+ *	bno055_set_intr_accel_any_motion()
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_interrupt_stat_accel_anymotion(
-_u8 *accel_anymotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_stat_accel_any_motion(
+u_8 *v_accel_any_motion_u_8);
 /*!
- *	@brief This API used to read the status of
+ *	@brief This API used to read the v_stat_s_8 of
  *	accel nomotion/slowmotion interrupt from register from 0x37 bit 6
  *
- *	@param accel_nomotion : The value of accel nomotion/slowmotion interrupt
+ *	@param v_accel_no_motion_u_8 :
+ *	The value of accel nomotion/slowmotion interrupt
  *
- *     accel_nomotion   |  result
- *    --------------  | -------------------------------
- *     0x00           | indicates no interrupt triggered
- *     0x01           | indicates interrupt triggered
+ *     v_accel_no_motion_u_8 |  result
+ *    -------------------   | ---------------------
+ *     0x00                 | indicates no interrupt triggered
+ *     0x01                 | indicates interrupt triggered
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4367,14 +4350,12 @@ _u8 *accel_anymotion);
  *	@note Accel nomotion/slowmotion interrupt can be configured
  *			by the following APIs
  *
- *	bno055_set_int_mask_accel_nomotion()
+ *	bno055_set_intr_mask_accel_nomotion()
  *
- *	bno055_set_int_accel_nomotion()
- *
- *
+ *	bno055_set_intr_accel_nomotion()
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_interrupt_stat_accel_nomotion(
-_u8 *accel_nomotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_stat_accel_no_motion(
+u_8 *v_accel_no_motion_u_8);
 /**************************************************************************/
 /**\name FUNCTIONS FOR READING SYSTEM CLOCK, STATUS AND ERROR CODE */
 /*************************************************************************/
@@ -4382,7 +4363,7 @@ _u8 *accel_nomotion);
  *	@brief This API is used to read status of main clock
  *	from the register 0x38 bit 0
  *
- *	@param stat_main_clk : the status of main clock
+ *	@param v_stat_main_clk_u_8 : the status of main clock
  *
  *
  *	@return results of bus communication function
@@ -4391,12 +4372,12 @@ _u8 *accel_nomotion);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_stat_main_clk(
-_u8 *stat_main_clk);
+u_8 *v_stat_main_clk_u_8);
 /*!
  *	@brief This API is used to read system status
  *	code from the register 0x39 it is a byte of data
  *
- *	@param sys_stat : the status of system
+ *	@param v_sys_stat_u_8 : the status of system
  *
  *
  *	@return results of bus communication function
@@ -4405,12 +4386,12 @@ _u8 *stat_main_clk);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_sys_stat_code(
-_u8 *sys_stat);
+u_8 *v_sys_stat_u_8);
 /*!
  *	@brief This API is used to read system error
  *	code from the register 0x3A it is a byte of data
  *
- *	@param sys_error : The value of system error code
+ *	@param v_sys_error_u_8 : The value of system error code
  *
  *
  *	@return results of bus communication function
@@ -4420,7 +4401,7 @@ _u8 *sys_stat);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_sys_error_code(
-_u8 *sys_error);
+u_8 *v_sys_error_u_8);
 /********************************************/
 /**\name FUNCTIONS FOR ACCEL UNIT SELECTION */
 /********************************************/
@@ -4428,12 +4409,12 @@ _u8 *sys_error);
  *	@brief This API used to read the accel unit
  *	from register from 0x3B bit 0
  *
- *	@param accel_unit : The value of accel unit
+ *	@param v_accel_unit_u_8 : The value of accel unit
  *
- *    accel_unit |   result
- *   ----------  | ---------------
- *        0x00   | ACCEL_UNIT_MSQ
- *        0x01   | ACCEL_UNIT_MG
+ *    v_accel_unit_u_8 |   result
+ *   -------------    | ---------------
+ *        0x00        | ACCEL_UNIT_MSQ
+ *        0x01        | ACCEL_UNIT_MG
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4441,17 +4422,17 @@ _u8 *sys_error);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_unit(
-_u8 *accel_unit);
+u_8 *v_accel_unit_u_8);
 /*!
  *	@brief This API used to write the accel unit
  *	from register from 0x3B bit 0
  *
- *	@param accel_unit : The value of accel unit
+ *	@param v_accel_unit_u_8 : The value of accel unit
  *
- *    accel_unit   |   result
- *   ----------  | ---------------
- *        0x00   | ACCEL_UNIT_MSQ
- *        0x01   | ACCEL_UNIT_MG
+ *    v_accel_unit_u_8 |   result
+ *   -------------    | ---------------
+ *        0x00        | ACCEL_UNIT_MSQ
+ *        0x01        | ACCEL_UNIT_MG
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4459,7 +4440,8 @@ _u8 *accel_unit);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_unit(_u8 accel_unit);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_unit(
+u_8 v_accel_unit_u_8);
 /********************************************/
 /**\name FUNCTIONS FOR GYRO UNIT SELECTION */
 /********************************************/
@@ -4467,12 +4449,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_unit(_u8 accel_unit);
  *	@brief This API used to read the gyro unit
  *	from register from 0x3B bit 1
  *
- *	@param gyro_unit : The value of accel unit
+ *	@param v_gyro_unit_u_8 : The value of accel unit
  *
- *	gyro_unit  |  result
- *	---------  | -----------
- *    0x00     | GYRO_UNIT_DPS
- *    0x01     | GYRO_UNIT_RPS
+ *	v_gyro_unit_u_8  |  result
+ *	-------------   | -----------
+ *    0x00          | GYRO_UNIT_DPS
+ *    0x01          | GYRO_UNIT_RPS
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4480,17 +4462,18 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_unit(_u8 accel_unit);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_unit(_u8 *gyro_unit);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_unit(
+u_8 *v_gyro_unit_u_8);
 /*!
  *	@brief This API used to write the gyro unit
  *	from register from 0x3B bit 1
  *
- *	@param gyro_unit : The value of accel unit
+ *	@param v_gyro_unit_u_8 : The value of accel unit
  *
- *	gyro_unit   |  result
- *	---------  | -----------
- *    0x00     | GYRO_UNIT_DPS
- *    0x01     | GYRO_UNIT_RPS
+ *	v_gyro_unit_u_8  |  result
+ *	-------------   | -----------
+ *    0x00          | GYRO_UNIT_DPS
+ *    0x01          | GYRO_UNIT_RPS
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4498,7 +4481,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_unit(_u8 *gyro_unit);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_unit(_u8 gyro_unit);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_unit(u_8 v_gyro_unit_u_8);
 /********************************************/
 /**\name FUNCTIONS FOR EULER UNIT SELECTION */
 /********************************************/
@@ -4506,12 +4489,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_unit(_u8 gyro_unit);
  *	@brief This API used to read the Euler unit
  *	from register from 0x3B bit 2
  *
- *	@param euler_unit : The value of accel unit
+ *	@param v_euler_unit_u_8 : The value of accel unit
  *
- *    euler_unit| result
- *   ---------- | -----------
- *      0x00    | EULER_UNIT_DEG
- *      0x01    | EULER_UNIT_RAD
+ *    v_euler_unit_u_8 | result
+ *   --------------   | -----------
+ *      0x00          | EULER_UNIT_DEG
+ *      0x01          | EULER_UNIT_RAD
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4519,17 +4502,18 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_unit(_u8 gyro_unit);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_euler_unit(_u8 *euler_unit);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_euler_unit(
+u_8 *v_euler_unit_u_8);
 /*!
  *	@brief This API used to write the Euler unit
  *	from register from 0x3B bit 2
  *
- *	@param euler_unit : The value of Euler unit
+ *	@param v_euler_unit_u_8 : The value of Euler unit
  *
- *    euler_unit  | result
- *   ---------- | -----------
- *      0x00    | EULER_UNIT_DEG
- *      0x01    | EULER_UNIT_RAD
+ *    v_euler_unit_u_8 | result
+ *   --------------   | -----------
+ *      0x00          | EULER_UNIT_DEG
+ *      0x01          | EULER_UNIT_RAD
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4537,7 +4521,7 @@ BNO055_RETURN_FUNCTION_TYPE bno055_get_euler_unit(_u8 *euler_unit);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_euler_unit(_u8 euler_unit);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_euler_unit(u_8 v_euler_unit_u_8);
 /********************************************/
 /**\name FUNCTIONS FOR TILT UNIT SELECTION */
 /********************************************/
@@ -4545,12 +4529,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_euler_unit(_u8 euler_unit);
  *	@brief This API used to write the tilt unit
  *	from register from 0x3B bit 3
  *
- *	@param tilt_unit : The value of tilt unit
+ *	@param v_tilt_unit_u_8 : The value of tilt unit
  *
- *    tilt_unit  | result
- *   ----------- | ---------
- *     0x00      | degrees
- *     0x01      | radians
+ *    v_tilt_unit_u_8  | result
+ *   ---------------  | ---------
+ *     0x00           | degrees
+ *     0x01           | radians
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4559,17 +4543,17 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_euler_unit(_u8 euler_unit);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_tilt_unit(
-_u8 *tilt_unit);
+u_8 *v_tilt_unit_u_8);
 /*!
  *	@brief This API used to write the tilt unit
  *	from register from 0x3B bit 3
  *
- *	@param tilt_unit : The value of tilt unit
+ *	@param v_tilt_unit_u_8 : The value of tilt unit
  *
- *    tilt_unit  | result
- *   ----------- | ---------
- *     0x00      | degrees
- *     0x01      | radians
+ *    v_tilt_unit_u_8  | result
+ *   ---------------  | ---------
+ *     0x00           | degrees
+ *     0x01           | radians
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4581,7 +4565,8 @@ _u8 *tilt_unit);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_tilt_unit(_u8 tilt_unit);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_tilt_unit(
+u_8 v_tilt_unit_u_8);
 /**************************************************/
 /**\name FUNCTIONS FOR TEMPERATURE UNIT SELECTION */
 /**************************************************/
@@ -4589,12 +4574,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_tilt_unit(_u8 tilt_unit);
  *	@brief This API used to read the temperature unit
  *	from register from 0x3B bit 4
  *
- *	@param temp_unit : The value of temperature unit
+ *	@param v_temp_unit_u_8 : The value of temperature unit
  *
- *    temp_unit  |  result
- *   ----------- | --------------
- *      0x00     | TEMP_UNIT_CEL
- *      0x01     | TEMP_UNIT_FARENHEIT
+ *    v_temp_unit_u_8  |  result
+ *   -----------      | --------------
+ *      0x00          | TEMP_UNIT_CELCIUS
+ *      0x01          | TEMP_UNIT_FAHRENHEIT
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4602,17 +4587,17 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_tilt_unit(_u8 tilt_unit);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_temp_unit(
-_u8 *temp_unit);
+u_8 *v_temp_unit_u_8);
 /*!
  *	@brief This API used to write the temperature unit
  *	from register from 0x3B bit 4
  *
- *	@param temp_unit : The value of temperature unit
+ *	@param v_temp_unit_u_8 : The value of temperature unit
  *
- *    temp_unit  |  result
- *   ----------- | --------------
- *      0x00     | TEMP_UNIT_CEL
- *      0x01     | TEMP_UNIT_FARENHEIT
+ *    v_temp_unit_u_8  |  result
+ *   -----------      | --------------
+ *      0x00          | TEMP_UNIT_CELCIUS
+ *      0x01          | TEMP_UNIT_FAHRENHEIT
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4621,7 +4606,7 @@ _u8 *temp_unit);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_temp_unit(
-_u8 temp_unit);
+u_8 v_temp_unit_u_8);
 /**************************************************/
 /**\name FUNCTIONS FOR DATA OUTPUT FORMAT SELECT */
 /**************************************************/
@@ -4629,12 +4614,12 @@ _u8 temp_unit);
  *	@brief This API used to read the current selected orientation mode
  *	from register from 0x3B bit 7
  *
- *	@param data_output_format : The value of data output format
+ *	@param v_data_output_format_u_8 : The value of data output format
  *
- *	  data_output_format  | result
- *   -------------------- | --------
- *    0x00                | Windows
- *    0x01                | Android
+ *	  v_data_output_format_u_8  | result
+ *   --------------------      | --------
+ *    0x00                     | Windows
+ *    0x01                     | Android
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -4642,388 +4627,34 @@ _u8 temp_unit);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_data_output_format(
-_u8 *data_output_format);
+u_8 *v_data_output_format_u_8);
 /*!
- *	@brief This API used to write the current selected orientation mode
+ *	@brief This API used to read the current selected orientation mode
  *	from register from 0x3B bit 7
  *
- *	@param data_output_format : The value of data output format
+ *	@param v_data_output_format_u_8 : The value of data output format
  *
- *	  data_output_format  | result
- *   -------------------- | --------
- *    0x00                | Windows
- *    0x01                | Android
+ *	  v_data_output_format_u_8  | result
+ *   --------------------      | --------
+ *    0x00                     | Windows
+ *    0x01                     | Android
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
- *
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_data_output_format(
-_u8 data_output_format);
-/***********************************************************/
-/**\name FUNCTIONS FOR DATA SELECT OF ACCEL.MAG,GYRO,EULER,
-QUATERNION, LINEAR ACCEL, GRAVITY AND TEMPERATURE **********/
-/************************************************************/
-/*!
- *	@brief This API used to read the accel data select
- *	from register from 0x3C bit 0
- *
- *	@param accel_data_select : The value of accel data select
- *
- *    accel_data_select  | result
- *   ------------------- | --------
- *      0x01             | ENABLED
- *      0x00             | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_data_select(
-_u8 *accel_data_select);
-/*!
- *	@brief This API used to write the accel data select
- *	from register from 0x3C bit 0
- *
- *	@param accel_data_select : The value of accel data select
- *
- *    accel_data_select  | result
- *   ------------------- | --------
- *      0x01             | ENABLED
- *      0x00             | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_data_select(
-_u8 accel_data_select);
-/*!
- *	@brief This API used to read the mag data select
- *	from register from 0x3C bit 1
- *
- *	@param mag_data_select : The value of mag data select
- *
- *	 mag_data_select   | result
- *   ----------------  | --------
- *      0x01           | ENABLED
- *      0x00           | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_mag_data_select(
-_u8 *mag_data_select);
-/*!
- *	@brief This API used to write the mag data select
- *	from register from 0x3C bit 1
- *
- *	@param mag_data_select : The value of mag data select
- *
- *	 mag_data_select   | result
- *   ----------------  | --------
- *      0x01           | ENABLED
- *      0x00           | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_mag_data_select(
-_u8 mag_data_select);
-/*!
- *	@brief This API used to read the gyro data select
- *	from register from 0x3C bit 2
- *
- *	@param gyro_data_select : The value of gyro data select
- *
- *	 gyro_data_select  | result
- *   ----------------  | --------
- *      0x01           | ENABLED
- *      0x00           | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_data_select(
-_u8 *gyro_data_select);
-/*!
- *	@brief This API used to write the gyro data select
- *	from register from 0x3C bit 2
- *
- *	@param gyro_data_select : The value of gyro data select
- *
- *	 gyro_data_select  | result
- *   ----------------  | --------
- *      0x01           | ENABLED
- *      0x00           | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_data_select(
-_u8 gyro_data_select);
-/*!
- *	@brief This API used to read the Euler data select
- *	from register from 0x3C bit 3
- *
- *	@param euler_data_select : The value of Euler data select
- *
- *	 euler_data_select   | result
- *   ------------------  | ----------
- *      0x01             | ENABLED
- *      0x00             | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_euler_data_select(
-_u8 *euler_data_select);
-/*!
- *	@brief This API used to write the Euler data select
- *	from register from 0x3C bit 3
- *
- *	@param euler_data_select : The value of Euler data select
- *
- *	 euler_data_select   | result
- *   ------------------  | ----------
- *      0x01             | ENABLED
- *      0x00             | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_euler_data_select(
-_u8 euler_data_select);
-/*!
- *	@brief This API used to read the quaternion data select
- *	from register from 0x3C bit 4
- *
- *	@param quaternion_data_select : The value of quaternion data select
- *
- *	 quaternion_data_select   |  result
- *   ------------------------ | ----------
- *         0x01               | ENABLED
- *         0x00               | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_quaternion_data_select(
-_u8 *quaternion_data_select);
-/*!
- *	@brief This API used to write the quaternion data select
- *	from register from 0x3C bit 4
- *
- *	@param quaternion_data_select : The value of quaternion data select
- *
- *	 quaternion_data_select   |  result
- *   ------------------------ | ----------
- *         0x01               | ENABLED
- *         0x00               | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_quaternion_data_select(
-_u8 quaternion_data_select);
-/*!
- *	@brief This API used to read the linear accel data select
- *	from register from 0x3C bit 5
- *
- *	@param linear_accel_data_select : The value of linear accel data select
- *
- *	 linear_accel_data_select   | result
- *   -------------------------- | ----------
- *             0x01             | ENABLED
- *             0x00             | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_linear_accel_data_select(
-_u8 *linear_accel_data_select);
-/*!
- *	@brief This API used to write the linear accel data select
- *	from register from 0x3C bit 5
- *
- *	@param linear_accel_data_select : The value of linear accel data select
- *
- *	 linear_accel_data_select   | result
- *   -------------------------- | ----------
- *             0x01             | ENABLED
- *             0x00             | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_linear_accel_data_select(
-_u8 linear_accel_data_select);
-/*!
- *	@brief This API used to read the gravity data select
- *	from register from 0x3C bit 6
- *
- *	@param gravity_data_select : The value of gravity data select
- *
- *	 gravity_data_select  | result
- *   -------------------  | ----------
- *          0x01          | ENABLED
- *          0x00          | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gravity_data_select(
-_u8 *gravity_data_select);
-/*!
- *	@brief This API used to write the gravity data select
- *	from register from 0x3C bit 6
- *
- *	@param gravity_data_select : The value of gravity data select
- *
- *	 gravity_data_select  | result
- *   -------------------  | ----------
- *          0x01          | ENABLED
- *          0x00          | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gravity_data_select(
-_u8 gravity_data_select);
-/*!
- *	@brief This API used to read the temperature data select
- *	from register from 0x3C bit 7
- *
- *	@param temp_data_select : The value of temperature data select
- *
- *	 temp_data_select  | result
- *   ----------------  | ----------
- *      0x01           | ENABLED
- *      0x00           | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_temp_data_select(
-_u8 *temp_data_select);
-/*!
- *	@brief This API used to write the temperature data select
- *	from register from 0x3C bit 7
- *
- *	@param temp_data_select : The value of temperature data select
- *
- *	 temp_data_select  | result
- *   ----------------  | ----------
- *      0x01           | ENABLED
- *      0x00           | DISABLED
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_temp_data_select(
-_u8 temp_data_select);
-/**************************************************/
-/**\name FUNCTIONS FOR DATA OUTPUT RATE  */
-/**************************************************/
-/*!	@brief This API used to read the output data rate
- *	from register from 0x3D bit 4 to 6
- *
- *	@param output_data_rate : The value of output data rate
- *
- *   output_data_rate |  result
- *   ---------------- |---------------
- *      0x00          | FASTEST_MODE_1
- *      0x01          | FASTEST_MODE_2
- *      0x02          | GAME_MODE
- *      0x03          | UI_MODE
- *      0x04          | FASTEST_MODE_2
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- *	@note actual output data rates depend on the
- *	fusion operation mode selected
- *	the mapping between operating modes and output data rates
- *	refer the data sheet Table 3-12 to Table 3-16
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_output_data_rate(
-_u8 *output_data_rate);
-/*!	@brief This API used to write the output data rate
- *	from register from 0x3D bit 4 to 6
- *
- *	@param output_data_rate : The value of output data rate
- *
- *   output_data_rate |  result
- *   ---------------- |---------------
- *      0x00          | FASTEST_MODE_1
- *      0x01          | FASTEST_MODE_2
- *      0x02          | GAME_MODE
- *      0x03          | UI_MODE
- *      0x04          | FASTEST_MODE_
- *
- *	@return results of bus communication function
- *	@retval 0 -> Success
- *	@retval 1 -> Error
- *
- *	@note Actual output data rates depend on the
- *	fusion operation mode selected
- *	the mapping between operating modes and output data rates
- *	refer the data sheet Table 3-12 to Table 3-16
- *
- */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_output_data_rate(
-_u8 output_data_rate);
+u_8 v_data_output_format_u_8);
 /**************************************************/
 /**\name FUNCTIONS FOR DATA OPERATION MODE  */
 /**************************************************/
 /*!	@brief This API used to read the operation mode
  *	from register from 0x3D bit 0 to 3
  *
- *	@param operation_mode : The value of operation mode
+ *	@param v_operation_mode_u_8 : The value of operation mode
  *
- * operation_mode |      result           | comments
+ * v_operation_mode_u_8 |      result      | comments
  * ----------|----------------------------|----------------------------
  *  0x00     | OPERATION_MODE_CONFIG      | Configuration mode
  *  0x01     | OPERATION_MODE_ACCONLY     | Reads accel data alone
@@ -5032,7 +4663,7 @@ _u8 output_data_rate);
  *  0x04     | OPERATION_MODE_ACCMAG      | Reads accel and mag data
  *  0x05     | OPERATION_MODE_ACCGYRO     | Reads accel and gyro data
  *  0x06     | OPERATION_MODE_MAGGYRO     | Reads accel and mag data
- *  0x07     | OPERATION_MODE_ANYMOTIONG         | Reads accel mag and gyro data
+ *  0x07     | OPERATION_MODE_ANY_MOTION  | Reads accel mag and gyro data
  *  0x08     | OPERATION_MODE_IMUPLUS     | Inertial measurement unit
  *   -       |       -                    | Reads accel,gyro and fusion data
  *  0x09     | OPERATION_MODE_COMPASS     | Reads accel, mag data
@@ -5057,13 +4688,13 @@ _u8 output_data_rate);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_operation_mode(
-_u8 *operation_mode);
+u_8 *v_operation_mode_u_8);
 /*!	@brief This API used to write the operation mode
  *	from register from 0x3D bit 0 to 3
  *
- *	@param operation_mode : The value of operation mode
+ *	@param v_operation_mode_u_8 : The value of operation mode
  *
- *  operation_mode  |      result         | comments
+ *  v_operation_mode_u_8  |      result    | comments
  * ----------|----------------------------|----------------------------
  *  0x00     | OPERATION_MODE_CONFIG      | Configuration mode
  *  0x01     | OPERATION_MODE_ACCONLY     | Reads accel data alone
@@ -5072,7 +4703,7 @@ _u8 *operation_mode);
  *  0x04     | OPERATION_MODE_ACCMAG      | Reads accel and mag data
  *  0x05     | OPERATION_MODE_ACCGYRO     | Reads accel and gyro data
  *  0x06     | OPERATION_MODE_MAGGYRO     | Reads accel and mag data
- *  0x07     | OPERATION_MODE_AMG         | Reads accel mag and gyro data
+ *  0x07     | OPERATION_MODE_ANY_MOTION  | Reads accel mag and gyro data
  *  0x08     | OPERATION_MODE_IMUPLUS     | Inertial measurement unit
  *   -       |       -                    | Reads accel,gyro and fusion data
  *  0x09     | OPERATION_MODE_COMPASS     | Reads accel, mag data
@@ -5096,16 +4727,16 @@ _u8 *operation_mode);
  *	to configure the various settings of the BNO
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_operation_mode(_u8 operation_mode);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_operation_mode(u_8 v_operation_mode_u_8);
 /**************************************************/
 /**\name FUNCTIONS FOR POWER MODE  */
 /**************************************************/
 /*!	@brief This API used to read the power mode
  *	from register from 0x3E bit 0 to 1
  *
- *	@param power_mode : The value of power mode
+ *	@param v_power_mode_u_8 : The value of power mode
  *
- * power_mode|      result         | comments
+ * v_power_mode_u_8|      result    | comments
  * ----------|---------------------|-------------------------------------
  *  0x00     | POWER_MODE_NORMAL   | In the NORMAL mode the register
  *    -      |       -             | map and the internal peripherals
@@ -5126,13 +4757,13 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_operation_mode(_u8 operation_mode);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_power_mode(
-_u8 *power_mode);
+u_8 *v_power_mode_u_8);
 /*!	@brief This API used to write the power mode
  *	from register from 0x3E bit 0 to 1
  *
- *	@param power_mode : The value of power mode
+ *	@param v_power_mode_u_8 : The value of power mode
  *
- * power_mode |      result        | comments
+ * v_power_mode_u_8 |      result        | comments
  * ----------|---------------------|-------------------------------------
  *  0x00     | POWER_MODE_NORMAL   | In the NORMAL mode the register
  *    -      |       -             | map and the internal peripherals
@@ -5152,8 +4783,7 @@ _u8 *power_mode);
  *	refer data sheet 3.4.2
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_power_mode(
-_u8 power_mode);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_power_mode(u_8 v_power_mode_u_8);
 /**************************************************/
 /**\name FUNCTIONS FOR RESET INTERRUPT  */
 /**************************************************/
@@ -5162,38 +4792,38 @@ _u8 power_mode);
  *	from register from 0x3F bit 6
  *	It resets all the interrupt bit and interrupt output
  *
- *	@param int_rst : The value of reset interrupt
+ *	@param v_intr_rst_u_8 : The value of reset interrupt
  *
- *    int_rst  | result
- *   ----------|----------
- *     0x01    | ENABLED
- *     0x00    | DISABLED
+ *    v_intr_rst_u_8 | result
+ *   -------------- |----------
+ *     0x01         | ENABLED
+ *     0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_int_rst(
-_u8 *int_rst);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_rst(
+u_8 *v_intr_rst_u_8);
 /*!
  *	@brief This API used to write the reset interrupt
  *	from register from 0x3F bit 6
  *	It resets all the interrupt bit and interrupt output
  *
- *	@param int_rst : The value of reset interrupt
+ *	@param v_intr_rst_u_8 : The value of reset interrupt
  *
- *    int_rst  | result
- *   ----------|----------
- *     0x01    | ENABLED
- *     0x00    | DISABLED
+ *    v_intr_rst_u_8 | result
+ *   -------------- |----------
+ *     0x01         | ENABLED
+ *     0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_int_rst(_u8 int_rst);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_intr_rst(u_8 v_intr_rst_u_8);
 /**************************************************/
 /**\name FUNCTIONS FOR CLOCK SOURCE  */
 /**************************************************/
@@ -5201,12 +4831,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_int_rst(_u8 int_rst);
  *	@brief This API used to read the clk source
  *	from register from 0x3F bit 7
  *
- *	@param clk_src : The value of clk source
+ *	@param v_clk_src_u_8 : The value of clk source
  *
- *	 clk_src   | result
- *   ----------|----------
- *     0x01    | ENABLED
- *     0x00    | DISABLED
+ *	 v_clk_src_u_8   | result
+ *   -------------- |----------
+ *     0x01         | ENABLED
+ *     0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5214,24 +4844,24 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_int_rst(_u8 int_rst);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_clk_src(
-_u8 *clk_src);
+u_8 *v_clk_src_u_8);
 /*!
- *	@brief This API used to write the clock source
+ *	@brief This API used to write the clk source
  *	from register from 0x3F bit 7
  *
- *	@param clk_src : The value of clock source
+ *	@param v_clk_src_u_8 : The value of clk source
  *
- *	 clk_src   | result
- *   ----------|----------
- *     0x01    | ENABLED
- *     0x00    | DISABLED
+ *	 v_clk_src_u_8   | result
+ *   -------------- |----------
+ *     0x01         | ENABLED
+ *     0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_clk_src(_u8 clk_src);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_clk_src(u_8 v_clk_src_u_8);
 /**************************************************/
 /**\name FUNCTIONS FOR RESET SYSTEM  */
 /**************************************************/
@@ -5239,12 +4869,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_clk_src(_u8 clk_src);
  *	@brief This API used to read the reset system
  *	from register from 0x3F bit 5
  *
- *	@param sys_rst : The value of reset system
+ *	@param v_sys_rst_u_8 : The value of reset system
  *
- *	 sys_rst   | result
- *   ----------|----------
- *     0x01    | ENABLED
- *     0x00    | DISABLED
+ *	 v_sys_rst_u_8   | result
+ *   -------------- |----------
+ *     0x01         | ENABLED
+ *     0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5253,17 +4883,17 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_clk_src(_u8 clk_src);
  *	@note It resets the whole system
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_sys_rst(
-_u8 *sys_rst);
+u_8 *v_sys_rst_u_8);
 /*!
  *	@brief This API used to write the reset system
  *	from register from 0x3F bit 5
  *
- *	@param sys_rst : The value of reset system
+ *	@param v_sys_rst_u_8 : The value of reset system
  *
- *	 sys_rst   | result
- *   ----------|----------
- *     0x01    | ENABLED
- *     0x00    | DISABLED
+ *	 v_sys_rst_u_8   | result
+ *   -------------- |----------
+ *     0x01         | ENABLED
+ *     0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5271,7 +4901,7 @@ _u8 *sys_rst);
  *
  *	@note It resets the whole system
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_sys_rst(_u8 sys_rst);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_sys_rst(u_8 v_sys_rst_u_8);
 /**************************************************/
 /**\name FUNCTIONS FOR SELF TEST  */
 /**************************************************/
@@ -5279,12 +4909,12 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_sys_rst(_u8 sys_rst);
  *	@brief This API used to read the self test
  *	from register from 0x3F bit 0
  *
- *	@param selftest : The value of self test
+ *	@param v_selftest_u_8 : The value of self test
  *
- *	 selftest   | result
- *   -----------|----------
- *     0x01     | ENABLED
- *     0x00     | DISABLED
+ *	 v_selftest_u_8  | result
+ *   -------------- |----------
+ *     0x01         | ENABLED
+ *     0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5293,17 +4923,17 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_sys_rst(_u8 sys_rst);
  *	@note It triggers the self test
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_selftest(
-_u8 *selftest);
+u_8 *v_selftest_u_8);
 /*!
  *	@brief This API used to write the self test
  *	from register from 0x3F bit 0
  *
- *	@param selftest : The value of self test
+ *	@param v_selftest_u_8 : The value of self test
  *
- *	 selftest   | result
- *   -----------|----------
- *     0x01     | ENABLED
- *     0x00     | DISABLED
+ *	 v_selftest_u_8  | result
+ *   -------------- |----------
+ *     0x01         | ENABLED
+ *     0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5313,7 +4943,7 @@ _u8 *selftest);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_selftest(_u8 selftest);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_selftest(u_8 v_selftest_u_8);
 /**************************************************/
 /**\name FUNCTIONS FOR TEMPERATURE SOURCE  */
 /**************************************************/
@@ -5321,13 +4951,13 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_selftest(_u8 selftest);
  *	@brief This API used to read the temperature source
  *	from register from 0x40 bit 0 and 1
  *
- *	@param temp_source : The value of selected temperature source
+ *	@param v_temp_source_u_8 : The value of selected temperature source
  *
- *     temp_source | result
- *    -----------  |---------------
- *      0x00       | ACCEL_TEMP_EN
- *      0X01       | GYRO_TEMP_EN
- *      0X03       | MCU_TEMP_EN
+ *     v_temp_source_u_8 | result
+ *    ----------------  |---------------
+ *      0x00            | ACCEL_TEMP_EN
+ *      0X01            | GYRO_TEMP_EN
+ *      0X03            | MCU_TEMP_EN
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5335,25 +4965,25 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_selftest(_u8 selftest);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_temp_source(
-_u8 *temp_source);
+u_8 *v_temp_source_u_8);
 /*!
  *	@brief This API used to write the temperature source
  *	from register from 0x40 bit 0 and 1
  *
- *	@param temp_source : The value of selected temperature source
+ *	@param v_temp_source_u_8 : The value of selected temperature source
  *
- *     temp_source | result
- *    -----------  |---------------
- *      0x00       | ACCEL_TEMP_EN
- *      0X01       | GYRO_TEMP_EN
- *      0X03       | MCU_TEMP_EN
+ *     v_temp_source_u_8 | result
+ *    ----------------  |---------------
+ *      0x00            | ACCEL_TEMP_EN
+ *      0X01            | GYRO_TEMP_EN
+ *      0X03            | MCU_TEMP_EN
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_temp_source(_u8 temp_source);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_temp_source(u_8 v_temp_source_u_8);
 /**************************************************/
 /**\name FUNCTIONS FOR AXIS REMAP  */
 /**************************************************/
@@ -5361,9 +4991,9 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_temp_source(_u8 temp_source);
  *	@brief This API used to read the axis remap value
  *	from register from 0x41 bit 0 and 5
  *
- *	@param remap_axis : The value of axis remapping
+ *	@param v_remap_axis_u_8 : The value of axis remapping
  *
- *    remap_axis |   result          | comments
+ *    v_remap_axis_u_8 |   result     | comments
  *   ------------|-------------------|------------
  *      0X21     | REMAP_X_Y         | Z=Z;X=Y;Y=X
  *      0X18     | REMAP_Y_Z         | X=X;Y=Z;Z=Y
@@ -5391,14 +5021,14 @@ BNO055_RETURN_FUNCTION_TYPE bno055_set_temp_source(_u8 temp_source);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_axis_remap_value(
-_u8 *remap_axis);
+u_8 *v_remap_axis_u_8);
 /*!
  *	@brief This API used to write the axis remap value
  *	from register from 0x41 bit 0 and 5
  *
- *	@param remap_axis : The value of axis remapping
+ *	@param v_remap_axis_u_8 : The value of axis remapping
  *
- *    remap_axis |   result          | comments
+ *    v_remap_axis_u_8 |   result     | comments
  *   ------------|-------------------|------------
  *      0X21     | REMAP_X_Y         | Z=Z;X=Y;Y=X
  *      0X18     | REMAP_Y_Z         | X=X;Y=Z;Z=Y
@@ -5426,20 +5056,20 @@ _u8 *remap_axis);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_axis_remap_value(
-_u8 remap_axis);
+u_8 v_remap_axis_u_8);
 /**************************************************/
 /**\name FUNCTIONS FOR AXIS REMAP SIGN  */
 /**************************************************/
 /*!
- *	@brief This API used to write the x-axis remap
+ *	@brief This API used to read the x-axis remap
  *	sign from register from 0x42 bit 2
  *
- *	@param remap_x_sign : The value of x-axis remap sign
+ *	@param v_remap_x_sign_u_8 : The value of x-axis remap sign
  *
- *    remap_x_sign  |    result
- *   ---------------|--------------------
- *      0X00        | REMAP_AXIS_POSITIVE
- *      0X01        | REMAP_AXIS_NEGATIVE
+ *    v_remap_x_sign_u_8  |    result
+ *   ------------------- |--------------------
+ *      0X00             | REMAP_AXIS_POSITIVE
+ *      0X01             | REMAP_AXIS_NEGATIVE
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5447,17 +5077,17 @@ _u8 remap_axis);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_remap_x_sign(
-_u8 *remap_x_sign);
+u_8 *v_remap_x_sign_u_8);
 /*!
  *	@brief This API used to write the x-axis remap
  *	sign from register from 0x42 bit 2
  *
- *	@param remap_x_sign : The value of x-axis remap sign
+ *	@param v_remap_x_sign_u_8 : The value of x-axis remap sign
  *
- *    remap_x_sign  |    result
- *   ---------------|--------------------
- *      0X00        | REMAP_AXIS_POSITIVE
- *      0X01        | REMAP_AXIS_NEGATIVE
+ *    v_remap_x_sign_u_8  |    result
+ *   ------------------- |--------------------
+ *      0X00             | REMAP_AXIS_POSITIVE
+ *      0X01             | REMAP_AXIS_NEGATIVE
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5465,17 +5095,17 @@ _u8 *remap_x_sign);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_remap_x_sign(
-_u8 remap_x_sign);
+u_8 v_remap_x_sign_u_8);
 /*!
  *	@brief This API used to read the y-axis remap
  *	sign from register from 0x42 bit 1
  *
- *	@param remap_y_sign : The value of y-axis remap sign
+ *	@param v_remap_y_sign_u_8 : The value of y-axis remap sign
  *
- *    remap_y_sign  |   result
- *    --------------|-------------------
- *      0X00        | REMAP_AXIS_POSITIVE
- *      0X01        | REMAP_AXIS_NEGATIVE
+ *    v_remap_y_sign_u_8  |   result
+ *   ------------------- |--------------------
+ *      0X00             | REMAP_AXIS_POSITIVE
+ *      0X01             | REMAP_AXIS_NEGATIVE
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5483,17 +5113,17 @@ _u8 remap_x_sign);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_remap_y_sign(
-_u8 *remap_y_sign);
+u_8 *v_remap_y_sign_u_8);
 /*!
  *	@brief This API used to write the y-axis remap
  *	sign from register from 0x42 bit 1
  *
- *	@param remap_y_sign : The value of y-axis remap sign
+ *	@param v_remap_y_sign_u_8 : The value of y-axis remap sign
  *
- *    remap_y_sign  |   result
- *    --------------|-------------------
- *      0X00        | REMAP_AXIS_POSITIVE
- *      0X01        | REMAP_AXIS_NEGATIVE
+ *    v_remap_y_sign_u_8  |   result
+ *   ------------------- |--------------------
+ *      0X00             | REMAP_AXIS_POSITIVE
+ *      0X01             | REMAP_AXIS_NEGATIVE
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5501,17 +5131,17 @@ _u8 *remap_y_sign);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_remap_y_sign(
-_u8 remap_y_sign);
+u_8 v_remap_y_sign_u_8);
 /*!
  *	@brief This API used to read the z-axis remap
  *	sign from register from 0x42 bit 0
  *
- *	@param remap_z_sign : The value of z-axis remap sign
+ *	@param v_remap_z_sign_u_8 : The value of z-axis remap sign
  *
- *    remap_z_sign  |   result
- *   ---------------|--------------------
- *      0X00        | REMAP_AXIS_POSITIVE
- *      0X01        | REMAP_AXIS_NEGATIVE
+ *    v_remap_z_sign_u_8  |   result
+ *   ------------------- |--------------------
+ *      0X00             | REMAP_AXIS_POSITIVE
+ *      0X01             | REMAP_AXIS_NEGATIVE
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5519,17 +5149,17 @@ _u8 remap_y_sign);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_remap_z_sign(
-_u8 *remap_z_sign);
+u_8 *v_remap_z_sign_u_8);
 /*!
  *	@brief This API used to write the z-axis remap
  *	sign from register from 0x42 bit 0
  *
- *	@param remap_z_sign : The value of z-axis remap sign
+ *	@param v_remap_z_sign_u_8 : The value of z-axis remap sign
  *
- *    remap_z_sign  |   result
- *   ---------------|--------------------
- *      0X00        | REMAP_AXIS_POSITIVE
- *      0X01        | REMAP_AXIS_NEGATIVE
+ *    v_remap_z_sign_u_8  |   result
+ *   ------------------- |--------------------
+ *      0X00             | REMAP_AXIS_POSITIVE
+ *      0X01             | REMAP_AXIS_NEGATIVE
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5537,7 +5167,7 @@ _u8 *remap_z_sign);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_remap_z_sign(
-_u8 remap_z_sign);
+u_8 v_remap_z_sign_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR SOFT IRON CALIBRATION MATRIX  */
 /*****************************************************/
@@ -5567,7 +5197,7 @@ _u8 remap_z_sign);
  *	@note : Each soft iron calibration matrix range from -32768 to +32767
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_sic_matrix(
-struct bno055_sic_matrix  *sic_matrix);
+struct bno055_sic_matrix_t  *sic_matrix);
 /*!
  *	@brief This API is used to write soft iron calibration matrix
  *	from the register 0x43 to 0x53 it is a 18 bytes of data
@@ -5594,7 +5224,7 @@ struct bno055_sic_matrix  *sic_matrix);
  *	@note : Each soft iron calibration matrix range from -32768 to +32767
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_write_sic_matrix(
-struct bno055_sic_matrix  *sic_matrix);
+struct bno055_sic_matrix_t  *sic_matrix);
 /*****************************************************/
 /**\name FUNCTIONS FOR ACCEL OFFSET AND RADIUS */
 /*****************************************************/
@@ -5604,7 +5234,7 @@ struct bno055_sic_matrix  *sic_matrix);
  *
  *	@param accel_offset : The value of accel offset and radius
  *
- *	    bno055_accel_offset |     result
+ *	    bno055_accel_offset_t |     result
  *      ------------------- | ----------------
  *	             x          |  accel offset x
  *               y          |  accel offset y
@@ -5630,14 +5260,14 @@ struct bno055_sic_matrix  *sic_matrix);
  *	bno055_set_accel_range() function
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_accel_offset(
-struct bno055_accel_offset  *accel_offset);
+struct bno055_accel_offset_t  *accel_offset);
 /*!
  *	@brief This API is used to write accel offset and accel radius
  *	offset form register 0x55 to 0x5A and radius form 0x67 and 0x68
  *
  *	@param accel_offset : The value of accel offset and radius
  *
- *	    bno055_accel_offset |     result
+ *	    bno055_accel_offset_t |     result
  *      ------------------- | ----------------
  *	             x          |  accel offset x
  *               y          |  accel offset y
@@ -5663,7 +5293,7 @@ struct bno055_accel_offset  *accel_offset);
  *	bno055_set_accel_range() function
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_write_accel_offset(
-struct bno055_accel_offset  *accel_offset);
+struct bno055_accel_offset_t  *accel_offset);
 /*****************************************************/
 /**\name FUNCTIONS FOR MAG OFFSET AND RADIUS*/
 /*****************************************************/
@@ -5673,7 +5303,7 @@ struct bno055_accel_offset  *accel_offset);
  *
  *	@param mag_offset :  The value of mag offset and radius
  *
- *	    bno055_mag_offset   |     result
+ *	    bno055_mag_offset_t   |     result
  *      ------------------- | ----------------
  *	             x          |  mag offset x
  *               y          |  mag offset y
@@ -5689,14 +5319,14 @@ struct bno055_accel_offset  *accel_offset);
  */
 
 BNO055_RETURN_FUNCTION_TYPE bno055_read_mag_offset(
-struct bno055_mag_offset  *mag_offset);
+struct bno055_mag_offset_t  *mag_offset);
 /*!
  *	@brief This API is used to read mag offset
  *	offset form register 0x69 to 0x6A
  *
  *	@param mag_offset :  The value of mag offset and radius
  *
- *	    bno055_mag_offset   |     result
+ *	    bno055_mag_offset_t   |     result
  *      ------------------- | ----------------
  *	             x          |  mag offset x
  *               y          |  mag offset y
@@ -5711,7 +5341,7 @@ struct bno055_mag_offset  *mag_offset);
  *	@note  The range of the magnetometer offset is +/-6400 in LSB
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_write_mag_offset(
-struct bno055_mag_offset  *mag_offset);
+struct bno055_mag_offset_t  *mag_offset);
 /*****************************************************/
 /**\name FUNCTIONS FOR GYRO OFFSET */
 /*****************************************************/
@@ -5721,7 +5351,7 @@ struct bno055_mag_offset  *mag_offset);
  *
  *	@param gyro_offset : The value of gyro offset
  *
- *	    bno055_gyro_offset  |     result
+ *	    bno055_gyro_offset_t  |     result
  *      ------------------- | ----------------
  *	             x          |  gyro offset x
  *               y          |  gyro offset y
@@ -5747,14 +5377,14 @@ struct bno055_mag_offset  *mag_offset);
  *	bno055_set_gyro_range() function
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_read_gyro_offset(
-struct bno055_gyro_offset  *gyro_offset);
+struct bno055_gyro_offset_t  *gyro_offset);
 /*!
  *	@brief This API is used to read gyro offset
  *	offset form register 0x61 to 0x66
  *
  *	@param gyro_offset : The value of gyro offset
  *
- *	    bno055_gyro_offset  |     result
+ *	    bno055_gyro_offset_t  |     result
  *      ------------------- | ----------------
  *	             x          |  gyro offset x
  *               y          |  gyro offset y
@@ -5780,7 +5410,7 @@ struct bno055_gyro_offset  *gyro_offset);
  *	bno055_set_gyro_range() function
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_write_gyro_offset(
-struct bno055_gyro_offset *gyro_offset);
+struct bno055_gyro_offset_t *gyro_offset);
 /********************************************************/
 /************** PAGE1 Functions *********************/
 /********************************************************/
@@ -5791,8 +5421,8 @@ struct bno055_gyro_offset *gyro_offset);
  *	@brief This API used to read the accel range
  *	from page one register from 0x08 bit 0 and 1
  *
- *	@param accel_range : The value of accel range
- *		   accel_range     |   result
+ *	@param v_accel_range_u_8 : The value of accel range
+ *		  v_accel_range_u_8 |   result
  *       ----------------- | --------------
  *              0x00       | ACCEL_RANGE_2G
  *              0x01       | ACCEL_RANGE_4G
@@ -5806,14 +5436,14 @@ struct bno055_gyro_offset *gyro_offset);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_range(
-_u8 *accel_range);
+u_8 *v_accel_range_u_8);
 /*!
  *	@brief This API used to write the accel range
  *	from page one register from 0x08 bit 0 and 1
  *
- *	@param accel_range : The value of accel range
+ *	@param v_accel_range_u_8 : The value of accel range
  *
- *		   accel_range     |   result
+ *		  v_accel_range_u_8 |   result
  *       ----------------- | --------------
  *              0x00       | ACCEL_RANGE_2G
  *              0x01       | ACCEL_RANGE_4G
@@ -5827,14 +5457,14 @@ _u8 *accel_range);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_range(
-_u8 accel_range);
+u_8 v_accel_range_u_8);
 /*!
  *	@brief This API used to read the accel bandwidth
  *	from page one register from 0x08 bit 2 to 4
  *
- *	@param accel_bw : The value of accel bandwidth
+ *	@param v_accel_bw_u_8 : The value of accel bandwidth
  *
- *		     accel_bw      |     result
+ *		     v_accel_bw_u_8 |     result
  *       ----------------- | ---------------
  *              0x00       | ACCEL_BW_7_81HZ
  *              0x01       | ACCEL_BW_15_63HZ
@@ -5852,14 +5482,14 @@ _u8 accel_range);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_bw(
-_u8 *accel_bw);
+u_8 *v_accel_bw_u_8);
 /*!
  *	@brief This API used to write the accel bandwidth
  *	from page one register from 0x08 bit 2 to 4
  *
- *	@param accel_bw : The value of accel bandwidth
+ *	@param v_accel_bw_u_8 : The value of accel bandwidth
  *
- *		     accel_bw      |     result
+ *		     v_accel_bw_u_8 |     result
  *       ----------------- | ---------------
  *              0x00       | ACCEL_BW_7_81HZ
  *              0x01       | ACCEL_BW_15_63HZ
@@ -5877,13 +5507,13 @@ _u8 *accel_bw);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_bw(
-_u8 accel_bw);
+u_8 v_accel_bw_u_8);
 /*!
  *	@brief This API used to read the accel power mode
  *	from page one register from 0x08 bit 5 to 7
  *
- *	@param accel_power_mode : The value of accel power mode
- *   accel_power_mode    |   result
+ *	@param v_accel_power_mode_u_8 : The value of accel power mode
+ * v_accel_power_mode_u_8 |   result
  *   -----------------   | -------------
  *              0x00     | ACCEL_NORMAL
  *              0x01     | ACCEL_SUSPEND
@@ -5899,13 +5529,13 @@ _u8 accel_bw);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_power_mode(
-_u8 *accel_power_mode);
+u_8 *v_accel_power_mode_u_8);
 /*!
  *	@brief This API used to write the accel power mode
  *	from page one register from 0x08 bit 5 to 7
  *
- *	@param accel_power_mode : The value of accel power mode
- *   accel_power_mode    |   result
+ *	@param v_accel_power_mode_u_8 : The value of accel power mode
+ * v_accel_power_mode_u_8 |   result
  *   -----------------   | -------------
  *              0x00     | ACCEL_NORMAL
  *              0x01     | ACCEL_SUSPEND
@@ -5921,7 +5551,7 @@ _u8 *accel_power_mode);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_power_mode(
-_u8 accel_power_mode);
+u_8 v_accel_power_mode_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR MAG CONFIGURATION */
 /*****************************************************/
@@ -5929,18 +5559,18 @@ _u8 accel_power_mode);
  *	@brief This API used to read the mag output data rate
  *	from page one register from 0x09 bit 0 to 2
  *
- *	@param mag_data_output_rate : The value of mag output data rate
+ *	@param v_mag_data_output_rate_u_8 : The value of mag output data rate
  *
- *  mag_data_output_rate |   result
- *  -----------------    |----------------------
- *     0x00              | MAG_DATA_OUTPUT_RATE_2HZ
- *     0x01              | MAG_DATA_OUTPUT_RATE_6HZ
- *     0x02              | MAG_DATA_OUTPUT_RATE_8HZ
- *     0x03              | MAG_DATA_OUTPUT_RATE_10HZ
- *     0x04              | MAG_DATA_OUTPUT_RATE_15HZ
- *     0x05              | MAG_DATA_OUTPUT_RATE_20HZ
- *     0x06              | MAG_DATA_OUTPUT_RATE_25HZ
- *     0x07              | MAG_DATA_OUTPUT_RATE_30HZ
+ *  v_mag_data_output_rate_u_8 |   result
+ *  ----------------------    |----------------------
+ *     0x00                   | MAG_DATA_OUTPUT_RATE_2HZ
+ *     0x01                   | MAG_DATA_OUTPUT_RATE_6HZ
+ *     0x02                   | MAG_DATA_OUTPUT_RATE_8HZ
+ *     0x03                   | MAG_DATA_OUTPUT_RATE_10HZ
+ *     0x04                   | MAG_DATA_OUTPUT_RATE_15HZ
+ *     0x05                   | MAG_DATA_OUTPUT_RATE_20HZ
+ *     0x06                   | MAG_DATA_OUTPUT_RATE_25HZ
+ *     0x07                   | MAG_DATA_OUTPUT_RATE_30HZ
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5949,23 +5579,23 @@ _u8 accel_power_mode);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_mag_data_output_rate(
-_u8 *mag_data_output_rate);
+u_8 *v_mag_data_output_rate_u_8);
 /*!
  *	@brief This API used to write the mag output data rate
  *	from page one register from 0x09 bit 0 to 2
  *
- *	@param mag_data_output_rate : The value of mag output data rate
+ *	@param v_mag_data_output_rate_u_8 : The value of mag output data rate
  *
- *  mag_data_output_rate |   result
- *  -----------------    |----------------------
- *     0x00              | MAG_DATA_OUTPUT_RATE_2HZ
- *     0x01              | MAG_DATA_OUTPUT_RATE_6HZ
- *     0x02              | MAG_DATA_OUTPUT_RATE_8HZ
- *     0x03              | MAG_DATA_OUTPUT_RATE_10HZ
- *     0x04              | MAG_DATA_OUTPUT_RATE_15HZ
- *     0x05              | MAG_DATA_OUTPUT_RATE_20HZ
- *     0x06              | MAG_DATA_OUTPUT_RATE_25HZ
- *     0x07              | MAG_DATA_OUTPUT_RATE_30HZ
+ *  v_mag_data_output_rate_u_8 |   result
+ *  ----------------------    |----------------------
+ *     0x00                   | MAG_DATA_OUTPUT_RATE_2HZ
+ *     0x01                   | MAG_DATA_OUTPUT_RATE_6HZ
+ *     0x02                   | MAG_DATA_OUTPUT_RATE_8HZ
+ *     0x03                   | MAG_DATA_OUTPUT_RATE_10HZ
+ *     0x04                   | MAG_DATA_OUTPUT_RATE_15HZ
+ *     0x05                   | MAG_DATA_OUTPUT_RATE_20HZ
+ *     0x06                   | MAG_DATA_OUTPUT_RATE_25HZ
+ *     0x07                   | MAG_DATA_OUTPUT_RATE_30HZ
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5974,19 +5604,19 @@ _u8 *mag_data_output_rate);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_mag_data_output_rate(
-_u8 mag_data_output_rate);
+u_8 v_mag_data_output_rate_u_8);
 /*!
  *	@brief This API used to read the mag operation mode
  *	from page one register from 0x09 bit 3 to 4
  *
- *	@param mag_operation_mode : The value of mag operation mode
+ *	@param v_mag_operation_mode_u_8 : The value of mag operation mode
  *
- *  mag_operation_mode |           result
- * --------------------|----------------------------
- *     0x00            | MAG_OPR_MODE_LOWPOWER
- *     0x01            | MAG_OPR_MODE_REGULAR
- *     0x02            | MAG_OPR_MODE_ENHANCED_REGULAR
- *     0x03            | MAG_OPR_MODE_HIGH_ACCURACY
+ *  v_mag_operation_mode_u_8  |      result
+ * ------------------------- |--------------------------
+ *     0x00                  | MAG_OPR_MODE_LOWPOWER
+ *     0x01                  | MAG_OPR_MODE_REGULAR
+ *     0x02                  | MAG_OPR_MODE_ENHANCED_REGULAR
+ *     0x03                  | MAG_OPR_MODE_HIGH_ACCURACY
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -5995,19 +5625,19 @@ _u8 mag_data_output_rate);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_mag_operation_mode(
-_u8 *mag_operation_mode);
+u_8 *v_mag_operation_mode_u_8);
 /*!
  *	@brief This API used to write the mag operation mode
  *	from page one register from 0x09 bit 3 to 4
  *
- *	@param mag_operation_mode : The value of mag operation mode
+ *	@param v_mag_operation_mode_u_8 : The value of mag operation mode
  *
- *  mag_operation_mode |           result
- * --------------------|----------------------------
- *     0x00            | MAG_OPR_MODE_LOWPOWER
- *     0x01            | MAG_OPR_MODE_REGULAR
- *     0x02            | MAG_OPR_MODE_ENHANCED_REGULAR
- *     0x03            | MAG_OPR_MODE_HIGH_ACCURACY
+ *  v_mag_operation_mode_u_8  |      result
+ * ------------------------- |--------------------------
+ *     0x00                  | MAG_OPR_MODE_LOWPOWER
+ *     0x01                  | MAG_OPR_MODE_REGULAR
+ *     0x02                  | MAG_OPR_MODE_ENHANCED_REGULAR
+ *     0x03                  | MAG_OPR_MODE_HIGH_ACCURACY
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6016,14 +5646,14 @@ _u8 *mag_operation_mode);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_mag_operation_mode(
-_u8 mag_operation_mode);
+u_8 v_mag_operation_mode_u_8);
 /*!
  *	@brief This API used to read the mag power mode
  *	from page one register from 0x09 bit 4 to 6
  *
- *	@param mag_power_mode : The value of mag power mode
+ *	@param v_mag_power_mode_u_8 : The value of mag power mode
  *
- *     mag_power_mode  |   result
+ * v_mag_power_mode_u_8 |   result
  * --------------------|-----------------
  *     0x00            | MAG_POWER_MODE_NORMAL
  *     0x01            | MAG_POWER_MODE_SLEEP
@@ -6037,14 +5667,14 @@ _u8 mag_operation_mode);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_mag_power_mode(
-_u8 *mag_power_mode);
+u_8 *v_mag_power_mode_u_8);
 /*!
  *	@brief This API used to write the mag power mode
  *	from page one register from 0x09 bit 4 to 6
  *
- *	@param mag_power_mode : The value of mag power mode
+ *	@param v_mag_power_mode_u_8 : The value of mag power mode
  *
- *     mag_power_mode  |   result
+ * v_mag_power_mode_u_8 |   result
  * --------------------|-----------------
  *     0x00            | MAG_POWER_MODE_NORMAL
  *     0x01            | MAG_POWER_MODE_SLEEP
@@ -6058,7 +5688,7 @@ _u8 *mag_power_mode);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_mag_power_mode(
-_u8 mag_power_mode);
+u_8 v_mag_power_mode_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR GYRO CONFIGURATION */
 /*****************************************************/
@@ -6066,9 +5696,9 @@ _u8 mag_power_mode);
  *	@brief This API used to read the gyro range
  *	from page one register from 0x0A bit 0 to 3
  *
- *	@param gyro_range : The value of gyro range
+ *	@param v_gyro_range_u_8 : The value of gyro range
  *
- *     gyro_range      |   result
+ *     v_gyro_range_u_8 |   result
  * --------------------|-----------------
  *     0x00            | GYRO_RANGE_2000DPS
  *     0x01            | GYRO_RANGE_1000DPS
@@ -6083,14 +5713,14 @@ _u8 mag_power_mode);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_range(
-_u8 *gyro_range);
+u_8 *v_gyro_range_u_8);
 /*!
  *	@brief This API used to write the gyro range
  *	from page one register from 0x0A bit 0 to 3
  *
- *	@param gyro_range : The value of gyro range
+ *	@param v_gyro_range_u_8 : The value of gyro range
  *
- *     gyro_range      |   result
+ *     v_gyro_range_u_8 |   result
  * --------------------|-----------------
  *     0x00            | GYRO_RANGE_2000DPS
  *     0x01            | GYRO_RANGE_1000DPS
@@ -6105,14 +5735,14 @@ _u8 *gyro_range);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_range(
-_u8 gyro_range);
+u_8 v_gyro_range_u_8);
 /*!
  *	@brief This API used to read the gyro bandwidth
  *	from page one register from 0x0A bit 3 to 5
  *
- *	@param gyro_bw : The value of gyro bandwidth
+ *	@param v_gyro_bw_u_8 : The value of gyro bandwidth
  *
- *     gyro_bw         |   result
+ *     v_gyro_bw_u_8    |   result
  * --------------------|-----------------
  *     0x00            | GYRO_BW_523HZ
  *     0x01            | GYRO_BW_230HZ
@@ -6130,14 +5760,14 @@ _u8 gyro_range);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_bw(
-_u8 *gyro_bw);
+u_8 *v_gyro_bw_u_8);
 /*!
  *	@brief This API used to write the gyro bandwidth
  *	from page one register from 0x0A bit 3 to 5
  *
- *	@param gyro_bw : The value of gyro bandwidth
+ *	@param v_gyro_bw_u_8 : The value of gyro bandwidth
  *
- *     gyro_bw         |   result
+ *     v_gyro_bw_u_8    |   result
  * --------------------|-----------------
  *     0x00            | GYRO_BW_523HZ
  *     0x01            | GYRO_BW_230HZ
@@ -6155,14 +5785,14 @@ _u8 *gyro_bw);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_bw(
-_u8 gyro_bw);
+u_8 v_gyro_bw_u_8);
 /*!
  *	@brief This API used to read the gyro power mode
  *	from page one register from 0x0B bit 0 to 2
  *
- *	@param gyro_power_mode : The value of gyro power mode
+ *	@param v_gyro_power_mode_u_8 : The value of gyro power mode
  *
- *  gyro_power_mode      |          result
+ *  v_gyro_power_mode_u_8 |          result
  * ----------------------|----------------------------
  *     0x00              | GYRO_OPR_MODE_NORMAL
  *     0x01              | GYRO_OPR_MODE_FASTPOWERUP
@@ -6177,14 +5807,14 @@ _u8 gyro_bw);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_power_mode(
-_u8 *gyro_power_mode);
+u_8 *v_gyro_power_mode_u_8);
 /*!
  *	@brief This API used to write the gyro power mode
  *	from page one register from 0x0B bit 0 to 2
  *
- *	@param gyro_power_mode : The value of gyro power mode
+ *	@param v_gyro_power_mode_u_8 : The value of gyro power mode
  *
- *  gyro_power_mode      |          result
+ *  v_gyro_power_mode_u_8 |          result
  * ----------------------|----------------------------
  *     0x00              | GYRO_OPR_MODE_NORMAL
  *     0x01              | GYRO_OPR_MODE_FASTPOWERUP
@@ -6199,7 +5829,7 @@ _u8 *gyro_power_mode);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_power_mode(
-_u8 gyro_power_mode);
+u_8 v_gyro_power_mode_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR ACCEL SLEEP SETTINGS  */
 /*****************************************************/
@@ -6207,12 +5837,12 @@ _u8 gyro_power_mode);
  *	@brief This API used to read the accel sleep mode
  *	from page one register from 0x0C bit 0
  *
- *	@param sleep_tmr : The value of accel sleep mode
+ *	@param v_sleep_tmr_u_8 : The value of accel sleep mode
  *
- *  sleep_tmr   |   result
- * -------------|------------------------------------
- *     0x00     | enable EventDrivenSampling(EDT)
- *     0x01     | enable Equidistant sampling mode(EST)
+ *  v_sleep_tmr_u_8   |   result
+ * ----------------- |------------------------------------
+ *     0x00          | enable EventDrivenSampling(EDT)
+ *     0x01          | enable Equidistant sampling mode(EST)
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6220,18 +5850,18 @@ _u8 gyro_power_mode);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_sleeptmr_mode(
-_u8 *sleep_tmr);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_sleep_tmr_mode(
+u_8 *v_sleep_tmr_u_8);
 /*!
  *	@brief This API used to write the accel sleep mode
  *	from page one register from 0x0C bit 0
  *
- *	@param sleep_tmr : The value of accel sleep mode
+ *	@param v_sleep_tmr_u_8 : The value of accel sleep mode
  *
- *  sleep_tmr   |   result
- * -------------|------------------------------------
- *     0x00     | enable EventDrivenSampling(EDT)
- *     0x01     | enable Equidistant sampling mode(EST)
+ *  v_sleep_tmr_u_8   |   result
+ * ----------------- |------------------------------------
+ *     0x00          | enable EventDrivenSampling(EDT)
+ *     0x01          | enable Equidistant sampling mode(EST)
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6239,27 +5869,27 @@ _u8 *sleep_tmr);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_sleeptmr_mode(
-_u8 sleep_tmr);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_sleep_tmr_mode(
+u_8 v_sleep_tmr_u_8);
 /*!
  *	@brief This API used to read the accel sleep duration
  *	from page one register from 0x0C bit 1 to 4
  *
- *	@param sleep_dur : The value of accel sleep duration
+ *	@param v_sleep_durn_u_8 : The value of accel sleep duration
  *
- *   sleep_dur  |      result
- * -------------|-----------------------------
- *     0x05     | BNO055_ACCEL_SLEEP_DUR_0_5MS
- *     0x06     | BNO055_ACCEL_SLEEP_DUR_1MS
- *     0x07     | BNO055_ACCEL_SLEEP_DUR_2MS
- *     0x08     | BNO055_ACCEL_SLEEP_DUR_4MS
- *     0x09     | BNO055_ACCEL_SLEEP_DUR_6MS
- *     0x0A     | BNO055_ACCEL_SLEEP_DUR_10MS
- *     0x0B     | BNO055_ACCEL_SLEEP_DUR_25MS
- *     0x0C     | BNO055_ACCEL_SLEEP_DUR_50MS
- *     0x0D     | BNO055_ACCEL_SLEEP_DUR_100MS
- *     0x0E     | BNO055_ACCEL_SLEEP_DUR_500MS
- *     0x0F     | BNO055_ACCEL_SLEEP_DUR_1S
+ * v_sleep_durn_u_8  |      result
+ * ---------------- |-----------------------------
+ *     0x05         | BNO055_ACCEL_SLEEP_DURN_0_5MS
+ *     0x06         | BNO055_ACCEL_SLEEP_DURN_1MS
+ *     0x07         | BNO055_ACCEL_SLEEP_DURN_2MS
+ *     0x08         | BNO055_ACCEL_SLEEP_DURN_4MS
+ *     0x09         | BNO055_ACCEL_SLEEP_DURN_6MS
+ *     0x0A         | BNO055_ACCEL_SLEEP_DURN_10MS
+ *     0x0B         | BNO055_ACCEL_SLEEP_DURN_25MS
+ *     0x0C         | BNO055_ACCEL_SLEEP_DURN_50MS
+ *     0x0D         | BNO055_ACCEL_SLEEP_DURN_100MS
+ *     0x0E         | BNO055_ACCEL_SLEEP_DURN_500MS
+ *     0x0F         | BNO055_ACCEL_SLEEP_DURN_1S
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6267,27 +5897,27 @@ _u8 sleep_tmr);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_sleep_dur(
-_u8 *sleep_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_sleep_durn(
+u_8 *v_sleep_durn_u_8);
 /*!
  *	@brief This API used to write the accel sleep duration
  *	from page one register from 0x0C bit 1 to 4
  *
- *	@param sleep_dur : The value of accel sleep duration
+ *	@param v_sleep_durn_u_8 : The value of accel sleep duration
  *
- *   sleep_dur  |      result
- * -------------|-----------------------------
- *     0x05     | BNO055_ACCEL_SLEEP_DUR_0_5MS
- *     0x06     | BNO055_ACCEL_SLEEP_DUR_1MS
- *     0x07     | BNO055_ACCEL_SLEEP_DUR_2MS
- *     0x08     | BNO055_ACCEL_SLEEP_DUR_4MS
- *     0x09     | BNO055_ACCEL_SLEEP_DUR_6MS
- *     0x0A     | BNO055_ACCEL_SLEEP_DUR_10MS
- *     0x0B     | BNO055_ACCEL_SLEEP_DUR_25MS
- *     0x0C     | BNO055_ACCEL_SLEEP_DUR_50MS
- *     0x0D     | BNO055_ACCEL_SLEEP_DUR_100MS
- *     0x0E     | BNO055_ACCEL_SLEEP_DUR_500MS
- *     0x0F     | BNO055_ACCEL_SLEEP_DUR_1S
+ * v_sleep_durn_u_8  |      result
+ * ---------------- |-----------------------------
+ *     0x05         | BNO055_ACCEL_SLEEP_DURN_0_5MS
+ *     0x06         | BNO055_ACCEL_SLEEP_DURN_1MS
+ *     0x07         | BNO055_ACCEL_SLEEP_DURN_2MS
+ *     0x08         | BNO055_ACCEL_SLEEP_DURN_4MS
+ *     0x09         | BNO055_ACCEL_SLEEP_DURN_6MS
+ *     0x0A         | BNO055_ACCEL_SLEEP_DURN_10MS
+ *     0x0B         | BNO055_ACCEL_SLEEP_DURN_25MS
+ *     0x0C         | BNO055_ACCEL_SLEEP_DURN_50MS
+ *     0x0D         | BNO055_ACCEL_SLEEP_DURN_100MS
+ *     0x0E         | BNO055_ACCEL_SLEEP_DURN_500MS
+ *     0x0F         | BNO055_ACCEL_SLEEP_DURN_1S
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6295,8 +5925,8 @@ _u8 *sleep_dur);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_sleep_dur(
-_u8 sleep_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_sleep_durn(
+u_8 v_sleep_durn_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR GYRO SLEEP SETTINGS  */
 /*****************************************************/
@@ -6304,7 +5934,7 @@ _u8 sleep_dur);
  *	@brief This API used to write the gyro sleep duration
  *	from page one register from 0x0D bit 0 to 2
  *
- *	@param sleep_dur : The value of gyro sleep duration
+ *	@param v_sleep_durn_u_8 : The value of gyro sleep duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6312,13 +5942,13 @@ _u8 sleep_dur);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_sleep_dur(
-_u8 *sleep_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_sleep_durn(
+u_8 *v_sleep_durn_u_8);
 /*!
  *	@brief This API used to write the gyro sleep duration
  *	from page one register from 0x0D bit 0 to 2
  *
- *	@param sleep_dur : The value of gyro sleep duration
+ *	@param v_sleep_durn_u_8 : The value of gyro sleep duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6326,13 +5956,13 @@ _u8 *sleep_dur);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_sleep_dur(
-_u8 sleep_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_sleep_durn(
+u_8 sleep_durn);
 /*!
  *	@brief This API used to read the gyro auto sleep duration
  *	from page one register from 0x0D bit 3 to 5
  *
- *	@param auto_sleep_dur : The value of gyro auto sleep duration
+ *	@param v_auto_sleep_durn_u_8 : The value of gyro auto sleep duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6340,13 +5970,13 @@ _u8 sleep_dur);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_auto_sleep_dur(
-_u8 *auto_sleep_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_auto_sleep_durn(
+u_8 *v_auto_sleep_durn_u_8);
 /*!
  *	@brief This API used to write the gyro auto sleep duration
  *	from page one register from 0x0D bit 3 to 5
  *
- *	@param auto_sleep_dur : The value of gyro auto sleep duration
+ *	@param v_auto_sleep_durn_u_8 : The value of gyro auto sleep duration
  *	@param bw : The value of gyro bandwidth
  *
  *	@return results of bus communication function
@@ -6355,8 +5985,8 @@ _u8 *auto_sleep_dur);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_gyro_set_auto_sleep_dur(
-_u8 auto_sleep_dur, _u8 bw);
+BNO055_RETURN_FUNCTION_TYPE bno055_gyro_set_auto_sleep_durn(
+u_8 v_auto_sleep_durn_u_8, u_8 bw);
 /*****************************************************/
 /**\name FUNCTIONS FOR MAG SLEEP SETTINGS  */
 /*****************************************************/
@@ -6364,7 +5994,7 @@ _u8 auto_sleep_dur, _u8 bw);
  *	@brief This API used to read the mag sleep mode
  *	from page one register from 0x0E bit 0
  *
- *	@param sleep_mode : The value of mag sleep mode
+ *	@param v_sleep_mode_u_8 : The value of mag sleep mode
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6373,12 +6003,12 @@ _u8 auto_sleep_dur, _u8 bw);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_mag_sleep_mode(
-_u8 *sleep_mode);
+u_8 *v_sleep_mode_u_8);
 /*!
  *	@brief This API used to write the mag sleep mode
  *	from page one register from 0x0E bit 0
  *
- *	@param sleep_mode : The value of mag sleep mode
+ *	@param v_sleep_mode_u_8 : The value of mag sleep mode
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6387,12 +6017,12 @@ _u8 *sleep_mode);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_mag_sleep_mode(
-_u8 sleep_mode);
+u_8 v_sleep_mode_u_8);
 /*!
  *	@brief This API used to read the mag sleep duration
  *	from page one register from 0x0E bit 1 to 4
  *
- *	@param sleep_dur : The value of mag sleep duration
+ *	@param v_sleep_durn_u_8 : The value of mag sleep duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6400,13 +6030,13 @@ _u8 sleep_mode);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_mag_sleep_dur(
-_u8 *sleep_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_mag_sleep_durn(
+u_8 *v_sleep_durn_u_8);
 /*!
  *	@brief This API used to write the mag sleep duration
  *	from page one register from 0x0E bit 1 to 4
  *
- *	@param sleep_dur : The value of mag sleep duration
+ *	@param v_sleep_durn_u_8 : The value of mag sleep duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6414,8 +6044,8 @@ _u8 *sleep_dur);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_mag_sleep_dur(
-_u8 sleep_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_mag_sleep_durn(
+u_8 v_sleep_durn_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR GYRO INTERRUPT MASK  */
 /*****************************************************/
@@ -6423,11 +6053,11 @@ _u8 sleep_dur);
  *	@brief This API used to read the gyro anymotion interrupt mask
  *	from page one register from 0x0F bit 2
  *
- *	@param gyro_anymotion : The value of gyro anymotion interrupt mask
- *		gyro_anymotion |   result
- *     --------------- |------------
- *              0x01   | ENABLED
- *              0x00   | DISABLED
+ *	@param v_gyro_any_motion_u_8 : The value of gyro anymotion interrupt mask
+ *		v_gyro_any_motion_u_8 |   result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6437,34 +6067,35 @@ _u8 sleep_dur);
  *	configure the following settings
  *
  *	Axis:
- *	bno055_set_gyro_anymotion_axis_enable()
+ *	bno055_set_gyro_any_motion_axis_enable()
  *
  *	Filter setting:
- *	bno055_set_gyro_anymotion_filter()
+ *	bno055_set_gyro_any_motion_filter()
  *
  *	Threshold :
  *
- *	bno055_set_gyro_anymotion_thres()
+ *	bno055_set_gyro_any_motion_thres()
  *
  *	Slope samples :
  *
- *	bno055_set_gyro_anymotion_slope_samples()
+ *	bno055_set_gyro_any_motion_slope_samples()
  *
  *	Awake duration :
  *
- *	bno055_set_gyro_anymotion_awake_dur()
+ *	bno055_set_gyro_any_motion_awake_durn()
+ *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_int_mask_gyro_anymotion(
-_u8 *gyro_anymotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_mask_gyro_any_motion(
+u_8 *v_gyro_any_motion_u_8);
 /*!
  *	@brief This API used to write the gyro anymotion interrupt mask
  *	from page one register from 0x0F bit 2
  *
- *	@param gyro_anymotion : The value of gyro anymotion interrupt mask
- *		gyro_anymotion |   result
- *     --------------- |------------
- *              0x01   | ENABLED
- *              0x00   | DISABLED
+ *	@param v_gyro_any_motion_u_8 : The value of gyro anymotion interrupt mask
+ *		v_gyro_any_motion_u_8 |   result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6474,34 +6105,35 @@ _u8 *gyro_anymotion);
  *	configure the following settings
  *
  *	Axis:
- *	bno055_set_gyro_anymotion_axis_enable()
+ *	bno055_set_gyro_any_motion_axis_enable()
  *
  *	Filter setting:
- *	bno055_set_gyro_anymotion_filter()
+ *	bno055_set_gyro_any_motion_filter()
  *
  *	Threshold :
  *
- *	bno055_set_gyro_anymotion_thres()
+ *	bno055_set_gyro_any_motion_thres()
  *
  *	Slope samples :
  *
- *	bno055_set_gyro_anymotion_slope_samples()
+ *	bno055_set_gyro_any_motion_slope_samples()
  *
  *	Awake duration :
  *
- *	bno055_set_gyro_anymotion_awake_dur()
+ *	bno055_set_gyro_any_motion_awake_durn()
+ *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_int_mask_gyro_anymotion(
-_u8 gyro_anymotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_intr_mask_gyro_any_motion(
+u_8 v_gyro_any_motion_u_8);
 /*!
  *	@brief This API used to read the gyro highrate interrupt mask
  *	from page one register from 0x0F bit 3
  *
- *	@param gyro_highrate : The value of gyro highrate interrupt mask
- *		   gyro_highrate|  result
- *       -------------- | --------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_gyro_highrate_u_8 : The value of gyro highrate interrupt mask
+ *		  v_gyro_highrate_u_8 |  result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6537,24 +6169,24 @@ _u8 gyro_anymotion);
  *
  *	Duration :
  *
- *	bno055_set_gyro_highrate_x_dur()
+ *	bno055_set_gyro_highrate_x_durn()
  *
- *	bno055_set_gyro_highrate_y_dur()
+ *	bno055_set_gyro_highrate_y_durn()
  *
- *	bno055_set_gyro_highrate_z_dur()
+ *	bno055_set_gyro_highrate_z_durn()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_int_mask_gyro_highrate(
-_u8 *gyro_highrate);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_mask_gyro_highrate(
+u_8 *v_gyro_highrate_u_8);
 /*!
  *	@brief This API used to write the gyro highrate interrupt mask
  *	from page one register from 0x0F bit 3
  *
- *	@param gyro_highrate : The value of gyro highrate interrupt mask
- *		   gyro_highrate|  result
- *       -------------- | --------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_gyro_highrate_u_8 : The value of gyro highrate interrupt mask
+ *		  v_gyro_highrate_u_8 |  result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6590,15 +6222,15 @@ _u8 *gyro_highrate);
  *
  *	Duration :
  *
- *	bno055_set_gyro_highrate_x_dur()
+ *	bno055_set_gyro_highrate_x_durn()
  *
- *	bno055_set_gyro_highrate_y_dur()
+ *	bno055_set_gyro_highrate_y_durn()
  *
- *	bno055_set_gyro_highrate_z_dur()
+ *	bno055_set_gyro_highrate_z_durn()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_int_mask_gyro_highrate(
-_u8 gyro_highrate);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_intr_mask_gyro_highrate(
+u_8 v_gyro_highrate_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR ACCEL INTERRUPT MASK  */
 /*****************************************************/
@@ -6606,11 +6238,11 @@ _u8 gyro_highrate);
  *	@brief This API used to read the accel highg interrupt mask
  *	from page one register from 0x0F bit 5
  *
- *	@param accel_high_g : The value of accel highg interrupt mask
- *		   accel_high_g |   result
- *     ---------------- | ---------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_high_g_u_8 : The value of accel highg interrupt mask
+ *		   v_accel_high_g_u_8 |   result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6630,20 +6262,20 @@ _u8 gyro_highrate);
  *
  *	Duration :
  *
- *	bno055_set_accel_high_g_dur()
+ *	bno055_set_accel_high_g_durn()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_int_mask_accel_high_g(
-_u8 *accel_high_g);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_mask_accel_high_g(
+u_8 *v_accel_high_g_u_8);
 /*!
  *	@brief This API used to write the accel highg interrupt mask
  *	from page one register from 0x0F bit 5
  *
- *	@param accel_high_g : The value of accel highg interrupt mask
- *		   accel_high_g |   result
- *     ---------------- | ---------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_high_g_u_8 : The value of accel highg interrupt mask
+ *		   v_accel_high_g_u_8 |   result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6663,20 +6295,20 @@ _u8 *accel_high_g);
  *
  *	Duration :
  *
- *	bno055_set_accel_high_g_dur()
+ *	bno055_set_accel_high_g_durn()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_int_mask_accel_high_g(
-_u8 accel_high_g);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_intr_mask_accel_high_g(
+u_8 v_accel_high_g_u_8);
 /*!
  *	@brief This API used to read the accel anymotion interrupt mask
  *	from page one register from 0x0F bit 6
  *
- *	@param accel_anymotion : The value of accel anymotion interrupt mask
- *      accel_anymotion | result
- *        ------------- | -------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_any_motion_u_8 : The value of accel anymotion interrupt mask
+ *     v_accel_any_motion_u_8 | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6696,20 +6328,20 @@ _u8 accel_high_g);
  *
  *	Duration :
  *
- *	bno055_set_accel_high_g_dur()
+ *	bno055_set_accel_high_g_durn()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_int_mask_accel_anymotion(
-_u8 *accel_anymotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_mask_accel_any_motion(
+u_8 *v_accel_any_motion_u_8);
 /*!
  *	@brief This API used to write the accel anymotion interrupt mask
  *	from page one register from 0x0F bit 6
  *
- *	@param accel_anymotion : The value of accel anymotion interrupt mask
- *		accel_anymotion | result
- *        ------------- | -------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_any_motion_u_8 : The value of accel anymotion interrupt mask
+ *     v_accel_any_motion_u_8 | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6720,28 +6352,28 @@ _u8 *accel_anymotion);
  *
  *	Axis:
  *
- *	bno055_set_accel_anymotion_nomotion_axis_enable()
+ *	bno055_set_accel_any_motion_no_motion_axis_enable()
  *
  *	Duration:
  *
- *	bno055_set_accel_anymotion_dur()
+ *	bno055_set_accel_any_motion_durn()
  *
  * Threshold:
  *
- *	bno055_set_accel_anymotion_thres()
+ *	bno055_set_accel_any_motion_thres()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_int_mask_accel_anymotion(
-_u8 accel_anymotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_intr_mask_accel_any_motion(
+u_8 v_accel_any_motion_u_8);
 /*!
  *	@brief This API used to read the accel nomotion interrupt mask
  *	from page one register from 0x0F bit 7
  *
- *	@param accel_nomotion : The value of accel nomotion interrupt mask
- *		 accel_nomotion | result
- *       -------------- | -----------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_nomotion_u_8 : The value of accel nomotion interrupt mask
+ *     v_accel_nomotion_u_8   | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6751,28 +6383,28 @@ _u8 accel_anymotion);
  *
  *	Axis:
  *
- *	bno055_set_accel_anymotion_nomotion_axis_enable()
+ *	bno055_set_accel_any_motion_no_motion_axis_enable()
  *
  *	Duration:
  *
- *	bno055_set_accel_anymotion_dur()
+ *	bno055_set_accel_any_motion_durn()
  *
  * Threshold:
  *
- *	bno055_set_accel_anymotion_thres())
+ *	bno055_set_accel_any_motion_thres())
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_int_mask_accel_nomotion(
-_u8 *accel_nomotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_mask_accel_no_motion(
+u_8 *v_accel_nomotion_u_8);
 /*!
  *	@brief This API used to write the accel nomotion interrupt mask
  *	from page one register from 0x0F bit 7
  *
- *	@param accel_nomotion : The value of accel nomotion interrupt mask
- *		 accel_nomotion | result
- *       -------------- | -----------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_nomotion_u_8 : The value of accel nomotion interrupt mask
+ *     v_accel_nomotion_u_8   | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6783,7 +6415,7 @@ _u8 *accel_nomotion);
  *
  *	Axis:
  *
- *	bno055_set_accel_anymotion_nomotion_axis_enable()
+ *	bno055_set_accel_any_motion_no_motion_axis_enable()
  *
  *	Threshold :
  *
@@ -6791,15 +6423,15 @@ _u8 *accel_nomotion);
  *
  *	Duration :
  *
- *	bno055_set_accel_slow_no_motion_dur()
+ *	bno055_set_accel_slow_no_motion_durn()
  *
  *	Slow/no motion enable:
  *
  *	bno055_set_accel_slow_no_motion_enable()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_int_mask_accel_nomotion(
-_u8 accel_nomotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_intr_mask_accel_no_motion(
+u_8 v_accel_nomotion_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR GYRO INTERRUPT */
 /*****************************************************/
@@ -6807,11 +6439,11 @@ _u8 accel_nomotion);
  *	@brief This API used to read the gyro anymotion interrupt
  *	from page one register from 0x10 bit 2
  *
- *	@param gyro_anymotion : The value of gyro anymotion interrupt
- *		gyro_anymotion  | result
- *     ---------------- | ---------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_gyro_any_motion_u_8 : The value of gyro anymotion interrupt
+ *		v_gyro_any_motion_u_8 | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6821,34 +6453,34 @@ _u8 accel_nomotion);
  *	configure the following settings
  *
  *	Axis:
- *	bno055_set_gyro_anymotion_axis_enable()
+ *	bno055_set_gyro_any_motion_axis_enable()
  *
  *	Filter setting:
- *	bno055_set_gyro_anymotion_filter()
+ *	bno055_set_gyro_any_motion_filter()
  *
  *	Threshold :
  *
- *	bno055_set_gyro_anymotion_thres()
+ *	bno055_set_gyro_any_motion_thres()
  *
  *	Slope samples :
  *
- *	bno055_set_gyro_anymotion_slope_samples()
+ *	bno055_set_gyro_any_motion_slope_samples()
  *
  *	Awake duration :
  *
- *	bno055_set_gyro_anymotion_awake_dur()
+ *	bno055_set_gyro_any_motion_awake_durn()
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_int_gyro_anymotion(
-_u8 *gyro_anymotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_gyro_any_motion(
+u_8 *v_gyro_any_motion_u_8);
 /*!
  *	@brief This API used to write the gyro anymotion interrupt
  *	from page one register from 0x10 bit 2
  *
- *	@param gyro_anymotion : The value of gyro anymotion interrupt
- *	  gyro_anymotion    | result
- *     ---------------- | ---------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_gyro_any_motion_u_8 : The value of gyro anymotion interrupt
+ *	  v_gyro_any_motion_u_8   | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6858,34 +6490,34 @@ _u8 *gyro_anymotion);
  *	configure the following settings
  *
  *	Axis:
- *	bno055_set_gyro_anymotion_axis_enable()
+ *	bno055_set_gyro_any_motion_axis_enable()
  *
  *	Filter setting:
- *	bno055_set_gyro_anymotion_filter()
+ *	bno055_set_gyro_any_motion_filter()
  *
  *	Threshold :
  *
- *	bno055_set_gyro_anymotion_thres()
+ *	bno055_set_gyro_any_motion_thres()
  *
  *	Slope samples :
  *
- *	bno055_set_gyro_anymotion_slope_samples()
+ *	bno055_set_gyro_any_motion_slope_samples()
  *
  *	Awake duration :
  *
- *	bno055_set_gyro_anymotion_awake_dur()
+ *	bno055_set_gyro_any_motion_awake_durn()
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_int_gyro_anymotion(
-_u8 gyro_anymotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_intr_gyro_any_motion(
+u_8 v_gyro_any_motion_u_8);
 /*!
  *	@brief This API used to read the gyro highrate interrupt
  *	from page one register from 0x10 bit 3
  *
- *	@param gyro_highrate : The value of gyro highrate interrupt
- *		gyro_highrate    | result
- *     ----------------- | ---------------
- *              0x01     | ENABLED
- *              0x00     | DISABLED
+ *	@param v_gyro_highrate_u_8 : The value of gyro highrate interrupt
+ *		v_gyro_highrate_u_8   | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6921,24 +6553,24 @@ _u8 gyro_anymotion);
  *
  *	Duration :
  *
- *	bno055_set_gyro_highrate_x_dur()
+ *	bno055_set_gyro_highrate_x_durn()
  *
- *	bno055_set_gyro_highrate_y_dur()
+ *	bno055_set_gyro_highrate_y_durn()
  *
- *	bno055_set_gyro_highrate_z_dur()
+ *	bno055_set_gyro_highrate_z_durn()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_int_gyro_highrate(
-_u8 *gyro_highrate);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_gyro_highrate(
+u_8 *v_gyro_highrate_u_8);
 /*!
  *	@brief This API used to write the gyro highrate interrupt
  *	from page one register from 0x10 bit 3
  *
- *	@param gyro_highrate : The value of gyro highrate interrupt
- *		gyro_highrate    | result
- *     ----------------- | ---------------
- *              0x01     | ENABLED
- *              0x00     | DISABLED
+ *	@param v_gyro_highrate_u_8 : The value of gyro highrate interrupt
+ *		v_gyro_highrate_u_8   | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -6974,15 +6606,15 @@ _u8 *gyro_highrate);
  *
  *	Duration :
  *
- *	bno055_set_gyro_highrate_x_dur()
+ *	bno055_set_gyro_highrate_x_durn()
  *
- *	bno055_set_gyro_highrate_y_dur()
+ *	bno055_set_gyro_highrate_y_durn()
  *
- *	bno055_set_gyro_highrate_z_dur()
+ *	bno055_set_gyro_highrate_z_durn()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_int_gyro_highrate(
-_u8 gyro_highrate);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_intr_gyro_highrate(
+u_8 v_gyro_highrate_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR ACCEL INTERRUPT  */
 /*****************************************************/
@@ -6990,11 +6622,11 @@ _u8 gyro_highrate);
  *	@brief This API used to read the accel highg interrupt
  *	from page one register from 0x10 bit 5
  *
- *	@param accel_high_g : The value of accel highg interrupt
- *		   accel_high_g     | result
- *     ---------------- | ---------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_high_g_u_8 : The value of accel highg interrupt
+ *		v_accel_high_g_u_8    | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7014,19 +6646,20 @@ _u8 gyro_highrate);
  *
  *	Duration :
  *
- *	bno055_set_accel_high_g_dur()
+ *	bno055_set_accel_high_g_durn()
+ *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_int_accel_high_g(
-_u8 *accel_high_g);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_accel_high_g(
+u_8 *v_accel_high_g_u_8);
 /*!
  *	@brief This API used to write the accel highg interrupt
  *	from page one register from 0x10 bit 5
  *
- *	@param accel_high_g : The value of accel highg interrupt
- *		   accel_high_g     | result
- *     ---------------- | ---------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_high_g_u_8 : The value of accel highg interrupt
+ *		v_accel_high_g_u_8    | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7046,20 +6679,20 @@ _u8 *accel_high_g);
  *
  *	Duration :
  *
- *	bno055_set_accel_high_g_dur()
+ *	bno055_set_accel_high_g_durn()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_int_accel_high_g(
-_u8 accel_high_g);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_intr_accel_high_g(
+u_8 v_accel_high_g_u_8);
 /*!
  *	@brief This API used to read the accel anymotion interrupt
  *	from page one register from 0x10 bit 6
  *
- *	@param accel_anymotion : The value of accel anymotion interrupt
- *		accel_anymotion  | result
- *     ----------------- | ---------------
- *              0x01     | ENABLED
- *              0x00     | DISABLED
+ *	@param v_accel_any_motion_u_8 : The value of accel anymotion interrupt
+ *	v_accel_any_motion_u_8    | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7070,28 +6703,28 @@ _u8 accel_high_g);
  *
  *	Axis:
  *
- *	bno055_set_accel_anymotion_nomotion_axis_enable()
+ *	bno055_set_accel_any_motion_no_motion_axis_enable()
  *
  *	Duration:
  *
- *	bno055_set_accel_anymotion_dur()
+ *	bno055_set_accel_any_motion_durn()
  *
  * Threshold:
  *
- *	bno055_set_accel_anymotion_thres()
+ *	bno055_set_accel_any_motion_thres()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_int_accel_anymotion(
-_u8 *accel_anymotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_accel_any_motion(
+u_8 *v_accel_any_motion_u_8);
 /*!
  *	@brief This API used to write the accel anymotion interrupt
  *	from page one register from 0x10 bit 6
  *
- *	@param accel_anymotion : The value of accel anymotion interrupt
- *	  accel_anymotion    | result
- *     ----------------- | ---------------
- *              0x01     | ENABLED
- *              0x00     | DISABLED
+ *	@param v_accel_any_motion_u_8 : The value of accel anymotion interrupt
+ *	v_accel_any_motion_u_8    | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7102,27 +6735,28 @@ _u8 *accel_anymotion);
  *
  *	Axis:
  *
- *	bno055_set_accel_anymotion_nomotion_axis_enable()
+ *	bno055_set_accel_any_motion_no_motion_axis_enable()
  *
  *	Duration:
  *
- *	bno055_set_accel_anymotion_dur()
+ *	bno055_set_accel_any_motion_durn()
  *
- * Threshold:
+ *	Threshold:
  *
- *	bno055_set_accel_anymotion_thres()
+ *	bno055_set_accel_any_motion_thres()
+ *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_int_accel_anymotion(
-_u8 accel_anymotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_intr_accel_any_motion(
+u_8 v_accel_any_motion_u_8);
 /*!
  *	@brief This API used to read the accel nomotion interrupt
  *	from page one register from 0x10 bit 6
  *
- *	@param accel_nomotion : The value of accel nomotion interrupt
- *		  accel_nomotion| result
- *         ------------ | -----------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_nomotion_u_8 : The value of accel nomotion interrupt
+ *	  v_accel_nomotion_u_8    | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7133,7 +6767,7 @@ _u8 accel_anymotion);
  *
  *	Axis:
  *
- *	bno055_set_accel_anymotion_nomotion_axis_enable()
+ *	bno055_set_accel_any_motion_no_motion_axis_enable()
  *
  *	Threshold :
  *
@@ -7141,24 +6775,24 @@ _u8 accel_anymotion);
  *
  *	Duration :
  *
- *	bno055_set_accel_slow_no_motion_dur()
+ *	bno055_set_accel_slow_no_motion_durn()
  *
  *	Slow/no motion enable:
  *
  *	bno055_set_accel_slow_no_motion_enable()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_int_accel_nomotion(
-_u8 *accel_nomotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_intr_accel_no_motion(
+u_8 *v_accel_nomotion_u_8);
 /*!
  *	@brief This API used to write the accel nomotion interrupt
  *	from page one register from 0x10 bit 6
  *
- *	@param accel_nomotion : The value of accel nomotion interrupt
- *		accel_nomotion  | result
- *     ---------------- | ---------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_nomotion_u_8 : The value of accel nomotion interrupt
+ *	  v_accel_nomotion_u_8    | result
+ *     --------------------  |------------
+ *              0x01         | ENABLED
+ *              0x00         | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7169,7 +6803,7 @@ _u8 *accel_nomotion);
  *
  *	Axis:
  *
- *	bno055_set_accel_anymotion_nomotion_axis_enable()
+ *	bno055_set_accel_any_motion_no_motion_axis_enable()
  *
  *	Threshold :
  *
@@ -7177,27 +6811,27 @@ _u8 *accel_nomotion);
  *
  *	Duration :
  *
- *	bno055_set_accel_slow_no_motion_dur()
+ *	bno055_set_accel_slow_no_motion_durn()
  *
  *	Slow/no motion enable:
  *
  *	bno055_set_accel_slow_no_motion_enable()
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_int_accel_nomotion(
-_u8 accel_nomotion);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_intr_accel_no_motion(
+u_8 v_accel_nomotion_u_8);
 /*****************************************************/
-/**\name FUNCTIONS FOR ACCEL ANYMOTION THRESHOLD  */
+/**\name FUNCTIONS FOR ACCEL ANY_MOTION THRESHOLD  */
 /*****************************************************/
 /*!
- *	@brief This API used to read the accel anymotion threshold
+ *	@brief This API used to read the accel any motion threshold
  *	from page one register from 0x11 bit 0 to 7
  *
- *	@param accel_anymotion_thres : The value of any motion threshold
- * accel_anymotion_thres| result
- *  ------------------- | -------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_any_motion_thres_u_8 : The value of any motion threshold
+ *  v_accel_any_motion_thres_u_8 | result
+ *  ------------------------    | -------------
+ *              0x01            | ENABLED
+ *              0x00            | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7206,7 +6840,7 @@ _u8 accel_nomotion);
  *	@note Accel anymotion threshold dependent on the
  *	range values
  *
- *  accel_range	 |	threshold	 |	LSB
+ *  v_accel_range_u_8 |	threshold |	LSB
  * ------------- | ------------- | ---------
  *     2g        |    3.19mg     |   1LSB
  *     4g        |    7.81mg     |   1LSB
@@ -7214,17 +6848,17 @@ _u8 accel_nomotion);
  *     16g       |    31.25mg    |   1LSB
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_anymotion_thresh(
-_u8 *accel_anymotion_thres);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_any_motion_thres(
+u_8 *v_accel_any_motion_thres_u_8);
 /*!
  *	@brief This API used to write the accel any motion threshold
  *	from page one register from 0x11 bit 0 to 7
  *
- *	@param accel_anymotion_thres : The value of any motion threshold
- * accel_anymotion_thres| result
- *  ------------------- | -------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_any_motion_thres_u_8 : The value of any motion threshold
+ *  v_accel_any_motion_thres_u_8 | result
+ *  ------------------------    | -------------
+ *              0x01            | ENABLED
+ *              0x00            | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7233,7 +6867,7 @@ _u8 *accel_anymotion_thres);
  *	@note Accel anymotion threshold dependent on the
  *	range values
  *
- *  accel_range	 |	threshold	 |	LSB
+ *  v_accel_range_u_8	 |	threshold	 |	LSB
  * ------------- | ------------- | ---------
  *     2g        |    3.19mg     |   1LSB
  *     4g        |    7.81mg     |   1LSB
@@ -7241,20 +6875,20 @@ _u8 *accel_anymotion_thres);
  *     16g       |    31.25mg    |   1LSB
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_anymotion_thres(
-_u8 accel_anymotion_thres);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_any_motion_thres(
+u_8 v_accel_any_motion_thres_u_8);
 /*****************************************************/
-/**\name FUNCTIONS FOR ACCEL ANYMOTION DURATION  */
+/**\name FUNCTIONS FOR ACCEL ANY_MOTION DURATION  */
 /*****************************************************/
 /*!
  *	@brief This API used to read the accel anymotion duration
  *	from page one register from 0x12 bit 0 to 1
  *
- *	@param accel_anymotion_dur : The value of accel anymotion duration
- * accel_anymotion_dur  | result
- *  ------------------- | -------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_any_motion_durn_u_8 : The value of accel anymotion duration
+ * v_accel_any_motion_durn_u_8  | result
+ *  -------------------------  | -------------
+ *              0x01           | ENABLED
+ *              0x00           | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7262,17 +6896,18 @@ _u8 accel_anymotion_thres);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_anymotion_dur(
-_u8 *accel_anymotion_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_any_motion_durn(
+u_8 *v_accel_any_motion_durn_u_8);
 /*!
  *	@brief This API used to write the accel anymotion duration
  *	from page one register from 0x12 bit 0 to 1
  *
- *	@param accel_anymotion_dur : The value of accel anymotion duration
- *  accel_anymotion_dur | result
- *  ------------------- | -------------
- *              0x01    | ENABLED
- *              0x00    | DISABLED
+ *	@param v_accel_any_motion_durn_u_8 : The value of accel anymotion duration
+ *
+ * v_accel_any_motion_durn_u_8  | result
+ *  -------------------------  | -------------
+ *              0x01           | ENABLED
+ *              0x00           | DISABLED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7280,26 +6915,26 @@ _u8 *accel_anymotion_dur);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_anymotion_dur(
-_u8 accel_anymotion_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_any_motion_durn(
+u_8 v_accel_any_motion_durn_u_8);
 /*****************************************************/
-/**\name FUNCTIONS FOR ACCEL ANYMOTION AXIS ENABLE  */
+/**\name FUNCTIONS FOR ACCEL ANY_MOTION AXIS ENABLE  */
 /*****************************************************/
 /*!
  *	@brief This API used to read the accel anymotion enable
  *	from page one register from 0x12 bit 2 to 4
  *
- *	@param data : The value of accel anymotion enable
- *	    data     | result
+ *	@param v_data_u_8 : The value of accel anymotion enable
+ *	   v_data_u_8 | result
  *  ------------ | -------------
  *      0x01     | ENABLED
  *      0x00     | DISABLED
- *	@param channel : The value of accel anymotion axis selection
- *           channel                           | value
- *     --------------------------              | ----------
- *     BNO055_ACCEL_ANYMOTION_NOMOTION_X_AXIS  |   0
- *     BNO055_ACCEL_ANYMOTION_NOMOTION_Y_AXIS  |   1
- *     BNO055_ACCEL_ANYMOTION_NOMOTION_Y_AXIS  |   2
+ *	@param v_channel_u_8 : The value of accel anymotion axis selection
+ *           v_channel_u_8                        | value
+ *     --------------------------                | ----------
+ *     BNO055_ACCEL_ANY_MOTION_NO_MOTION_X_AXIS  |   0
+ *     BNO055_ACCEL_ANY_MOTION_NO_MOTION_Y_AXIS  |   1
+ *     BNO055_ACCEL_ANY_MOTION_NO_MOTION_Y_AXIS  |   2
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7307,23 +6942,23 @@ _u8 accel_anymotion_dur);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_anymotion_nomotion_axis_enable(
-_u8 channel, _u8 *data);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_any_motion_no_motion_axis_enable(
+u_8 v_channel_u_8, u_8 *v_data_u_8);
 /*!
  *	@brief This API used to write the accel anymotion enable
  *	from page one register from 0x12 bit 2 to 4
  *
- *	@param data : The value of accel anymotion enable
- *	    data     | result
+ *	@param v_data_u_8 : The value of accel anymotion enable
+ *	   v_data_u_8 | result
  *  ------------ | -------------
  *      0x01     | ENABLED
  *      0x00     | DISABLED
- *	@param channel : The value of accel anymotion axis selection
- *           channel                           | value
- *     ------------------------------------    | ----------
- *     BNO055_ACCEL_ANYMOTION_NOMOTION_X_AXIS  |   0
- *     BNO055_ACCEL_ANYMOTION_NOMOTION_Y_AXIS  |   1
- *     BNO055_ACCEL_ANYMOTION_NOMOTION_Y_AXIS  |   2
+ *	@param v_channel_u_8 : The value of accel anymotion axis selection
+ *           v_channel_u_8                        | value
+ *     --------------------------                | ----------
+ *     BNO055_ACCEL_ANY_MOTION_NO_MOTION_X_AXIS  |   0
+ *     BNO055_ACCEL_ANY_MOTION_NO_MOTION_Y_AXIS  |   1
+ *     BNO055_ACCEL_ANY_MOTION_NO_MOTION_Y_AXIS  |   2
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7331,8 +6966,8 @@ _u8 channel, _u8 *data);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_anymotion_nomotion_axis_enable(
-_u8 channel, _u8 data);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_any_motion_no_motion_axis_enable(
+u_8 v_channel_u_8, u_8 v_data_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR ACCEL HIGHG AXIS ENABLE  */
 /*****************************************************/
@@ -7340,13 +6975,13 @@ _u8 channel, _u8 data);
  *	@brief This API used to read the accel highg enable
  *	from page one register from 0x12 bit 5 to 7
  *
- *	@param data : The value of accel highg enable
- *      data     | result
+ *	@param v_data_u_8 : The value of accel highg enable
+ *      v_data_u_8| result
  *  ------------ | -------------
  *      0x01     | ENABLED
  *      0x00     | DISABLED
- *	@param channel : The value of accel highg axis selection
- *               channel          | value
+ *	@param v_channel_u_8 : The value of accel highg axis selection
+ *               v_channel_u_8     | value
  *     -------------------------- | ----------
  *     BNO055_ACCEL_HIGH_G_X_AXIS |   0
  *     BNO055_ACCEL_HIGH_G_Y_AXIS |   1
@@ -7359,18 +6994,18 @@ _u8 channel, _u8 data);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_high_g_axis_enable(
-_u8 channel, _u8 *data);
+u_8 v_channel_u_8, u_8 *v_data_u_8);
 /*!
  *	@brief This API used to write the accel highg enable
  *	from page one register from 0x12 bit 5 to 7
  *
- *	@param data : The value of accel highg enable
- *      data     | result
+ *	@param v_data_u_8 : The value of accel highg enable
+ *      v_data_u_8| result
  *  ------------ | -------------
  *      0x01     | ENABLED
  *      0x00     | DISABLED
- *	@param channel : The value of accel highg axis selection
- *               channel          | value
+ *	@param v_channel_u_8 : The value of accel highg axis selection
+ *               v_channel_u_8     | value
  *     -------------------------- | ----------
  *     BNO055_ACCEL_HIGH_G_X_AXIS |   0
  *     BNO055_ACCEL_HIGH_G_Y_AXIS |   1
@@ -7383,7 +7018,7 @@ _u8 channel, _u8 *data);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_high_g_axis_enable(
-_u8 channel, _u8 data);
+u_8 v_channel_u_8, u_8 v_data_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR ACCEL HIGHG DURATION */
 /*****************************************************/
@@ -7391,7 +7026,7 @@ _u8 channel, _u8 data);
  *	@brief This API used to read the accel highg duration
  *	from page one register from 0x13 bit 0 to 7
  *
- *	@param accel_high_g_dur : The value of accel highg duration
+ *	@param v_accel_high_g_durn_u_8 : The value of accel highg duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7403,13 +7038,13 @@ _u8 channel, _u8 data);
  *	in a range from 2 ms to 512 ms
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_high_g_dur(
-_u8 *accel_high_g_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_high_g_durn(
+u_8 *v_accel_high_g_durn_u_8);
 /*!
  *	@brief This API used to write the accel highg duration
  *	from page one register from 0x13 bit 0 to 7
  *
- *	@param accel_high_g_dur : The value of accel highg duration
+ *	@param v_accel_high_g_durn_u_8 : The value of accel highg duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7421,8 +7056,8 @@ _u8 *accel_high_g_dur);
  *	in a range from 2 ms to 512 ms
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_high_g_dur(
-_u8 accel_high_g_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_high_g_durn(
+u_8 v_accel_high_g_durn_u_8);
 /*****************************************************/
 /**\name FUNCTIONS FOR ACCEL HIGHG THRESHOLD */
 /*****************************************************/
@@ -7430,7 +7065,7 @@ _u8 accel_high_g_dur);
  *	@brief This API used to read the accel highg threshold
  *	from page one register from 0x14 bit 0 to 7
  *
- *	@param accel_high_g_thres : The value of accel highg threshold
+ *	@param v_accel_high_g_thres_u_8 : The value of accel highg threshold
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7439,7 +7074,7 @@ _u8 accel_high_g_dur);
  *	@note Accel highg interrupt threshold dependent
  *	for accel g range
  *
- *  accel_range	 |	threshold	 |	LSB
+ *  v_accel_range_u_8	 |	threshold	 |	LSB
  * ------------- | ------------- | ---------
  *     2g        |    7.81mg     |   1LSB
  *     4g        |    15.63mg    |   1LSB
@@ -7448,12 +7083,12 @@ _u8 accel_high_g_dur);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_high_g_thres(
-_u8 *accel_high_g_thres);
+u_8 *v_accel_high_g_thres_u_8);
 /*!
  *	@brief This API used to write the accel highg threshold
  *	from page one register from 0x14 bit 0 to 7
  *
- *	@param accel_high_g_thres : The value of accel highg threshold
+ *	@param v_accel_high_g_thres_u_8 : The value of accel highg threshold
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7462,7 +7097,7 @@ _u8 *accel_high_g_thres);
  *	@note Accel highg interrupt threshold dependent
  *	for accel g range
  *
- *  accel_range	 |	threshold	 |	LSB
+ *  v_accel_range_u_8	 |	threshold	 |	LSB
  * ------------- | ------------- | ---------
  *     2g        |    7.81mg     |   1LSB
  *     4g        |    15.63mg    |   1LSB
@@ -7471,7 +7106,7 @@ _u8 *accel_high_g_thres);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_high_g_thres(
-_u8 accel_high_g_thres);
+u_8 v_accel_high_g_thres_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR ACCEL SLOWNOMOTION THRESHOLD */
 /**************************************************************/
@@ -7479,7 +7114,7 @@ _u8 accel_high_g_thres);
  *	@brief This API used to read the accel slownomotion threshold
  *	from page one register from 0x15 bit 0 to 7
  *
- *	@param accel_slow_no_motion_thres :
+ *	@param v_accel_slow_no_motion_thres_u_8 :
  *	The value of accel slownomotion threshold
  *
  *	@return results of bus communication function
@@ -7489,7 +7124,7 @@ _u8 accel_high_g_thres);
  *	@note Accel slow no motion interrupt threshold dependent
  *	for accel g range
  *
- *  accel_range	 |	threshold	 |	LSB
+ *  v_accel_range_u_8	 |	threshold	 |	LSB
  * ------------- | ------------- | ---------
  *     2g        |    3.19mg     |   1LSB
  *     4g        |    7.81mg     |   1LSB
@@ -7497,12 +7132,12 @@ _u8 accel_high_g_thres);
  *     16g       |    31.25mg    |   1LSB
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_slow_no_motion_thres(
-_u8 *accel_slow_no_motion_thres);
+u_8 *v_accel_slow_no_motion_thres_u_8);
 /*!
  *	@brief This API used to write the accel slownomotion threshold
  *	from page one register from 0x15 bit 0 to 7
  *
- *	@param accel_slow_no_motion_thres :
+ *	@param v_accel_slow_no_motion_thres_u_8 :
  *	The value of accel slownomotion threshold
  *
  *	@return results of bus communication function
@@ -7512,7 +7147,7 @@ _u8 *accel_slow_no_motion_thres);
  *	@note Accel slow no motion interrupt threshold dependent
  *	for accel g range
  *
- *  accel_range	 |	threshold	 |	LSB
+ *  v_accel_range_u_8	 |	threshold	 |	LSB
  * ------------- | ------------- | ---------
  *     2g        |    3.19mg     |   1LSB
  *     4g        |    7.81mg     |   1LSB
@@ -7520,7 +7155,7 @@ _u8 *accel_slow_no_motion_thres);
  *     16g       |    31.25mg    |   1LSB
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_slow_no_motion_thres(
-_u8 accel_slow_no_motion_thres);
+u_8 v_accel_slow_no_motion_thres_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR ACCEL SLOWNOMOTION ENABLE */
 /**************************************************************/
@@ -7528,11 +7163,11 @@ _u8 accel_slow_no_motion_thres);
  *	@brief This API used to read accel slownomotion enable
  *	from page one register from 0x16 bit 0
  *
- *	@param accel_slow_no_motion_en : The value of accel slownomotion enable
- *	  accel_slow_no_motion_en   | result
- *     ------------------------ | --------
- *              0x01            | Slow motion
- *              0x00            | No motion
+ *	@param v_accel_slow_no_motion_en_u_8 : The value of accel slownomotion enable
+ *	  v_accel_slow_no_motion_en_u_8   | result
+ *     ------------------------      | --------
+ *              0x01                 | Slow motion
+ *              0x00                 | No motion
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7540,16 +7175,16 @@ _u8 accel_slow_no_motion_thres);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_slow_no_motion_enable(
-_u8 *accel_slow_no_motion_en);
+u_8 *v_accel_slow_no_motion_en_u_8);
 /*!
  *	@brief This API used to write accel slownomotion enable
  *	from page one register from 0x16 bit 0
  *
- *	@param accel_slow_no_motion_en : The value of accel slownomotion enable
- *	  accel_slow_no_motion_en   | result
- *     ------------------------ | --------
- *              0x01            | Slow motion
- *              0x00            | No motion
+ *	@param v_accel_slow_no_motion_en_u_8 : The value of accel slownomotion enable
+ *	  v_accel_slow_no_motion_en_u_8   | result
+ *     ------------------------      | --------
+ *              0x01                 | Slow motion
+ *              0x00                 | No motion
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7557,7 +7192,7 @@ _u8 *accel_slow_no_motion_en);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_slow_no_motion_enable(
-_u8 accel_slow_no_motion_en);
+u_8 v_accel_slow_no_motion_en_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR ACCEL SLOWNOMOTION DURATION */
 /**************************************************************/
@@ -7565,46 +7200,48 @@ _u8 accel_slow_no_motion_en);
  *	@brief This API used to read accel slownomotion duration
  *	from page one register from 0x16 bit 1 to 6
  *
- *	@param accel_slow_no_motion_dur : The value of accel slownomotion duration
+ *	@param v_accel_slow_no_motion_durn_u_8 :
+ *	The value of accel slownomotion duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_slow_no_motion_dur(
-_u8 *accel_slow_no_motion_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_accel_slow_no_motion_durn(
+u_8 *v_accel_slow_no_motion_durn_u_8);
 /*!
  *	@brief This API used to write accel slownomotion duration
  *	from page one register from 0x16 bit 1 to 6
  *
- *	@param accel_slow_no_motion_dur : The value of accel slownomotion duration
+ *	@param v_accel_slow_no_motion_durn_u_8 :
+ *	The value of accel slownomotion duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_slow_no_motion_dur(
-_u8 accel_slow_no_motion_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_accel_slow_no_motion_durn(
+u_8 v_accel_slow_no_motion_durn_u_8);
 /**************************************************************/
-/**\name FUNCTIONS FOR GYRO ANYMOTION AXIS ENABLE */
+/**\name FUNCTIONS FOR GYRO ANY_MOTION AXIS ENABLE */
 /**************************************************************/
 /*!
  *	@brief This API used to read the gyro anymotion enable
  *	from page one register from 0x17 bit 0 to 2
  *
- *	@param data : The value of gyro anymotion enable
- *      data     | result
- *  ------------ |-------------
- *      0x01     | ENABLED
- *      0x00     | DISABLED
- *	@param channel : The value of gyro anymotion axis selection
- *               channel              | value
- *     ------------------------       | ----------
- *     BNO055_GYRO_ANYMOTIONX_AXIS    |   0
- *     BNO055_GYRO_ANYMOTIONY_AXIS    |   1
- *     BNO055_GYRO_ANYMOTIONZ_AXIS    |   2
+ *	@param v_data_u_8 : The value of gyro anymotion enable
+ *      v_data_u_8     | result
+ *  ----------------- |-------------
+ *      0x01          | ENABLED
+ *      0x00          | DISABLED
+ *	@param v_channel_u_8 : The value of gyro anymotion axis selection
+ *               v_channel_u_8         | value
+ *     ---------------------------    | ----------
+ *     BNO055_GYRO_ANY_MOTIONX_AXIS   |   0
+ *     BNO055_GYRO_ANY_MOTIONY_AXIS   |   1
+ *     BNO055_GYRO_ANY_MOTIONZ_AXIS   |   2
  *
  *
  *	@return results of bus communication function
@@ -7613,23 +7250,23 @@ _u8 accel_slow_no_motion_dur);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_anymotion_axis_enable(
-_u8 channel, _u8 *data);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_any_motion_axis_enable(
+u_8 v_channel_u_8, u_8 *v_data_u_8);
 /*!
  *	@brief This API used to write the gyro anymotion enable
  *	from page one register from 0x17 bit 0 to 2
  *
- *	@param data : The value of gyro anymotion enable
- *      data     | result
- *  ------------ |-------------
- *      0x01     | ENABLED
- *      0x00     | DISABLED
- *	@param channel : The value of gyro anymotion axis selection
- *               channel              | value
- *     ------------------------       | ----------
- *     BNO055_GYRO_ANYMOTIONX_AXIS    |   0
- *     BNO055_GYRO_ANYMOTIONY_AXIS    |   1
- *     BNO055_GYRO_ANYMOTIONZ_AXIS    |   2
+ *	@param v_data_u_8 : The value of gyro anymotion enable
+ *      v_data_u_8     | result
+ *  ----------------- |-------------
+ *      0x01          | ENABLED
+ *      0x00          | DISABLED
+ *	@param v_channel_u_8 : The value of gyro anymotion axis selection
+ *               v_channel_u_8         | value
+ *     ---------------------------    | ----------
+ *     BNO055_GYRO_ANY_MOTIONX_AXIS   |   0
+ *     BNO055_GYRO_ANY_MOTIONY_AXIS   |   1
+ *     BNO055_GYRO_ANY_MOTIONZ_AXIS   |   2
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7637,8 +7274,8 @@ _u8 channel, _u8 *data);
  *
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_anymotion_axis_enable(
-_u8 channel, _u8 data);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_any_motion_axis_enable(
+u_8 v_channel_u_8, u_8  v_data_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE ENABLE */
 /**************************************************************/
@@ -7646,13 +7283,13 @@ _u8 channel, _u8 data);
  *	@brief This API used to read the gyro highrate enable
  *	from page one register from 0x17 bit 3 to 5
  *
- *	@param data : The value of gyro highrate enable
- *      data     | result
- *  ------------ |-------------
- *      0x01     | ENABLED
- *      0x00     | DISABLED
- *	@param channel : The value of gyro highrate axis selection
- *               channel              | value
+ *	@param v_data_u_8 : The value of gyro highrate enable
+ *      v_data_u_8     | result
+ *  ----------------  |-------------
+ *      0x01          | ENABLED
+ *      0x00          | DISABLED
+ *	@param v_channel_u_8 : The value of gyro highrate axis selection
+ *               v_channel_u_8         | value
  *     ------------------------       | ----------
  *     BNO055_GYRO_HIGHRATE_X_AXIS    |   0
  *     BNO055_GYRO_HIGHRATE_Y_AXIS    |   1
@@ -7666,7 +7303,7 @@ _u8 channel, _u8 data);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_axis_enable(
-_u8 channel, _u8 *data);
+u_8 v_channel_u_8, u_8 *v_data_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE AXIS ENABLE */
 /**************************************************************/
@@ -7674,13 +7311,13 @@ _u8 channel, _u8 *data);
  *	@brief This API used to write the gyro highrate enable
  *	from page one register from 0x17 bit 3 to 5
  *
- *	@param data : The value of gyro highrate enable
- *      data     | result
- *  ------------ |-------------
- *      0x01     | ENABLED
- *      0x00     | DISABLED
- *	@param channel : The value of gyro highrate axis selection
- *               channel              | value
+ *	@param v_data_u_8 : The value of gyro highrate enable
+ *      v_data_u_8     | result
+ *  ----------------  |-------------
+ *      0x01          | ENABLED
+ *      0x00          | DISABLED
+ *	@param v_channel_u_8 : The value of gyro highrate axis selection
+ *               v_channel_u_8         | value
  *     ------------------------       | ----------
  *     BNO055_GYRO_HIGHRATE_X_AXIS    |   0
  *     BNO055_GYRO_HIGHRATE_Y_AXIS    |   1
@@ -7693,44 +7330,44 @@ _u8 channel, _u8 *data);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_axis_enable(
-_u8 channel, _u8 data);
+u_8 v_channel_u_8, u_8 v_data_u_8);
 /**************************************************************/
-/**\name FUNCTIONS FOR GYRO ANYMOTION FILTER */
+/**\name FUNCTIONS FOR GYRO ANY_MOTION FILTER */
 /**************************************************************/
 /*!
  *	@brief This API used to read gyro anymotion filter
  *	from page one register from 0x17 bit 6
  *
- *	@param gyro_anymotion_filter : The value of gyro anymotion filter
- *   gyro_anymotion_filter  | result
- *  ----------------------  |------------
- *      0x00                | FILTERED
- *      0x01                | UNFILTERED
+ *	@param v_gyro_any_motion_filter_u_8 : The value of gyro anymotion filter
+ *   v_gyro_any_motion_filter_u_8  | result
+ *  ---------------------------   |------------
+ *      0x00                      | FILTERED
+ *      0x01                      | UNFILTERED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_anymotion_filter(
-_u8 *gyro_anymotion_filter);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_any_motion_filter(
+u_8 *v_gyro_any_motion_filter_u_8);
 /*!
  *	@brief This API used to write gyro anymotion filter
  *	from page one register from 0x17 bit 6
  *
- *	@param gyro_anymotion_filter : The value of gyro anymotion filter
- *   gyro_anymotion_filter  | result
- *  ----------------------  |------------
- *      0x00                | FILTERED
- *      0x01                | UNFILTERED
+ *	@param v_gyro_any_motion_filter_u_8 : The value of gyro anymotion filter
+ *   v_gyro_any_motion_filter_u_8  | result
+ *  ---------------------------   |------------
+ *      0x00                      | FILTERED
+ *      0x01                      | UNFILTERED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_anymotion_filter(
-_u8 gyro_anymotion_filter);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_any_motion_filter(
+u_8 v_gyro_any_motion_filter_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE FILTER */
 /**************************************************************/
@@ -7738,11 +7375,11 @@ _u8 gyro_anymotion_filter);
  *	@brief This API used to read gyro highrate filter
  *	from page one register from 0x17 bit 7
  *
- *	@param gyro_highrate_filter : The value of gyro highrate filter
- *   gyro_highrate_filter  | result
- *  ---------------------- |------------
- *         0x00            | FILTERED
- *         0x01            | UNFILTERED
+ *	@param v_gyro_highrate_filter_u_8 : The value of gyro highrate filter
+ *   v_gyro_highrate_filter_u_8  | result
+ *  --------------------------- |------------
+ *         0x00                 | FILTERED
+ *         0x01                 | UNFILTERED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7750,15 +7387,16 @@ _u8 gyro_anymotion_filter);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_filter(
-_u8 *gyro_highrate_filter);
+u_8 *v_gyro_highrate_filter_u_8);
 /*!
  *	@brief This API used to write gyro highrate filter
  *	from page one register from 0x17 bit 7
  *
- *   gyro_highrate_filter  | result
- *  ---------------------- |------------
- *         0x00            | FILTERED
- *         0x01            | UNFILTERED
+ *	@param v_gyro_highrate_filter_u_8 : The value of gyro highrate filter
+ *   v_gyro_highrate_filter_u_8  | result
+ *  --------------------------- |------------
+ *         0x00                 | FILTERED
+ *         0x01                 | UNFILTERED
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7766,7 +7404,7 @@ _u8 *gyro_highrate_filter);
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_filter(
-_u8 gyro_highrate_filter);
+u_8 v_gyro_highrate_filter_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE X THRESHOLD */
 /**************************************************************/
@@ -7774,7 +7412,7 @@ _u8 gyro_highrate_filter);
  *	@brief This API used to read gyro highrate x threshold
  *	from page one register from 0x18 bit 0 to 4
  *
- *	@param gyro_highrate_x_thres : The value of gyro x highrate threshold
+ *	@param v_gyro_highrate_x_thres_u_8 : The value of gyro x highrate threshold
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7783,21 +7421,21 @@ _u8 gyro_highrate_filter);
  *	@note Gyro highrate threshold dependent on the
  *	selection of gyro range
  *
- *  gyro_range	  |	threshold		|     LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.5dps      |   1LSB
- *     1000       |    31.25dps     |   1LSB
- *     500        |    15.625dps    |   1LSB
- *     125        |    7.8125dps    |   1LSB
+ *  v_gyro_range_u_8	  |	threshold		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.5dps      |   1LSB
+ *     1000           |    31.25dps     |   1LSB
+ *     500            |    15.625dps    |   1LSB
+ *     125            |    7.8125dps    |   1LSB
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_x_thres(
-_u8 *gyro_highrate_x_thres);
+u_8 *v_gyro_highrate_x_thres_u_8);
 /*!
  *	@brief This API used to write gyro highrate x threshold
  *	from page one register from 0x18 bit 0 to 4
  *
- *	@param gyro_highrate_x_thres : The value of gyro highrate x threshold
+ *	@param v_gyro_highrate_x_thres_u_8 : The value of gyro x highrate threshold
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7806,16 +7444,16 @@ _u8 *gyro_highrate_x_thres);
  *	@note Gyro highrate threshold dependent on the
  *	selection of gyro range
  *
- *  gyro_range	  |	threshold		|     LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.5dps      |   1LSB
- *     1000       |    31.25dps     |   1LSB
- *     500        |    15.625dps    |   1LSB
- *     125        |    7.8125dps    |   1LSB
+ *  v_gyro_range_u_8	  |	threshold		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.5dps      |   1LSB
+ *     1000           |    31.25dps     |   1LSB
+ *     500            |    15.625dps    |   1LSB
+ *     125            |    7.8125dps    |   1LSB
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_x_thres(
-_u8 gyro_highrate_x_thres);
+u_8 v_gyro_highrate_x_thres_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE X HYSTERESIS */
 /**************************************************************/
@@ -7823,7 +7461,7 @@ _u8 gyro_highrate_x_thres);
  *	@brief This API used to read gyro highrate x hysteresis
  *	from page one register from 0x18 bit 5 to 6
  *
- *	@param gyro_highrate_x_hyst : The value of gyro highrate x hysteresis
+ *	@param v_gyro_highrate_x_hyst_u_8 : The value of gyro highrate x hysteresis
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7831,23 +7469,24 @@ _u8 gyro_highrate_x_thres);
  *
  *	@note Gyro high rate hysteresis calculated by
  *
- *	using this (255 + 256 * gyro_highrate_x_hyst) *4 LSB
+ *	using this (255 + 256 * v_gyro_highrate_x_hyst_u_8) *4 LSB
  *
  *	The high rate value scales with the range setting
  *
- *  gyro_range	  |	hysteresis		|     LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.26dps     |   1LSB
- *     1000       |    31.13dps     |   1LSB
- *     500        |    15.56dps     |   1LSB
+ *  v_gyro_range_u_8	  |	hysteresis		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.26dps     |   1LSB
+ *     1000           |    31.13dps     |   1LSB
+ *     500            |    15.56dps     |   1LSB
+ *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_x_hyst(
-_u8 *gyro_highrate_x_hyst);
+u_8 *v_gyro_highrate_x_hyst_u_8);
 /*!
  *	@brief This API used to write gyro highrate x hysteresis
  *	from page one register from 0x18 bit 5 to 6
  *
- *	@param gyro_highrate_x_hyst : The value of gyro highrate x hysteresis
+ *	@param v_gyro_highrate_x_hyst_u_8 : The value of gyro highrate x hysteresis
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7855,18 +7494,19 @@ _u8 *gyro_highrate_x_hyst);
  *
  *	@note Gyro high rate hysteresis calculated by
  *
- *	using this (255 + 256 * gyro_highrate_x_hyst) *4 LSB
+ *	using this (255 + 256 * v_gyro_highrate_x_hyst_u_8) *4 LSB
  *
  *	The high rate value scales with the range setting
  *
- *  gyro_range	  |	hysteresis		|     LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.26dps     |   1LSB
- *     1000       |    31.13dps     |   1LSB
- *     500        |    15.56dps     |   1LSB
+ *  v_gyro_range_u_8	  |	hysteresis		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.26dps     |   1LSB
+ *     1000           |    31.13dps     |   1LSB
+ *     500            |    15.56dps     |   1LSB
+ *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_x_hyst(
-_u8 gyro_highrate_x_hyst);
+u_8 v_gyro_highrate_x_hyst_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE X DURATION */
 /**************************************************************/
@@ -7874,7 +7514,7 @@ _u8 gyro_highrate_x_hyst);
  *	@brief This API used to read gyro highrate x duration
  *	from page one register from 0x19 bit 0 to 7
  *
- *	@param gyro_highrate_x_dur : The value of gyro highrate x duration
+ *	@param v_gyro_highrate_x_durn_u_8 : The value of gyro highrate x duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7882,16 +7522,16 @@ _u8 gyro_highrate_x_hyst);
  *
  *	@note Gyro highrate duration calculate by using the formula
  *
- *	(1 + gyro_highrate_x_dur)*2.5ms
+ *	(1 + v_gyro_highrate_x_durn_u_8)*2.5ms
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_x_dur(
-_u8 *gyro_highrate_x_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_x_durn(
+u_8 *v_gyro_highrate_x_durn_u_8);
 /*!
  *	@brief This API used to write gyro highrate x duration
  *	from page one register from 0x19 bit 0 to 7
  *
- *	@param gyro_highrate_x_dur : The value of gyro highrate x duration
+ *	@param v_gyro_highrate_x_durn_u_8 : The value of gyro highrate x duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7899,10 +7539,10 @@ _u8 *gyro_highrate_x_dur);
  *
  *	@note Gyro highrate duration calculate by using the formula
  *
- *	(1 + gyro_highrate_x_dur)*2.5ms
+ *	(1 + v_gyro_highrate_x_durn_u_8)*2.5ms
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_x_dur(
-_u8 gyro_highrate_x_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_x_durn(
+u_8 v_gyro_highrate_x_durn_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE Y THRESHOLD */
 /**************************************************************/
@@ -7910,7 +7550,7 @@ _u8 gyro_highrate_x_dur);
  *	@brief This API used to read gyro highrate y threshold
  *	from page one register from 0x1A bit 0 to 4
  *
- *	@param gyro_highrate_y_thres : The value of gyro highrate y threshold
+ *	@param v_gyro_highrate_y_thres_u_8 : The value of gyro highrate y threshold
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7919,21 +7559,21 @@ _u8 gyro_highrate_x_dur);
  *	@note Gyro highrate threshold dependent on the
  *	selection of gyro range
  *
- *  gyro_range	  |	threshold		|     LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.5dps      |   1LSB
- *     1000       |    31.25dps     |   1LSB
- *     500        |    15.625dps    |   1LSB
- *     125        |    7.8125dps    |   1LSB
+ *  v_gyro_range_u_8	  |	threshold		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.5dps      |   1LSB
+ *     1000           |    31.25dps     |   1LSB
+ *     500            |    15.625dps    |   1LSB
+ *     125            |    7.8125dps    |   1LSB
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_y_thres(
-_u8 *gyro_highrate_y_thres);
+u_8 *v_gyro_highrate_y_thres_u_8);
 /*!
  *	@brief This API used to write gyro highrate y threshold
  *	from page one register from 0x1A bit 0 to 4
  *
- *	@param gyro_highrate_y_thres : The value of gyro highrate y threshold
+ *	@param v_gyro_highrate_y_thres_u_8 : The value of gyro highrate y threshold
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7942,16 +7582,16 @@ _u8 *gyro_highrate_y_thres);
  *	@note Gyro highrate threshold dependent on the
  *	selection of gyro range
  *
- *  gyro_range	  |	threshold	    |	LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.5dps      |   1LSB
- *     1000       |    31.25dps     |   1LSB
- *     500        |    15.625dps    |   1LSB
- *     125        |    7.8125dps    |   1LSB
+ *  v_gyro_range_u_8	  |	threshold		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.5dps      |   1LSB
+ *     1000           |    31.25dps     |   1LSB
+ *     500            |    15.625dps    |   1LSB
+ *     125            |    7.8125dps    |   1LSB
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_y_thres(
-_u8 gyro_highrate_y_thres);
+u_8 v_gyro_highrate_y_thres_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE Y HYSTERESIS */
 /**************************************************************/
@@ -7959,7 +7599,7 @@ _u8 gyro_highrate_y_thres);
  *	@brief This API used to read gyro highrate y hysteresis
  *	from page one register from 0x1A bit 5 to 6
  *
- *	@param gyro_highrate_y_hyst : The value of gyro highrate y hysteresis
+ *	@param v_gyro_highrate_y_hyst_u_8 : The value of gyro highrate y hysteresis
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7967,23 +7607,23 @@ _u8 gyro_highrate_y_thres);
  *
  *	@note Gyro high rate hysteresis calculated by
  *
- *	using this (255 + 256 * gyro_highrate_y_hyst) *4 LSB
+ *	using this (255 + 256 * v_gyro_highrate_y_hyst_u_8) *4 LSB
  *
  *	The high rate value scales with the range setting
  *
- *  gyro_range	  |	hysteresis		|     LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.26dps     |   1LSB
- *     1000       |    31.13dps     |   1LSB
- *     500        |    15.56dps     |   1LSB
+ *  v_gyro_range_u_8	  |	hysteresis		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.26dps     |   1LSB
+ *     1000           |    31.13dps     |   1LSB
+ *     500            |    15.56dps     |   1LSB
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_y_hyst(
-_u8 *gyro_highrate_y_hyst);
+u_8 *v_gyro_highrate_y_hyst_u_8);
 /*!
  *	@brief This API used to write gyro highrate y hysteresis
  *	from page one register from 0x1A bit 5 to 6
  *
- *	@param gyro_highrate_y_hyst : The value of gyro highrate y hysteresis
+ *	@param v_gyro_highrate_y_hyst_u_8 : The value of gyro highrate y hysteresis
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -7991,18 +7631,18 @@ _u8 *gyro_highrate_y_hyst);
  *
  *	@note Gyro high rate hysteresis calculated by
  *
- *	using this (255 + 256 * gyro_highrate_y_hyst) *4 LSB
+ *	using this (255 + 256 * v_gyro_highrate_y_hyst_u_8) *4 LSB
  *
  *	The high rate value scales with the range setting
  *
- *  gyro_range	  |	hysteresis		|     LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.26dps     |   1LSB
- *     1000       |    31.13dps     |   1LSB
- *     500        |    15.56dps     |   1LSB
+ *  v_gyro_range_u_8	  |	hysteresis		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.26dps     |   1LSB
+ *     1000           |    31.13dps     |   1LSB
+ *     500            |    15.56dps     |   1LSB
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_y_hyst(
-_u8 gyro_highrate_y_hyst);
+u_8 v_gyro_highrate_y_hyst_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE Y DURATION */
 /**************************************************************/
@@ -8010,7 +7650,7 @@ _u8 gyro_highrate_y_hyst);
  *	@brief This API used to read gyro highrate y duration
  *	from page one register from 0x1B bit 0 to 7
  *
- *	@param gyro_highrate_y_dur : The value of gyro highrate y duration
+ *	@param v_gyro_highrate_y_durn_u_8 : The value of gyro highrate y duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -8018,15 +7658,15 @@ _u8 gyro_highrate_y_hyst);
  *
  *	@note Gyro highrate duration calculate by using the formula
  *
- *	(1 + gyro_highrate_y_dur)*2.5ms
+ *	(1 + v_gyro_highrate_y_durn_u_8)*2.5ms
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_y_dur(
-_u8 *gyro_highrate_y_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_y_durn(
+u_8 *v_gyro_highrate_y_durn_u_8);
 /*!
  *	@brief This API used to write gyro highrate y duration
  *	from page one register from 0x1B bit 0 to 7
  *
- *	@param gyro_highrate_y_dur : The value of gyro highrate y duration
+ *	@param v_gyro_highrate_y_durn_u_8 : The value of gyro highrate y duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -8034,10 +7674,10 @@ _u8 *gyro_highrate_y_dur);
  *
  *	@note Gyro highrate duration calculate by using the formula
  *
- *	(1 + gyro_highrate_y_dur)*2.5ms
+ *	(1 + v_gyro_highrate_y_durn_u_8)*2.5ms
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_y_dur(
-_u8 gyro_highrate_y_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_y_durn(
+u_8 v_gyro_highrate_y_durn_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE Z THRESHOLD */
 /**************************************************************/
@@ -8045,7 +7685,7 @@ _u8 gyro_highrate_y_dur);
  *	@brief This API used to read gyro highrate z threshold
  *	from page one register from 0x1C bit 0 to 4
  *
- *	@param gyro_highrate_z_thres : The value of gyro highrate z threshold
+ *	@param v_gyro_highrate_z_thres_u_8 : The value of gyro highrate z threshold
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -8054,21 +7694,21 @@ _u8 gyro_highrate_y_dur);
  *	@note Gyro highrate threshold dependent on the
  *	selection of gyro range
  *
- *  gyro_range	  |	threshold		|    LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.5dps      |   1LSB
- *     1000       |    31.25dps     |   1LSB
- *     500        |    15.625dps    |   1LSB
- *     125        |    7.8125dps    |   1LSB
+ *  v_gyro_range_u_8	  |	threshold		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.5dps      |   1LSB
+ *     1000           |    31.25dps     |   1LSB
+ *     500            |    15.625dps    |   1LSB
+ *     125            |    7.8125dps    |   1LSB
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_z_thres(
-_u8 *gyro_highrate_z_thres);
+u_8 *v_gyro_highrate_z_thres_u_8);
 /*!
  *	@brief This API used to write gyro highrate z threshold
  *	from page one register from 0x1C bit 0 to 4
  *
- *	@param gyro_highrate_z_thres : The value of gyro highrate z threshold
+ *	@param v_gyro_highrate_z_thres_u_8 : The value of gyro highrate z threshold
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -8077,16 +7717,16 @@ _u8 *gyro_highrate_z_thres);
  *	@note Gyro highrate threshold dependent on the
  *	selection of gyro range
  *
- *  gyro_range	  |	threshold		|    LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.5dps      |   1LSB
- *     1000       |    31.25dps     |   1LSB
- *     500        |    15.625dps    |   1LSB
- *     125        |    7.8125dps    |   1LSB
+ *  v_gyro_range_u_8	  |	threshold		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.5dps      |   1LSB
+ *     1000           |    31.25dps     |   1LSB
+ *     500            |    15.625dps    |   1LSB
+ *     125            |    7.8125dps    |   1LSB
  *
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_z_thres(
-_u8 gyro_highrate_z_thres);
+u_8 v_gyro_highrate_z_thres_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE Z HYSTERESIS */
 /**************************************************************/
@@ -8094,7 +7734,7 @@ _u8 gyro_highrate_z_thres);
  *	@brief This API used to read gyro highrate z hysteresis
  *	from page one register from 0x1C bit 5 to 6
  *
- *	@param gyro_highrate_z_hyst : The value of gyro highrate z hysteresis
+ *	@param v_gyro_highrate_z_hyst_u_8 : The value of gyro highrate z hysteresis
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -8102,23 +7742,23 @@ _u8 gyro_highrate_z_thres);
  *
  *	@note Gyro high rate hysteresis calculated by
  *
- *	using this (255 + 256 * gyro_highrate_z_hyst) *4 LSB
+ *	using this (255 + 256 * v_gyro_highrate_z_hyst_u_8) *4 LSB
  *
  *	The high rate value scales with the range setting
  *
- *  gyro_range	  |	hysteresis		|     LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.26dps     |   1LSB
- *     1000       |    31.13dps     |   1LSB
- *     500        |    15.56dps     |   1LSB
+ *  v_gyro_range_u_8	  |	 hysteresis		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.26dps     |   1LSB
+ *     1000           |    31.13dps     |   1LSB
+ *     500            |    15.56dps     |   1LSB
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_z_hyst(
-_u8 *gyro_highrate_z_hyst);
+u_8 *v_gyro_highrate_z_hyst_u_8);
 /*!
  *	@brief This API used to write gyro highrate z hysteresis
  *	from page one register from 0x1C bit 5 to 6
  *
- *	@param gyro_highrate_z_hyst : The value of gyro highrate z hysteresis
+ *	@param v_gyro_highrate_z_hyst_u_8 : The value of gyro highrate z hysteresis
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -8126,18 +7766,18 @@ _u8 *gyro_highrate_z_hyst);
  *
  *	@note Gyro high rate hysteresis calculated by
  *
- *	using this (255 + 256 * gyro_highrate_z_hyst) *4 LSB
+ *	using this (255 + 256 * v_gyro_highrate_z_hyst_u_8) *4 LSB
  *
  *	The high rate value scales with the range setting
  *
- *  gyro_range	  |	hysteresis		|     LSB
- * -------------  | -------------   | ---------
- *     2000       |    62.26dps     |   1LSB
- *     1000       |    31.13dps     |   1LSB
- *     500        |    15.56dps     |   1LSB
+ *  v_gyro_range_u_8	  |	 hysteresis		|     LSB
+ * -----------------  | -------------   | ---------
+ *     2000           |    62.26dps     |   1LSB
+ *     1000           |    31.13dps     |   1LSB
+ *     500            |    15.56dps     |   1LSB
  */
 BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_z_hyst(
-_u8 gyro_highrate_z_hyst);
+u_8 v_gyro_highrate_z_hyst_u_8);
 /**************************************************************/
 /**\name FUNCTIONS FOR GYRO HIGHRATE Z DURATION */
 /**************************************************************/
@@ -8145,7 +7785,7 @@ _u8 gyro_highrate_z_hyst);
  *	@brief This API used to read gyro highrate z duration
  *	from page one register from 0x1D bit 0 to 7
  *
- *	@param gyro_highrate_z_dur : The value of gyro highrate z duration
+ *	@param v_gyro_highrate_z_durn_u_8 : The value of gyro highrate z duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -8153,15 +7793,15 @@ _u8 gyro_highrate_z_hyst);
  *
  *	@note Gyro highrate duration calculate by using the formula
  *
- *	(1 + gyro_highrate_z_dur)*2.5ms
+ *	(1 + v_gyro_highrate_z_durn_u_8)*2.5ms
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_z_dur(
-_u8 *gyro_highrate_z_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_highrate_z_durn(
+u_8 *v_gyro_highrate_z_durn_u_8);
 /*!
  *	@brief This API used to write gyro highrate z duration
  *	from page one register from 0x1D bit 0 to 7
  *
- *	@param gyro_highrate_z_dur : The value of gyro highrate z duration
+ *	@param v_gyro_highrate_z_durn_u_8 : The value of gyro highrate z duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -8169,18 +7809,18 @@ _u8 *gyro_highrate_z_dur);
  *
  *	@note Gyro highrate duration calculate by using the formula
  *
- *	(1 + gyro_highrate_z_dur)*2.5ms
+ *	(1 + v_gyro_highrate_z_durn_u_8)*2.5ms
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_z_dur(
-_u8 gyro_highrate_z_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_highrate_z_durn(
+u_8 v_gyro_highrate_z_durn_u_8);
 /**************************************************************/
-/**\name FUNCTIONS FOR GYRO ANYMOTION THRESHOLD */
+/**\name FUNCTIONS FOR GYRO ANY_MOTION THRESHOLD */
 /**************************************************************/
 /*!
  *	@brief This API used to read gyro anymotion threshold
  *	from page one register from 0x1E bit 0 to 6
  *
- *	@param gyro_anymotion_thres : The value of gyro anymotion threshold
+ *	@param v_gyro_any_motion_thres_u_8 : The value of gyro anymotion threshold
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -8189,20 +7829,20 @@ _u8 gyro_highrate_z_dur);
  *	@note Gyro anymotion interrupt threshold dependent
  *	on the selection of gyro range
  *
- *  gyro_range	  |	threshold		|     LSB
- * -------------  | -------------   | ---------
- *     2000       |    1dps       |   1LSB
- *     1000       |    0.5dps     |   1LSB
- *     500        |    0.25dps    |   1LSB
+ *  v_gyro_range_u_8	  |	threshold	  |	   LSB
+ * -----------------  | ------------- | ---------
+ *     2000           |    1dps       |   1LSB
+ *     1000           |    0.5dps     |   1LSB
+ *     500            |    0.25dps    |   1LSB
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_anymotion_thres(
-_u8 *gyro_anymotion_thres);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_any_motion_thres(
+u_8 *v_gyro_any_motion_thres_u_8);
 /*!
  *	@brief This API used to write gyro anymotion threshold
  *	from page one register from 0x1E bit 0 to 6
  *
- *	@param gyro_anymotion_thres : The value of gyro anymotion threshold
+ *	@param v_gyro_any_motion_thres_u_8 : The value of gyro anymotion threshold
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
@@ -8211,85 +7851,85 @@ _u8 *gyro_anymotion_thres);
  *	@note Gyro anymotion interrupt threshold dependent
  *	on the selection of gyro range
  *
- *  gyro_range	  |	threshold     |     LSB
- * -------------  | ------------- | ---------
- *     2000       |    1dps       |   1LSB
- *     1000       |    0.5dps     |   1LSB
- *     500        |    0.25dps    |   1LSB
+ *  v_gyro_range_u_8	  |	threshold	  |	   LSB
+ * -----------------  | ------------- | ---------
+ *     2000           |    1dps       |   1LSB
+ *     1000           |    0.5dps     |   1LSB
+ *     500            |    0.25dps    |   1LSB
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_anymotion_thres(
-_u8 gyro_anymotion_thres);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_any_motion_thres(
+u_8 v_gyro_any_motion_thres_u_8);
 /**************************************************************/
-/**\name FUNCTIONS FOR GYRO ANYMOTION SLOPE SAMPLES */
+/**\name FUNCTIONS FOR GYRO ANY_MOTION SLOPE SAMPLES */
 /**************************************************************/
 /*!
  *	@brief This API used to read gyro anymotion slope samples
  *	from page one register from 0x1F bit 0 to 1
  *
- *	@param gyro_anymotion_slope_samples :
+ *	@param v_gyro_any_motion_slope_samples_u_8 :
  *	The value of gyro anymotion slope samples
- *  gyro_anymotion_slope_samples   |   result
- *  ----------------------------   | -----------
- *            0                    |    8 samples
- *            1                    |    16 samples
- *            2                    |    32 samples
- *            3                    |    64 samples
+ *  v_gyro_any_motion_slope_samples_u_8   |   result
+ *  ----------------------------------   | -----------
+ *            0                          |    8 samples
+ *            1                          |    16 samples
+ *            2                          |    32 samples
+ *            3                          |    64 samples
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_anymotion_slope_samples(
-_u8 *gyro_anymotion_slope_samples);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_any_motion_slope_samples(
+u_8 *v_gyro_any_motion_slope_samples_u_8);
 /*!
  *	@brief This API used to write gyro anymotion slope samples
  *	from page one register from 0x1F bit 0 to 1
  *
- *	@param gyro_anymotion_slope_samples :
+ *	@param v_gyro_any_motion_slope_samples_u_8 :
  *	The value of gyro anymotion slope samples
- *  gyro_anymotion_slope_samples   |   result
- *  ----------------------------   | -----------
- *            0                    |    8 samples
- *            1                    |    16 samples
- *            2                    |    32 samples
- *            3                    |    64 samples
+ *  v_gyro_any_motion_slope_samples_u_8   |   result
+ *  ----------------------------------   | -----------
+ *            0                          |    8 samples
+ *            1                          |    16 samples
+ *            2                          |    32 samples
+ *            3                          |    64 samples
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_anymotion_slope_samples(
-_u8 gyro_anymotion_slope_samples);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_any_motion_slope_samples(
+u_8 v_gyro_any_motion_slope_samples_u_8);
 /**************************************************************/
-/**\name FUNCTIONS FOR GYRO ANYMOTION AWAKE DURATION */
+/**\name FUNCTIONS FOR GYRO ANY_MOTION AWAKE DURATION */
 /**************************************************************/
 /*!
  *	@brief This API used to read gyro anymotion awake duration
  *	from page one register from 0x1F bit 2 to 3
  *
- *	@param gyro_awake_dur : The value of gyro anymotion awake duration
+ *	@param v_gyro_awake_durn_u_8 : The value of gyro anymotion awake duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_anymotion_awake_duration(
-_u8 *gyro_awake_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_get_gyro_any_motion_awake_durn(
+u_8 *v_gyro_awake_durn_u_8);
 /*!
  *	@brief This API used to write gyro anymotion awake duration
  *	from page one register from 0x1F bit 2 to 3
  *
- *	@param gyro_awake_dur : The value of gyro anymotion awake duration
+ *	@param v_gyro_awake_durn_u_8 : The value of gyro anymotion awake duration
  *
  *	@return results of bus communication function
  *	@retval 0 -> Success
  *	@retval 1 -> Error
  *
  */
-BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_anymotion_awake_duration(
-_u8 gyro_awake_dur);
+BNO055_RETURN_FUNCTION_TYPE bno055_set_gyro_any_motion_awake_durn(
+u_8 v_gyro_awake_durn_u_8);
 #endif

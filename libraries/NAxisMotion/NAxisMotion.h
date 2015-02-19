@@ -2,8 +2,8 @@
 * Copyright (C) 2011 - 2014 Bosch Sensortec GmbH
 *
 * NAxisMotion.h
-* Date: 2014/08/27
-* Revision: 2.3 $
+* Date: 2015/02/10
+* Revision: 3.0 $
 *
 * Usage:        Header file of the C++ Wrapper for the BNO055 Sensor API
 *
@@ -57,7 +57,7 @@ extern "C" {
 
 //Custom Data structures
 //Structure to hold the calibration status
-struct bno055_calib_stat {
+struct bno055_calib_stat_t {
 	uint8_t accel;	//Calibration Status of the accelerometer
 	uint8_t mag;	//Calibration Status of the magnetometer
 	uint8_t gyro;	//Calibration Status of the gyroscope
@@ -65,25 +65,22 @@ struct bno055_calib_stat {
 };
 
 //Structure to hold the accelerometer configurations
-struct bno055_accel_stat {
+struct bno055_accel_stat_t {
 	uint8_t range;		//Range: 2G - 16G
 	uint8_t bandwidth;	//Bandwidth: 7.81Hz - 1000Hz
 	uint8_t powerMode;	//Power mode: Normal - Deep suspend
 };
 
-
 //GPIO pins used for controlling the Sensor
+#define RESET_PIN		4		//GPIO to reset the BNO055 (RESET pin has to be HIGH for the BNO055 to operate)
 
-#define RESET_PIN 4				//GPIO to reset the BNO055 (RESET pin has to be HIGH for the BNO055 to operate)
-
-#if defined(ARDUINO_AVR_LEONARDO) || defined(ARDUINO_AVR_YUN)
-#define INT_PIN   4  			//GPIO to receive the Interrupt from the BNO055 for the Arduino Uno(Interrupt is visible on the INT LED on the Shield)
-#elif defined(ARDUINO_SAM_DUE)
-#define INT_PIN   2
+#if defined(__AVR_ATmega32U4__) //Arduino Yun and Leonardo
+#define INT_PIN			4		//GPIO to receive the Interrupt from the BNO055 for the Arduino Uno(Interrupt is visible on the INT LED on the Shield)
+#elif defined(ARDUINO_ARCH_SAM)  //INT_PIN is the interrupt number not the interrupt pin
+#define INT_PIN			2
 #else
-#define INT_PIN   0
+#define INT_PIN			0
 #endif
-
 
 #define ENABLE			1		//For use in function parameters
 #define DISABLE			0		//For use in function parameters
@@ -97,23 +94,24 @@ struct bno055_accel_stat {
 #define I2C             Wire    //Or Wire
 #endif
 
-#define INIT_PERIOD		600		//Initialization period set to 600ms
-#define RESET_PERIOD	300		//Reset period set to 300ms
-#define MANUAL			1		//To manually call the update data functions
-#define AUTO			0		//To automatically call the update data functions
+#define INIT_PERIOD			600		//Initialization period set to 600ms
+#define RESET_PERIOD		300		//Reset period set to 300ms
+#define POST_INIT_PERIOD	50		//Post initialization delay of 50ms
+#define MANUAL				1		//To manually call the update data functions
+#define AUTO				0		//To automatically call the update data functions
 class NAxisMotion {
 private:
 	bool 	dataUpdateMode;								//Variable to store the mode of updating data
 	struct 	bno055_t 			myBNO;					//Structure that stores the device information
-	struct 	bno055_accel_float	accelData;				//Structure that holds the accelerometer data
-	struct 	bno055_mag_float	magData;				//Structure that holds the magnetometer data
-	struct 	bno055_gyro_float 	gyroData;				//Structure that holds the gyroscope data
-	struct 	bno055_quaternion	quatData;				//Structure that holds the quaternion data
-	struct 	bno055_euler_float	eulerData;				//Structure that holds the euler data
-	struct 	bno055_linear_accel_float	linearAccelData;	//Structure that holds the linear acceleration data
-	struct 	bno055_gravity_float	gravAccelData;			//Structure that holds the gravity acceleration data
-	struct 	bno055_calib_stat	calibStatus;			//Structure to hold the calibration status
-	struct 	bno055_accel_stat	accelStatus;			//Structure to hold the status of the accelerometer configurations
+	struct 	bno055_accel_float_t	accelData;				//Structure that holds the accelerometer data
+	struct 	bno055_mag_float_t	magData;				//Structure that holds the magnetometer data
+	struct 	bno055_gyro_float_t 	gyroData;				//Structure that holds the gyroscope data
+	struct 	bno055_quaternion_t	quatData;				//Structure that holds the quaternion data
+	struct 	bno055_euler_float_t	eulerData;				//Structure that holds the euler data
+	struct 	bno055_linear_accel_float_t	linearAccelData;	//Structure that holds the linear acceleration data
+	struct 	bno055_gravity_float_t	gravAccelData;			//Structure that holds the gravity acceleration data
+	struct 	bno055_calib_stat_t	calibStatus;			//Structure to hold the calibration status
+	struct 	bno055_accel_stat_t	accelStatus;			//Structure to hold the status of the accelerometer configurations
 public:
 	//Function Declarations
 	/*******************************************************************************************
@@ -694,6 +692,6 @@ public:
 /******************** Bridge Functions for the Sensor API to control the Arduino Hardware******************************************/
 signed char BNO055_I2C_bus_read(unsigned char,unsigned char, unsigned char*, unsigned char);
 signed char BNO055_I2C_bus_write(unsigned char ,unsigned char , unsigned char* , unsigned char );
-void _delay(uint32_t);
+void _delay(u_32);
 
 #endif __NAXISMOTION_H__
