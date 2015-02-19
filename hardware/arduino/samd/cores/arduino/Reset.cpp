@@ -29,8 +29,15 @@ static void banzai() {
 	__disable_irq();
 
   // Reset the device
-	NVIC_SystemReset() ;
-
+	//NVIC_SystemReset() ;
+	//cpu_irq_disable();
+	//SCB->AIRCR = ((0x05FA<<16)|0b100); //reset cpu
+	WDT->CONFIG.bit.PER = 0x0; //8 clock cycles period for WDT
+	WDT->CTRL.reg |= WDT_CTRL_ENABLE; //enable watchdog
+	while(1)
+	{
+		//wait for WDT
+	}
 	while (true);
 }
 

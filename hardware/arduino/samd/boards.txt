@@ -94,7 +94,7 @@ arduino_zero_bl_dbg.build.variant=arduino_zero
 arduino_zero_bl_dbg.build.variant_system_lib=
 arduino_zero_bl_dbg.build.vid=0x03eb
 arduino_zero_bl_dbg.build.pid=0x2111
-arduino_zero_bl_dbg.build.section.start=0x6000
+arduino_zero_bl_dbg.build.section.start=0x4000
 
 arduino_zero_bl.name=Arduino Zero with Bootloader (Native USB Port)
 arduino_zero_bl.vid.0=0x2a03
@@ -118,7 +118,7 @@ arduino_zero_bl.build.variant_system_lib=
 arduino_zero_bl.build.vid=0x2a03
 arduino_zero_bl.build.pid=0x804d
 
-arduino_zero_bl.build.section.start=0x6000
+arduino_zero_bl.build.section.start=0x4000
 arduino_zero_bl.upload.speed=57600
 arduino_zero_bl.build.emu.mcu=atmega2560
 
