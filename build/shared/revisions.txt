@@ -1,4 +1,4 @@
-ARDUINO 1.5.8.1 BETA - 2015.19.02
+ARDUINO 1.5.8.2 BETA - 2015.19.02
 [libraries]
 * NAxis Motion: updated library to revision v8 of the shield.
   check of the interrupt based on mcu family instead of board name.
